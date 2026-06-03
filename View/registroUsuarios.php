@@ -12,7 +12,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
         <div class="container">
-            <a class="navbar-brand fw-bold text-white" href="index.html">
+            <a class="navbar-brand fw-bold text-white" href="index.php">
                 Tienda Ropa
             </a>
         </div>
@@ -54,7 +54,7 @@
 
                 <div class="text-center mt-3 small text-muted">
                     ¿Ya tiene una cuenta?
-                    <a href="login.html" class="link-primary">Inicio Session</a>
+                    <a href="login.php" class="link-primary">Inicio Session</a>
                 </div>
 
             </div>

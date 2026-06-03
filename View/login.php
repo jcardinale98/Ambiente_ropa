@@ -17,7 +17,7 @@
     <header id="header" >
         <nav class="navbar navbar-expand-lg navbar-white bg-primary  border-bottom">
             <div class="container">
-                <a class="navbar-brand fw-bold text-white" href="index.html">
+                <a class="navbar-brand fw-bold text-white" href="index.php">
                     Tienda De Ropa
                 </a>
 
@@ -85,7 +85,7 @@
                         </form>
 
                         <div class="text-center mt-3">
-                            <a href="recuperar.html">
+                            <a href="recuperar.php">
                                 ¿Olvidaste tu contraseña?
                             </a>
                         </div>
@@ -94,7 +94,7 @@
 
                         <p class="text-center mb-0">
                             ¿No tienes cuenta?
-                            <a href="registroUsuarios.html">
+                            <a href="registroUsuarios.php">
                                 Registrarse
                             </a>
                         </p>
