@@ -2,17 +2,15 @@
 <html lang="en">
 
 <head>
-  <title>Ultras - Clothing Store eCommerce Store HTML Website Template</title>
+  <title>Vestira - Clothing Store eCommerce Store HTML Website Template</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="author" content="">
   <meta name="keywords" content="">
   <meta name="description" content="">
   <link rel="stylesheet" type="text/css" href="css/normalize.css">
-  <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
   <link rel="stylesheet" type="text/css" media="all"
     href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="css/vendor.css">

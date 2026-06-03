@@ -13,7 +13,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
         <div class="container">
             <a class="navbar-brand fw-bold text-white" href="index.php">
-                Tienda Ropa
+                Ultras.
             </a>
         </div>
     </nav>
@@ -62,7 +62,5 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="js/registro.js"></script>
-
 </body>
 </html>
