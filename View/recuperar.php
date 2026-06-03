@@ -13,7 +13,7 @@
         <div class="card" style="max-width: 420px; width: 100%">
             <div class="card-body p-5">
                 <div class="text-center mb-3">
-                   <a href="index.php" class="mb-2 d-inline-block"><img src="images/logo-fidelitas.png" alt=""
+                   <a href="index.php" class="mb-2 d-inline-block"><img src="images/main-logo.png" alt=""
                             width="130" />
                     </a>
                     <h1 class="card-title mb-5 h5">Recuperar Acceso</h1>
