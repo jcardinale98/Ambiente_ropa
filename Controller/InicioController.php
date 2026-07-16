@@ -42,8 +42,12 @@
 
         if($datos)
         {
-            $_SESSION["NombreUsuario"] = $datos["Nombre"];
+            // debug esto
+             $_SESSION["NombreUsuario"] = $datos["Nombre"];
             $_SESSION["ConsecutivoUsuario"] = $datos["Consecutivo"];
+            $_SESSION["CorreoElectronicoUsuario"] = $datos["CorreoElectronico"];
+            $_SESSION["ConsecutivoRol"] = $datos["ConsecutivoRol"];
+            $_SESSION["NombreRol"] = $datos["NombreRol"];
 
             header("Location: ../../View/vInicio/Principal.php");
             exit();

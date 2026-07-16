@@ -15,11 +15,12 @@ function CloseDB($conn)
     $conn->close();
 }
 
- function AddError($error, $accion, $idUsuario)
+ function AddError($error, $accion)
     {
         $conn = OpenDB();
 
         $mensaje = $conn -> real_escape_string($error -> getMessage());
+         $idUsuario = isset($_SESSION["ConsecutivoUsuario"]) ? $_SESSION["ConsecutivoUsuario"] : 0;
 
         $sql = "CALL spRegistrarError('$mensaje', '$accion', '$idUsuario')";
         $response = $conn -> query($sql);           

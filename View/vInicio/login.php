@@ -46,6 +46,14 @@
                             Iniciar Sesión
                         </h3>
 
+                        <?php
+                    if(isset($_POST["Mensaje"]))
+                    {
+                        echo '<div class="alert alert-danger text-center">' 
+                             . $_POST["Mensaje"] . '</div>';
+                    }
+                ?>
+
                         <form action="" method="post" class="needs-validation mt-3" id="formIniciarSesion">
 
 

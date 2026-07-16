@@ -15,7 +15,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'RegistrarUsuarioModel', 0);
+            AddError($e, 'RegistrarUsuarioModel');
             return false;
         }
     }
@@ -41,7 +41,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'IniciarSesionModel', 0);
+            AddError($e, 'IniciarSesionModel');
             return null;
         }
     }
@@ -67,7 +67,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'ValidarCorreoModel', 0 );
+            AddError($e, 'ValidarCorreoModel' );
             return null;
         }
     }
@@ -86,7 +86,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'ActualizarContrasennaModel', 0);
+            AddError($e, 'ActualizarContrasennaModel');
             return false;
         }
     }

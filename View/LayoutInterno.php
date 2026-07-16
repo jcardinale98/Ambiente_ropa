@@ -1,5 +1,10 @@
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/InicioController.php';
 
+
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
 function ImportCSS()
 {
   echo '
@@ -14,6 +19,7 @@ function ImportCSS()
 
   <link rel="stylesheet" type="text/css" href="../css/normalize.css">
   <link rel="stylesheet" type="text/css" href="../css/vendor.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="../css/style.css">
 
   <link rel="stylesheet" type="text/css" media="all"
@@ -35,13 +41,141 @@ function ImportJS()
 {
   echo '
           <script src="../js/jquery-1.11.0.min.js"></script>
-  <script src="../js/plugins.js"></script>
-  <script src="../js/script.js"></script>
+<script src="../js/plugins.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/script.js"></script>
     ';
 }
 
+function HeaderInfo()
+{
+  $nombreUsuario = "";
+  $nombreRol = "";
+
+  if (isset($_SESSION["NombreUsuario"])) {
+    $nombreUsuario = $_SESSION["NombreUsuario"];
+    $nombreRol = isset($_SESSION["NombreRol"]) ? $_SESSION["NombreRol"] : "";
+  } else {
+    header("Location: login.php");
+    exit();
+  }
+
+  echo '
+   <header id="header">
+
+    <div id="header-wrap">
+
+        <!-- Barra superior -->
+        <nav class="secondary-nav border-bottom py-2">
+            <div class="container">
+
+                <div class="row align-items-center">
+
+                    <!-- Contacto -->
+                    <div class="col-lg-4 d-none d-lg-block">
+                        <span class="text-muted">
+                            <i class="fa fa-phone me-2"></i>
+                            +506 8888-7777
+                        </span>
+                    </div>
+
+                    <!-- Mensaje -->
+                    <div class="col-lg-4 text-center">
+                        <span class="fw-semibold">
+                            🚚 Envío gratis en compras mayores a <strong>$200</strong>
+                        </span>
+                    </div>
+
+                    <!-- Usuario -->
+                    <div class="col-lg-4">
+
+                        <ul class="d-flex justify-content-end align-items-center list-unstyled mb-0">
+
+                            <li class="me-3">
+                                <a href="cart.html" title="Carrito">
+                                    <i class="fa fa-shopping-cart fa-lg"></i>
+                                </a>
+                            </li>
+
+                            <li class="me-3">
+                                <a href="wishlist.html" title="Favoritos">
+                                    <i class="fa fa-heart fa-lg"></i>
+                                </a>
+                            </li>
+
+                            <li class="me-3">
+                                <a href="#" class="search-button" title="Buscar">
+                                    <i class="fa fa-search fa-lg"></i>
+                                </a>
+                            </li>
+
+
+                            
+                        <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle d-flex align-items-center text-decoration-none"
+       href="#"
+       id="dropdownUsuario"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false">
+        <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center"
+             style="width:40px;height:40px;">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="ms-2 text-start">
+            <div class="fw-bold" style="font-size:14px;">
+                <?php echo $nombreUsuario; ?>
+            </div>
+            <small class="text-muted">
+                <?php echo $nombreRol; ?>
+            </small>
+        </div>
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end shadow p-2" aria-labelledby="dropdownUsuario">
+        <li>
+            <a class="dropdown-item rounded py-2" href="../vUsuario/CambiarPerfil.php">
+                <i class="fa fa-user me-2"></i> Mi perfil
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item rounded py-2" href="../vUsuario/CambiarContrasenna.php">
+                <i class="fa fa-lock me-2"></i> Seguridad
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <form method="POST" class="m-0">
+                <button type="submit"
+                        class="dropdown-item rounded py-2 w-100 text-start border-0 bg-transparent"
+                        name="btnSalir">
+                    <i class="fa fa-sign-out me-2"></i> Cerrar sesión
+                </button>
+            </form>
+        </li>
+    </ul>
+</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </nav>
+
+    </div>
+
+</header>
+    ';
+}
+
+
 function FooterInfo()
 {
+
+
+
   echo '
         <footer id="footer">
     <div class="container">

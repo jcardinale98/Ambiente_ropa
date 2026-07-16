@@ -2998,3 +2998,232 @@ section.categories .category-content a {
 .jarallax.min-height300 {
   min-height: 300px;
 }
+/* ==================================================
+   HEADER - Ultras
+   Pegar al final de tu style.css existente
+   ================================================== */
+
+:root {
+  --ultras-black: #101012;
+  --ultras-ink: #1b1b1f;
+  --ultras-white: #fafafa;
+  --ultras-red: #c8102e;
+  --ultras-red-dark: #9c0c23;
+  --ultras-gray: #8a8a92;
+  --ultras-line: rgba(255, 255, 255, 0.08);
+}
+
+.ultras-header {
+  font-family: "Inter", sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: var(--ultras-white);
+  transition: box-shadow .25s ease;
+}
+
+.ultras-header.is-scrolled {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Barra superior ---------- */
+.ultras-topbar {
+  background: var(--ultras-black);
+  color: var(--ultras-white);
+  font-size: 13px;
+  letter-spacing: .02em;
+  border-bottom: 1px solid var(--ultras-line);
+}
+
+.ultras-topbar .row {
+  min-height: 40px;
+}
+
+.ultras-topbar p {
+  margin: 0;
+  opacity: .85;
+}
+
+.ultras-topbar strong {
+  color: var(--ultras-white);
+  font-weight: 600;
+}
+
+.ultras-topbar .shipping-purchase p {
+  color: var(--ultras-red);
+  font-weight: 500;
+  letter-spacing: .03em;
+}
+
+.ultras-icon-btn {
+  color: var(--ultras-white);
+  opacity: .85;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: all .2s ease;
+}
+
+.ultras-icon-btn:hover {
+  opacity: 1;
+  background: var(--ultras-red);
+  color: var(--ultras-white);
+  transform: translateY(-1px);
+}
+
+/* ---------- Menú principal ---------- */
+.ultras-mainnav {
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.ultras-logo {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 30px;
+  letter-spacing: .06em;
+  color: var(--ultras-black);
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.ultras-logo span {
+  display: block;
+  width: 34px;
+  height: 3px;
+  margin-top: 4px;
+  background: var(--ultras-red);
+}
+
+.ultras-nav-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+.ultras-nav-list .item-anchor {
+  display: inline-block;
+  padding: 8px 16px;
+  color: var(--ultras-ink);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  text-decoration: none;
+  border-radius: 999px;
+  transition: all .2s ease;
+}
+
+.ultras-nav-list .item-anchor:hover,
+.ultras-nav-list .item-anchor.active {
+  background: var(--ultras-black);
+  color: var(--ultras-white);
+}
+
+.ultras-nav-list .submenu {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  padding: 8px;
+  margin-top: 10px !important;
+}
+
+.ultras-nav-list .submenu li a {
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--ultras-ink);
+}
+
+.ultras-nav-list .submenu li a:hover {
+  background: #f4f4f5;
+  color: var(--ultras-red);
+}
+
+/* ---------- Usuario ---------- */
+.ultras-user-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 6px !important;
+  border-radius: 999px;
+  border: 1px solid #ececec;
+  text-decoration: none !important;
+}
+
+.ultras-user-toggle:hover {
+  border-color: var(--ultras-red);
+}
+
+.ultras-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ultras-black);
+  color: var(--ultras-white);
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ultras-user-toggle .user-text strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ultras-black);
+  line-height: 1.15;
+}
+
+.ultras-user-toggle .user-text small {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.ultras-dropdown {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+  padding: 8px;
+  min-width: 210px;
+  margin-top: 12px !important;
+}
+
+.ultras-dropdown .dropdown-item {
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--ultras-ink);
+}
+
+.ultras-dropdown .dropdown-item:hover {
+  background: #f4f4f5;
+  color: var(--ultras-red);
+}
+
+.ultras-dropdown form button {
+  color: var(--ultras-red-dark);
+  font-weight: 500;
+}
+
+.ultras-dropdown form button:hover {
+  color: var(--ultras-red);
+}
+
+@media (max-width: 991px) {
+  .ultras-nav-list {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
