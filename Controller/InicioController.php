@@ -1,5 +1,5 @@
 <?php
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/UtilitarioController.php';
     include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/InicioModel.php';
 
     if(session_status() == PHP_SESSION_NONE){
@@ -51,6 +51,41 @@
 
         $_POST["Mensaje"] = "No se ha podido autenticar su información correctamente";
     }
+
+
+if(isset($_POST["btnRecuperarAcceso"]))
+    {
+        $correoElectronico = $_POST["correoElectronico"];
+
+        $datos = ValidarCorreoModel($correoElectronico);
+        
+        if($datos)
+        {
+            $temporal = generarContrasena();            
+            $actualizacion = ActualizarContrasennaModel($datos['Consecutivo'], $temporal);
+
+            if($actualizacion)
+            {
+                $plantilla = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/RepoMN/View/templates/Recuperacion.html');
+                $plantilla = str_replace("{{TEMPORAL}}", $temporal, $plantilla);
+                $plantilla = str_replace("{{NOMBRE}}", $datos['Nombre'], $plantilla);
+
+                EnviarCorreo("Recuperación de acceso", $plantilla, $datos['CorreoElectronico']);
+
+                header("Location: ../../View/vInicio/login.php");
+                exit();
+            }
+        }
+
+        $_POST["Mensaje"] = "No se ha podido recuperar su acceso correctamente";
+    }
+
+    if(isset($_POST["btnSalir"]))        
+    {
+        CerrarSesion();
+    }
+
+
 
     // if(isset($_POST["btnRecuperarAcceso"]))
     // {
