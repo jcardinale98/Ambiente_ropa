@@ -1,6 +1,6 @@
 <?php
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/AMBIENTE_ROPA/Controller/UtilitarioController.php';
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/AMBIENTE_ROPA/Model/InicioModel.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/InicioModel.php';
 
     if(session_status() == PHP_SESSION_NONE){
         session_start();
@@ -12,19 +12,28 @@
         $nombre = $_POST["nombre"];
         $correoElectronico = $_POST["correoElectronico"];
         $contrasenna = $_POST["contrasenna"];
+       
 
         $datos = RegistrarUsuarioModel($identificacion,$nombre,$correoElectronico,$contrasenna);
 
         if($datos)
         {
-            header("Location: ../../View/vInicio/IniciarSesion.php");
+            header("Location: ../../View/vInicio/login.php");
             exit();
         }
 
         $_POST["Mensaje"] = "No se ha podido registrar su información correctamente";
     }
 
-    if(isset($_POST["btnIniciarSesion"]))        
+
+
+
+
+
+
+
+    
+    if(isset($_POST["btnlogin"]))        
     {
         $identificacion = $_POST["identificacion"];
         $contrasenna = $_POST["contrasenna"];

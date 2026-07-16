@@ -1,5 +1,5 @@
 <?php
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/AMBIENTE_ROPA/Model/UtilitarioModel.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
 
     function RegistrarUsuarioModel($identificacion,$nombre,$correoElectronico,$contrasenna)
     {
@@ -15,7 +15,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'RegistrarUsuarioModel');
+            AddError($e, 'RegistrarUsuarioModel', 0);
             return false;
         }
     }
@@ -41,7 +41,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'IniciarSesionModel');
+            AddError($e, 'IniciarSesionModel', 0);
             return null;
         }
     }
@@ -67,7 +67,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'ValidarCorreoModel');
+            AddError($e, 'ValidarCorreoModel', 0 );
             return null;
         }
     }
@@ -86,7 +86,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'ActualizarContrasennaModel');
+            AddError($e, 'ActualizarContrasennaModel', 0);
             return false;
         }
     }
