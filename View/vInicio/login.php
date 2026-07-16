@@ -17,7 +17,7 @@
     <header id="header" >
         <nav class="navbar navbar-expand-lg navbar-white bg-primary  border-bottom">
             <div class="container">
-                <a class="navbar-brand fw-bold text-white" href="index.php">
+                <a class="navbar-brand fw-bold text-white" href="Principal.php">
                     Tienda De Ropa
                 </a>
 
