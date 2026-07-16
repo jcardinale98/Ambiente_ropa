@@ -1,5 +1,5 @@
 <?php
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/AMBIENTE_ROPA/Model/UtilitarioModel.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
 
     function RegistrarUsuarioModel($identificacion,$nombre,$correoElectronico,$contrasenna)
     {
@@ -67,7 +67,7 @@
         }
         catch(Exception $e)
         {
-            AddError($e, 'ValidarCorreoModel');
+            AddError($e, 'ValidarCorreoModel' );
             return null;
         }
     }

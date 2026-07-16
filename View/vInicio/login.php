@@ -1,14 +1,17 @@
+<?php
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/InicioController.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/View/LayoutExterno.php';
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+<?php
+    ImportCSS();
+?>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
 
 
 <body class="bg-light">
@@ -29,9 +32,10 @@
 
     <!-- LOGIN -->
     <div class="container-md">
+        
         <div class="row justify-content-center align-items-center vh-100">
 
-
+            
             <div class="col-md-6 col-lg-4">
 
 
@@ -42,13 +46,24 @@
                             Iniciar Sesión
                         </h3>
 
-                        <form>
+                        <?php
+                    if(isset($_POST["Mensaje"]))
+                    {
+                        echo '<div class="alert alert-danger text-center">' 
+                             . $_POST["Mensaje"] . '</div>';
+                    }
+                ?>
+
+                        <form action="" method="post" class="needs-validation mt-3" id="formIniciarSesion">
+
 
                             <div class="mb-3">
                                 <label class="form-label">
                                     Correo Electrónico
                                 </label>
                                 <input
+                                id="identificacion" 
+                                name="identificacion"
                                     type="email"
                                     class="form-control"
                                     placeholder="correo@ejemplo.com"
@@ -60,7 +75,9 @@
                                     Contraseña
                                 </label>
                                 <input
-                                    id="password"
+                                id="contrasenna" 
+                                name="contrasenna"
+                                    
                                     type="password"
                                     class="form-control"
                                     placeholder="********"
@@ -76,11 +93,7 @@
                                 </label>
                             </div>
 
-                            <button
-                                type="submit"
-                                class="btn btn-primary w-100">
-                                Ingresar
-                            </button>
+                             <button type="submit" id="btnlogin" name="btnlogin" class="btn btn-primary w-100">Procesar</button>
 
                         </form>
 
@@ -107,5 +120,9 @@
         </div>
     </div>
 
+    <?php
+        ImportJS();
+    ?>
+    <script src="../js/iniciarSesion.js"></script>
 </body>
 </html>

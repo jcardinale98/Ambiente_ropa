@@ -1,5 +1,5 @@
 <?php
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/AMBIENTE_ROPA/View/LayoutInterno.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/View/LayoutInterno.php';
     
 ?>
 
@@ -13,110 +13,20 @@
     ImportCSS();
 ?>
 
-
 <body>
+
+ <?php
+    HeaderInfo();
+  ?>
+
 
   <div class="preloader-wrapper">
     <div class="preloader">
     </div>
   </div>
 
- 
-  <header id="header">
-    <div id="header-wrap">
-      <nav class="secondary-nav border-bottom">
-        <div class="container">
-          <div class="row d-flex align-items-center">
-            <div class="col-md-4 header-contact">
-              <p>¡Contáctanos!<strong>+506 8888-7777</strong>
-              </p>
-            </div>
-            <div class="col-md-4 shipping-purchase text-center">
-              <p>Envío gratis en compras superiores a $200</p>
-            </div>
-            <div class="col-md-4 col-sm-12 user-items">
-              <ul class="d-flex justify-content-end list-unstyled">
-                <li>
-                  <a href="login.php">
-                    <i class="fa fa-user fa-lg"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="cart.html">
-                    <i class="fa fa-shopping-cart fa-lg"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="wishlist.html">
-                    <i class="fa fa-heart fa-lg"></i>
-                  </a>
-                </li>
-                <li class="user-items search-item pe-3">
-                  <a href="#" class="search-button">
-                    <i class="fa fa-search fa-lg"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </nav>
-      <nav class="primary-nav padding-small">
-        <div class="container">
-          <div class="row d-flex align-items-center">
-            <div class="col-lg-2 col-md-2">
-              <div class="main-logo">
-                <a href="index.html">
-                  <img src="../images/main-logo.png" alt="logo">
-                </a>
-              </div>
-            </div>
-            <div class="col-lg-10 col-md-10">
-              <div class="navbar">
 
-                <div id="main-nav" class="stellarnav d-flex justify-content-end right">
-                  <ul class="menu-list">
-
-                    <li class="menu-item has-sub">
-                      <a href="index.html" class="item-anchor active d-flex align-item-center"
-                        data-effect="Home">Inicio<i class="icon icon-chevron-down"></i></a>
-                    </li>
-
-
-
-                    <li class="menu-item has-sub">
-                      <a href="shop.html" class="item-anchor d-flex align-item-center" data-effect="Shop">Tienda<i
-                          class="icon icon-chevron-down"></i></a>
-                      <ul class="submenu">
-                        <li><a href="shop.html" class="item-anchor">Catálogo</a></li>
-                        <li><a href="cart.html" class="item-anchor">Carrito</a></li>
-                        <li><a href="wishlist.html" class="item-anchor">Lista de Deseos</a></li>
-                        <li><a href="checkout.html" class="item-anchor">Checkout</a></li>
-                      </ul>
-                    </li>
-
-                    <li class="menu-item has-sub">
-                      <a href="#" class="item-anchor d-flex align-item-center" data-effect="Pages">Ingresa a tu cuenta<i
-                          class="icon icon-chevron-down"></i></a>
-                      <ul class="submenu">
-                        <li><a href="login.php" class="item-anchor">Login</a></li>
-
-
-                      </ul>
-                    </li>
-
-
-
-                  </ul>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+  
 
   // carrusel de imagenes
   <section id="billboard" class="overflow-hidden">
