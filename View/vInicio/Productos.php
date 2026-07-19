@@ -1,5 +1,6 @@
 <?php
 
+
 if (session_status() == PHP_SESSION_NONE)
 {
     session_start();
@@ -14,7 +15,39 @@ if (!isset($_SESSION["ConsecutivoUsuario"]))
     exit();
 }
 
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/UtilitarioModel.php';
+
+RequerirRol("Cliente");
+
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/CarritoModel.php';
+
+
+<?php
+
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/UtilitarioModel.php';
+
+RequerirRol("Cliente");
+
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/CarritoModel.php';
+
+
 $productos = ConsultarProductosDisponiblesModel();
+
+$cantidadCarrito = ConsultarCantidadCarritoModel(
+    $_SESSION["ConsecutivoUsuario"]
+);
+
+$cantidadActual = isset(
+    $cantidadCarrito["CantidadProductos"]
+)
+    ? intval($cantidadCarrito["CantidadProductos"])
+    : 0;
+
+?>
 
 $cantidadCarrito = ConsultarCantidadCarritoModel(
     $_SESSION["ConsecutivoUsuario"]
