@@ -152,6 +152,8 @@ include_once $_SERVER['DOCUMENT_ROOT']
 
     </section>
 
+    <!-- Marcas -->
+
     <section
         id="brand-collection"
         class="padding-medium bg-light-grey"
@@ -199,6 +201,8 @@ include_once $_SERVER['DOCUMENT_ROOT']
 
     </section>
 
+    <!-- Accesos principales -->
+
     <section class="padding-medium">
 
         <div class="container text-center">
@@ -210,12 +214,33 @@ include_once $_SERVER['DOCUMENT_ROOT']
                 realiza tus compras.
             </p>
 
-            <a
-                href="Productos.php"
-                class="btn btn-dark"
+            <div
+                class="d-flex justify-content-center gap-3 flex-wrap mt-4"
             >
-                Ver productos
-            </a>
+
+                <a
+                    href="Productos.php"
+                    class="btn btn-dark"
+                >
+
+                    <i class="fa-solid fa-shirt"></i>
+
+                    Ver productos
+
+                </a>
+
+                <a
+                    href="Perfil.php"
+                    class="btn btn-outline-dark"
+                >
+
+                    <i class="fa-solid fa-user-gear"></i>
+
+                    Mi perfil
+
+                </a>
+
+            </div>
 
         </div>
 

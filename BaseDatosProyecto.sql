@@ -908,6 +908,143 @@ END $$
 
 DELIMITER ;
 
+--
+-- PROCEDURE `spConsultarPerfilUsuario`
+--
+
+USE bdproyecto;
+
+DROP PROCEDURE IF EXISTS spConsultarPerfilUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spConsultarPerfilUsuario
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Identificacion,
+        Nombre,
+        CorreoElectronico,
+        RutaImagen,
+        Estado
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
+
+END $$
+
+DELIMITER ;
+
+CALL spConsultarPerfilUsuario(5);
+
+
+--
+-- PROCEDURE `spActualizarPerfilUsuario`
+--
+
+USE bdproyecto;
+
+DROP PROCEDURE IF EXISTS spActualizarPerfilUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spActualizarPerfilUsuario
+(
+    IN pConsecutivoUsuario INT,
+    IN pNombre VARCHAR(250),
+    IN pCorreoElectronico VARCHAR(100)
+)
+BEGIN
+
+    DECLARE vUsuarioExiste INT DEFAULT 0;
+    DECLARE vCorreoDuplicado INT DEFAULT 0;
+
+    SELECT COUNT(*)
+    INTO vUsuarioExiste
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
+
+    IF vUsuarioExiste = 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
+
+    ELSEIF pNombre IS NULL
+        OR TRIM(pNombre) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar el nombre.' AS Mensaje;
+
+    ELSEIF pCorreoElectronico IS NULL
+        OR TRIM(pCorreoElectronico) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar el correo electrónico.' AS Mensaje;
+
+    ELSEIF pCorreoElectronico NOT LIKE '%_@_%._%' THEN
+
+        SELECT
+            0 AS Resultado,
+            'El formato del correo electrónico no es válido.' AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vCorreoDuplicado
+        FROM tb_usuario
+        WHERE CorreoElectronico = TRIM(pCorreoElectronico)
+          AND Consecutivo <> pConsecutivoUsuario;
+
+        IF vCorreoDuplicado > 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'El correo electrónico ya está registrado por otro usuario.'
+                    AS Mensaje;
+
+        ELSE
+
+            UPDATE tb_usuario
+            SET
+                Nombre = TRIM(pNombre),
+                CorreoElectronico = TRIM(pCorreoElectronico)
+            WHERE Consecutivo = pConsecutivoUsuario
+              AND Estado = 1;
+
+            SELECT
+                1 AS Resultado,
+                'El perfil se actualizó correctamente.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+CALL spActualizarPerfilUsuario
+(
+    5,
+    'EDUARDO JOSE CALVO',
+    'ecalvo90415@ufide.ac.cr'
+);
+
+
+
+
+
+
+
+
 
 --
 -- Table structure for table `tb_rol`
@@ -1040,19 +1177,107 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spActualizarContrasenna`(
-	pConsecutivo 	int, 
-    pContrasenna	varchar(10)
+USE bdproyecto;
+
+DROP PROCEDURE IF EXISTS spActualizarContrasenna;
+
+DELIMITER $$
+
+CREATE PROCEDURE spActualizarContrasenna
+(
+    IN pConsecutivoUsuario INT,
+    IN pContrasennaActual VARCHAR(100),
+    IN pNuevaContrasenna VARCHAR(100)
 )
 BEGIN
 
-	UPDATE 	tb_usuario
-	SET		Contrasenna = pContrasenna
-	WHERE 	Consecutivo = pConsecutivo;
+    DECLARE vUsuarioExiste INT DEFAULT 0;
+    DECLARE vContrasennaCorrecta INT DEFAULT 0;
 
-END ;;
+    SELECT COUNT(*)
+    INTO vUsuarioExiste
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
+
+    IF vUsuarioExiste = 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
+
+    ELSEIF pContrasennaActual IS NULL
+        OR TRIM(pContrasennaActual) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar la contraseña actual.' AS Mensaje;
+
+    ELSEIF pNuevaContrasenna IS NULL
+        OR TRIM(pNuevaContrasenna) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar la nueva contraseña.' AS Mensaje;
+
+    ELSEIF CHAR_LENGTH(pNuevaContrasenna) < 5 THEN
+
+        SELECT
+            0 AS Resultado,
+            'La nueva contraseña debe tener al menos 5 caracteres.'
+                AS Mensaje;
+
+    ELSEIF pContrasennaActual = pNuevaContrasenna THEN
+
+        SELECT
+            0 AS Resultado,
+            'La nueva contraseña debe ser diferente a la actual.'
+                AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vContrasennaCorrecta
+        FROM tb_usuario
+        WHERE Consecutivo = pConsecutivoUsuario
+          AND Contrasenna = pContrasennaActual
+          AND Estado = 1;
+
+        IF vContrasennaCorrecta = 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'La contraseña actual es incorrecta.' AS Mensaje;
+
+        ELSE
+
+            UPDATE tb_usuario
+            SET Contrasenna = pNuevaContrasenna
+            WHERE Consecutivo = pConsecutivoUsuario
+              AND Estado = 1;
+
+            SELECT
+                1 AS Resultado,
+                'La contraseña se actualizó correctamente.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END $$
+
 DELIMITER ;
+
+-- actializar la contrasenna nueva
+CALL spActualizarContrasenna
+(
+    5,
+    '1111111111',
+    'Nueva123'
+);
+
+
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
