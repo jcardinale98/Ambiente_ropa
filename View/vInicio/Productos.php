@@ -6,6 +6,9 @@ if (session_status() == PHP_SESSION_NONE)
 }
 
 include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/UtilitarioModel.php';
+
+include_once $_SERVER['DOCUMENT_ROOT']
     . '/Ambiente_ropa/Model/CarritoModel.php';
 
 if (!isset($_SESSION["ConsecutivoUsuario"]))
@@ -13,6 +16,8 @@ if (!isset($_SESSION["ConsecutivoUsuario"]))
     header("Location: login.php");
     exit();
 }
+
+RequerirRol("Cliente");
 
 $productos = ConsultarProductosDisponiblesModel();
 
@@ -25,6 +30,7 @@ $cantidadActual = isset(
 )
     ? intval($cantidadCarrito["CantidadProductos"])
     : 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -340,9 +346,7 @@ $cantidadActual = isset(
                                                 echo $idProducto;
                                             ?>">
 
-                                            <i
-                                                class="fa-solid fa-cart-plus">
-                                            </i>
+                                            <i class="fa-solid fa-cart-plus"></i>
 
                                             Agregar
 
@@ -366,10 +370,8 @@ $cantidadActual = isset(
 
     </main>
 
-    <!-- Se carga una sola versión de jQuery -->
     <script src="../js/jquery-1.11.0.min.js"></script>
 
-    <!-- JavaScript para agregar productos -->
     <script src="../js/carrito.js"></script>
 
 </body>
