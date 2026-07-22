@@ -1,6 +1,6 @@
 <?php
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/PrincipalController.php';
     include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/View/LayoutInterno.php';
-    
 ?>
 
 
@@ -15,7 +15,7 @@
 
 <body>
 
- <?php
+  <?php
     HeaderInfo();
   ?>
 
@@ -26,9 +26,9 @@
   </div>
 
 
-  
 
-  // carrusel de imagenes
+
+  <!-- Carrusel de imagenes -->
   <section id="billboard" class="overflow-hidden">
     <button class="button-prev">
       <i class="icon icon-chevron-left"></i>
@@ -74,10 +74,11 @@
                 <div class="col-md-6">
                   <h2 class="banner-title">Colección Casual</h2>
                   <p>
-                    Explora el catalogo de ropa casual para hombres y mujeres. Encuentra prendas versátiles y cómodas para tu estilo diario.
+                    Explora el catalogo de ropa casual para hombres y mujeres. Encuentra prendas versátiles y cómodas
+                    para tu estilo diario.
                   </p>
                   <div class="btn-wrap">
-                    
+
                     <a href="shop.html" class="btn btn-light btn-light-arrow btn-medium d-flex align-items-center"
                       tabindex="0">Compra ahora <i class="icon icon-arrow-io"></i>
                     </a>
@@ -107,7 +108,34 @@
       </div>
     </div>
   </section>
--------------------------------------------------------------catalogo de productos------------------------------------------------------------
+  <!-- -------------------------------------------------------------catalogo de productos------------------------------------------------------------ -->
+
+  <div class="row">
+    <?php if($productos && $productos->num_rows > 0) { ?>
+    <?php while($fila = $productos->fetch_assoc()) { ?>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <img src="<?php echo $fila["RutaImagen"]; ?>" class="card-img-top" alt="<?php echo $fila["Nombre"]; ?>">
+        <div class="card-body">
+          <h5 class="card-title"> <?php echo $fila["Nombre"]; ?> </h5>
+          <p> Categoría: <?php echo $fila["Categoria"]; ?> </p>
+          <p> <?php echo $fila["Descripcion"]; ?> </p>
+          <p> Precio: ₡<?php echo number_format($fila["Precio"], 2); ?> </p>
+          <p> Stock: <?php echo $fila["Stock"]; ?>
+          </p>
+          <button type="button" class="btn btn-dark w-100">
+            Agregar al carrito</button>
+        </div>
+      </div>
+    </div>
+    <?php } ?>
+    <?php } else { ?>
+    <div class="col-12 text-center">
+      <p>No se encontraron productos.</p>
+    </div>
+    <?php } ?>
+  </div>
+
 
   <section id="shipping-information">
     <hr />
@@ -152,7 +180,7 @@
 
 
 
-  ------------------------------------------------------------General Footer------------------------------------------------------------
+  <!-- -------------------------------------------------------------General Footer------------------------------------------------------------ -->
   <?php
        FooterInfo();
     ?>
