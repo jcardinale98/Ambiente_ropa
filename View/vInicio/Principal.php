@@ -1,14 +1,9 @@
 <?php
     include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/PrincipalController.php';
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
     include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/View/LayoutInterno.php';
 
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/UtilitarioModel.php';
-
 RequerirRol("Cliente");
-
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/View/LayoutInterno.php';
 
 ?>
 
@@ -21,7 +16,8 @@ include_once $_SERVER['DOCUMENT_ROOT']
 ?>
 
 <body>
-
+  <div id="mensajeAlerta" class="alert mensaje-alerta" role="alert">
+  </div>
   <?php
     HeaderInfo();
   ?>
@@ -130,8 +126,21 @@ include_once $_SERVER['DOCUMENT_ROOT']
           <p> Precio: ₡<?php echo number_format($fila["Precio"], 2); ?> </p>
           <p> Stock: <?php echo $fila["Stock"]; ?>
           </p>
-          <button type="button" class="btn btn-dark w-100">
-            Agregar al carrito</button>
+          <div class="mt-auto">
+
+            <?php
+    $idProducto = intval($fila["Consecutivo"]);
+    $stockProducto = intval($fila["Stock"]);?>
+            <div class="d-flex gap-2 align-items-center">
+              <input type="number" id="cantidad_<?php echo $idProducto; ?>" class="form-control cantidad-input"
+                value="1" min="1" max="<?php echo $stockProducto; ?>">
+              <button type="button" class="btn btn-dark flex-grow-1 btn-agregar"
+                data-producto="<?php echo $idProducto; ?>">
+                <i class="fa-solid fa-cart-plus"></i>
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -192,145 +201,7 @@ include_once $_SERVER['DOCUMENT_ROOT']
        FooterInfo();
     ?>
 
-  <div class="preloader-wrapper">
 
-    <div class="preloader"></div>
-
-  </div>
-
-  <!-- Carrusel principal -->
-
-  <section id="billboard" class="overflow-hidden">
-
-    <button class="button-prev">
-
-      <i class="icon icon-chevron-left"></i>
-
-    </button>
-
-    <button class="button-next">
-
-      <i class="icon icon-chevron-right"></i>
-
-    </button>
-
-    <div class="swiper main-swiper">
-
-      <div class="swiper-wrapper">
-
-        <div class="swiper-slide" style="
-                        background-image: url('../images/banner1.jpg');
-                        background-repeat: no-repeat;
-                        background-size: cover;
-                        background-position: center;
-                    ">
-
-          <div class="banner-content">
-
-            <div class="container">
-
-              <div class="row">
-
-                <div class="col-md-6">
-
-                  <h2 class="banner-title">
-                    Colección de verano
-                  </h2>
-
-                  <p>
-                    Descubre nuestra colección con diseños
-                    frescos y estilos modernos.
-                  </p>
-
-                  <div class="btn-wrap">
-
-                    <a href="Productos.php" class="btn btn-light btn-medium">
-                      Comprar ahora
-                    </a>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="swiper-slide" style="
-                        background-image: url('../images/banner2.jpg');
-                        background-repeat: no-repeat;
-                        background-size: cover;
-                        background-position: center;
-                    ">
-
-          <div class="banner-content">
-
-            <div class="container">
-
-              <div class="row">
-
-                <div class="col-md-6">
-
-                  <h2 class="banner-title">
-                    Colección casual
-                  </h2>
-
-                  <p>
-                    Explora el catálogo de ropa casual para
-                    hombres y mujeres.
-                  </p>
-
-                  <div class="btn-wrap">
-
-                    <a href="Productos.php" class="btn btn-light btn-medium">
-                      Comprar ahora
-                    </a>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- Marcas -->
-
-  <section id="brand-collection" class="padding-medium bg-light-grey">
-
-    <div class="container">
-
-      <div class="d-flex flex-wrap justify-content-between">
-
-        <img src="../images/brand1.png" alt="Marca 1" class="brand-image">
-
-        <img src="../images/brand2.png" alt="Marca 2" class="brand-image">
-
-        <img src="../images/brand3.png" alt="Marca 3" class="brand-image">
-
-        <img src="../images/brand4.png" alt="Marca 4" class="brand-image">
-
-        <img src="../images/brand5.png" alt="Marca 5" class="brand-image">
-
-      </div>
-
-    </div>
-
-  </section>
 
   <!-- Accesos principales -->
 
@@ -368,7 +239,8 @@ include_once $_SERVER['DOCUMENT_ROOT']
     </div>
 
   </section>
-
+  <script src="../js/jquery-1.11.0.min.js"></script>
+  <script src="../js/carrito.js"></script>
   <?php
         FooterInfo();
     ?>

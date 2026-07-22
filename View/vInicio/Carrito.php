@@ -28,171 +28,150 @@ $totalActual = isset($totalCarrito["Total"])
     : 0;
 ?>
 
-<!DOCTYPE html>
+
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Carrito de compras</title>
+  <title>Carrito de compras</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <style>
-        body
-        {
-            background-color: #f5f5f5;
-        }
+  <style>
+  body {
+    background-color: #f5f5f5;
+  }
 
-        .encabezado
-        {
-            background-color: white;
-            border-bottom: 1px solid #dddddd;
-            padding: 18px 30px;
-        }
+  .encabezado {
+    background-color: white;
+    border-bottom: 1px solid #dddddd;
+    padding: 18px 30px;
+  }
 
-        .titulo
-        {
-            margin: 0;
-            font-size: 30px;
-            font-weight: bold;
-        }
+  .titulo {
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+  }
 
-        .contenedor-carrito
-        {
-            padding-top: 35px;
-            padding-bottom: 45px;
-        }
+  .contenedor-carrito {
+    padding-top: 35px;
+    padding-bottom: 45px;
+  }
 
-        .producto-carrito
-        {
-            background-color: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 18px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
-        }
+  .producto-carrito {
+    background-color: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
+  }
 
-        .imagen-producto
-        {
-            width: 130px;
-            height: 130px;
-            object-fit: contain;
-            background-color: #eeeeee;
-            border-radius: 8px;
-        }
+  .imagen-producto {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    background-color: #eeeeee;
+    border-radius: 8px;
+  }
 
-        .producto-nombre
-        {
-            font-size: 21px;
-            font-weight: bold;
-        }
+  .producto-nombre {
+    font-size: 21px;
+    font-weight: bold;
+  }
 
-        .producto-precio
-        {
-            color: #6f42c1;
-            font-size: 19px;
-            font-weight: bold;
-        }
+  .producto-precio {
+    color: #6f42c1;
+    font-size: 19px;
+    font-weight: bold;
+  }
 
-        .cantidad-carrito
-        {
-            width: 90px;
-        }
+  .cantidad-carrito {
+    width: 90px;
+  }
 
-        .resumen-carrito
-        {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
-        }
+  .resumen-carrito {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
+  }
 
-        .total-carrito
-        {
-            font-size: 27px;
-            font-weight: bold;
-            color: #6f42c1;
-        }
+  .total-carrito {
+    font-size: 27px;
+    font-weight: bold;
+    color: #6f42c1;
+  }
 
-        .mensaje-alerta
-        {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            min-width: 320px;
-            z-index: 9999;
-            display: none;
-        }
-    </style>
+  .mensaje-alerta {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 320px;
+    z-index: 9999;
+    display: none;
+  }
+  </style>
 </head>
 
 <body>
 
-    <div id="mensajeAlerta"
-         class="alert mensaje-alerta"
-         role="alert">
+  <div id="mensajeAlerta" class="alert mensaje-alerta" role="alert">
+  </div>
+
+  <header class="encabezado">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+      <h1 class="titulo">
+        Mi carrito
+      </h1>
+
+      <a href="/Ambiente_ropa/View/vInicio/Principal.php" class="btn btn-outline-dark">
+
+        <i class="fa-solid fa-arrow-left"></i>
+        Seguir comprando
+
+      </a>
+
     </div>
 
-    <header class="encabezado">
+  </header>
 
-        <div class="d-flex justify-content-between align-items-center">
+  <main class="container contenedor-carrito">
 
-            <h1 class="titulo">
-                Mi carrito
-            </h1>
+    <?php if (empty($productosCarrito)): ?>
 
-            <a href="Productos.php"
-               class="btn btn-outline-dark">
+    <div class="alert alert-info text-center">
 
-                <i class="fa-solid fa-arrow-left"></i>
-                Seguir comprando
+      <h4>El carrito está vacío.</h4>
 
-            </a>
+      <p>
+        Agrega productos para continuar con la compra.
+      </p>
 
-        </div>
+      <a href="/Ambiente_ropa/View/vInicio/Principal.php" class="btn btn-dark">
 
-    </header>
+        Ver productos
 
-    <main class="container contenedor-carrito">
+      </a>
 
-        <?php if (empty($productosCarrito)): ?>
+    </div>
 
-            <div class="alert alert-info text-center">
+    <?php else: ?>
 
-                <h4>El carrito está vacío.</h4>
+    <div class="row">
 
-                <p>
-                    Agrega productos para continuar con la compra.
-                </p>
+      <div class="col-lg-8">
 
-                <a href="Productos.php"
-                   class="btn btn-dark">
+        <?php foreach ($productosCarrito as $producto): ?>
 
-                    Ver productos
-
-                </a>
-
-            </div>
-
-        <?php else: ?>
-
-            <div class="row">
-
-                <div class="col-lg-8">
-
-                    <?php foreach ($productosCarrito as $producto): ?>
-
-                        <?php
+        <?php
                             $idProducto = intval(
                                 $producto["ConsecutivoProducto"]
                             );
@@ -213,43 +192,39 @@ $totalActual = isset($totalCarrito["Total"])
                                 "../images/" . $nombreImagen;
                         ?>
 
-                        <div class="producto-carrito"
-                             id="producto_<?php echo $idProducto; ?>">
+        <div class="producto-carrito" id="producto_<?php echo $idProducto; ?>">
 
-                            <div class="row align-items-center">
+          <div class="row align-items-center">
 
-                                <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center">
 
-                                    <img
-                                        src="<?php
+              <img src="<?php
                                             echo htmlspecialchars(
                                                 $rutaImagen
                                             );
-                                        ?>"
-                                        class="imagen-producto"
-                                        alt="<?php
+                                        ?>" class="imagen-producto" alt="<?php
                                             echo htmlspecialchars(
                                                 $producto["Nombre"]
                                             );
                                         ?>">
 
-                                </div>
+            </div>
 
-                                <div class="col-md-5">
+            <div class="col-md-5">
 
-                                    <h2 class="producto-nombre">
+              <h2 class="producto-nombre">
 
-                                        <?php
+                <?php
                                             echo htmlspecialchars(
                                                 $producto["Nombre"]
                                             );
                                         ?>
 
-                                    </h2>
+              </h2>
 
-                                    <p class="producto-precio">
+              <p class="producto-precio">
 
-                                        ₡<?php
+                ₡<?php
                                             echo number_format(
                                                 $producto["PrecioUnitario"],
                                                 2,
@@ -258,58 +233,47 @@ $totalActual = isset($totalCarrito["Total"])
                                             );
                                         ?>
 
-                                    </p>
+              </p>
 
-                                    <p>
-                                        Stock disponible:
-                                        <?php echo $stock; ?>
-                                    </p>
+              <p>
+                Stock disponible:
+                <?php echo $stock; ?>
+              </p>
 
-                                </div>
+            </div>
 
-                                <div class="col-md-4">
+            <div class="col-md-4">
 
-                                    <label class="form-label">
-                                        Cantidad
-                                    </label>
+              <label class="form-label">
+                Cantidad
+              </label>
 
-                                    <input
-                                        type="number"
-                                        class="form-control cantidad-carrito"
-                                        id="cantidad_<?php echo $idProducto; ?>"
-                                        value="<?php echo $cantidad; ?>"
-                                        min="1"
-                                        max="<?php echo $stock; ?>">
+              <input type="number" class="form-control cantidad-carrito" id="cantidad_<?php echo $idProducto; ?>"
+                value="<?php echo $cantidad; ?>" min="1" max="<?php echo $stock; ?>">
 
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary mt-2 btn-modificar"
-                                        data-producto="<?php
+              <button type="button" class="btn btn-primary mt-2 btn-modificar" data-producto="<?php
                                             echo $idProducto;
                                         ?>">
 
-                                        Actualizar
+                Actualizar
 
-                                    </button>
+              </button>
 
-                                    <button
-                                        type="button"
-                                        class="btn btn-danger mt-2 btn-eliminar"
-                                        data-producto="<?php
+              <button type="button" class="btn btn-danger mt-2 btn-eliminar" data-producto="<?php
                                             echo $idProducto;
                                         ?>">
 
-                                        Eliminar
+                Eliminar
 
-                                    </button>
+              </button>
 
-                                    <p class="mt-3 mb-0">
+              <p class="mt-3 mb-0">
 
-                                        Subtotal:
+                Subtotal:
 
-                                        <strong>
+                <strong>
 
-                                            ₡<?php
+                  ₡<?php
                                                 echo number_format(
                                                     $producto["Subtotal"],
                                                     2,
@@ -318,35 +282,35 @@ $totalActual = isset($totalCarrito["Total"])
                                                 );
                                             ?>
 
-                                        </strong>
+                </strong>
 
-                                    </p>
+              </p>
 
-                                </div>
+            </div>
 
-                            </div>
+          </div>
 
-                        </div>
+        </div>
 
-                    <?php endforeach; ?>
+        <?php endforeach; ?>
 
-                </div>
+      </div>
 
-                <div class="col-lg-4">
+      <div class="col-lg-4">
 
-                    <div class="resumen-carrito">
+        <div class="resumen-carrito">
 
-                        <h3>Resumen</h3>
+          <h3>Resumen</h3>
 
-                        <hr>
+          <hr>
 
-                        <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between">
 
-                            <span>Total:</span>
+            <span>Total:</span>
 
-                            <span class="total-carrito">
+            <span class="total-carrito">
 
-                                ₡<?php
+              ₡<?php
                                     echo number_format(
                                         $totalActual,
                                         2,
@@ -355,43 +319,37 @@ $totalActual = isset($totalCarrito["Total"])
                                     );
                                 ?>
 
-                            </span>
+            </span>
 
-                        </div>
+          </div>
 
-                        <button
-                            type="button"
-                            id="btnVaciarCarrito"
-                            class="btn btn-outline-danger w-100 mt-4">
+          <button type="button" id="btnVaciarCarrito" class="btn btn-outline-danger w-100 mt-4">
 
-                            Vaciar carrito
+            Vaciar carrito
 
-                        </button>
+          </button>
 
-                        <button
-    type="button"
-    id="btnConfirmarCompra"
-    class="btn btn-dark w-100 mt-2">
+          <button type="button" id="btnConfirmarCompra" class="btn btn-dark w-100 mt-2">
 
-    <i class="fa-solid fa-check"></i>
+            <i class="fa-solid fa-check"></i>
 
-    Confirmar compra
+            Confirmar compra
 
-</button>
+          </button>
 
-                    </div>
+        </div>
 
-                </div>
+      </div>
 
-            </div>
+    </div>
 
-        <?php endif; ?>
+    <?php endif; ?>
 
-    </main>
+  </main>
 
-    <script src="../js/jquery-1.11.0.min.js"></script>
+  <script src="../js/jquery-1.11.0.min.js"></script>
 
-    <script src="../js/carritoVista.js"></script>
+  <script src="../js/carritoVista.js"></script>
 
 </body>
 

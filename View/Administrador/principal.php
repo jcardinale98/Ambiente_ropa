@@ -13,103 +13,88 @@ RequerirRol("Administrador");
 
 <head>
 
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Panel administrativo</title>
+  <title>Panel administrativo</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 
 <body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-dark">
+  <nav class="navbar navbar-dark bg-dark">
 
-        <div class="container">
+    <div class="container">
 
-            <span class="navbar-brand">
-                Administración de la tienda
-            </span>
+      <span class="navbar-brand">
+        Administración de la tienda
+      </span>
 
-            <a
-                class="btn btn-outline-light"
-                href="/Ambiente_ropa/Controller/CerrarSessionController.php"
-            >
-                Cerrar sesión
-            </a>
+      <a class="btn btn-outline-light" href="/Ambiente_ropa/Controller/CerrarSessionController.php">
+        Cerrar sesión
+      </a>
 
-        </div>
+    </div>
 
-    </nav>
+  </nav>
 
-    <main class="container py-5">
+  <main class="container py-5">
 
-        <div class="card shadow">
+    <div class="card shadow">
 
-            <div class="card-body p-5">
+      <div class="card-body p-5">
 
-                <h1>Panel administrativo</h1>
+        <h1>Panel administrativo</h1>
 
-                <p class="lead">
+        <p class="lead">
 
-                    Bienvenido,
+          Bienvenido,
 
-                    <strong>
-                        <?= htmlspecialchars(
+          <strong>
+            <?= htmlspecialchars(
                             $_SESSION["NombreUsuario"]
                         ) ?>
-                    </strong>
+          </strong>
 
-                </p>
+        </p>
 
-                <p>
+        <p>
 
-                    Rol actual:
+          Rol actual:
 
-                    <strong>
-                        <?= htmlspecialchars(
+          <strong>
+            <?= htmlspecialchars(
                             $_SESSION["RolUsuario"]
                         ) ?>
-                    </strong>
+          </strong>
 
-                </p>
+        </p>
 
-                <p>
-                    Desde este panel puede administrar la información
-                    de la tienda.
-                </p>
+        <p>
+          Desde este panel puede administrar la información
+          de la tienda.
+        </p>
 
-                <div class="d-flex flex-wrap gap-3">
+        <div class="d-flex flex-wrap gap-3">
 
-                    <a
-                        class="btn btn-dark"
-                        href="/Ambiente_ropa/View/Administrador/Roles.php"
-                    >
-                        Gestionar roles
-                    </a>
+          <a class="btn btn-dark" href="/Ambiente_ropa/View/Administrador/Roles.php">
+            Gestionar roles
+          </a>
 
-                    <a
-                        class="btn btn-outline-dark"
-                        href="/AMBIENTE_ROPA/View/Administrador/AdminProductos.php"
-                    >
-                        Gestionar productos
-                    </a>
-
-                </div>
-
-            </div>
+          <a class="btn btn-outline-dark" href="/AMBIENTE_ROPA/View/Administrador/AdminProductos.php">
+            Gestionar productos
+          </a>
 
         </div>
 
-    </main>
+      </div>
+
+    </div>
+
+  </main>
 
 </body>
 

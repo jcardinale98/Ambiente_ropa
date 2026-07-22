@@ -5,11 +5,8 @@ if (session_status() == PHP_SESSION_NONE)
     session_start();
 }
 
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/InicioModel.php';
-
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/UtilitarioModel.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/InicioModel.php';
+include_once $_SERVER['DOCUMENT_ROOT']. '/Ambiente_ropa/Model/UtilitarioModel.php';
 
 
 /*

@@ -3246,3 +3246,32 @@ section.categories .category-content a {
   margin: 0;
   padding: 0 18px;
 }
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu.show {
+  display: block !important;
+}
+
+.secondary-nav {
+  overflow: visible !important;
+}
+
+#header-wrap {
+  overflow: visible !important;
+}
+
+.cantidad-input {
+  width: 85px;
+}
+
+.mensaje-alerta {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  min-width: 320px;
+  display: none;
+}
