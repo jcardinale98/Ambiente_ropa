@@ -98,7 +98,7 @@ RequerirRol("Administrador");
 
                     <a
                         class="btn btn-outline-dark"
-                        href="/Ambiente_ropa/View/Administrador/productos.php"
+                        href="/AMBIENTE_ROPA/View/Administrador/AdminProductos.php"
                     >
                         Gestionar productos
                     </a>

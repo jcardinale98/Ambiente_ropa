@@ -187,9 +187,14 @@ $cantidadActual = isset(
 
     <header class="encabezado">
 
-        <h1 class="titulo-productos">
-            Nuestros productos
-        </h1>
+        <a
+            href="Principal.php"
+            class="text-decoration-none text-dark"
+        >
+            <h1 class="titulo-productos">
+                Nuestros productos
+            </h1>
+        </a>
 
         <a
             href="Carrito.php"
