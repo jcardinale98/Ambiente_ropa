@@ -6,6 +6,7 @@ USE `bdproyecto`;
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.32-MariaDB
 
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -1298,8 +1299,8 @@ DELIMITER $$
 
 CREATE PROCEDURE spIniciarSesionUsuario
 (
-    pIdentificacionCorreo VARCHAR(100),
-    pContrasenna          VARCHAR(10)
+    IN pIdentificacionCorreo VARCHAR(100),
+    IN pContrasenna VARCHAR(100)
 )
 BEGIN
 
@@ -1313,20 +1314,25 @@ BEGIN
         R.Consecutivo AS ConsecutivoRol,
         R.Rol
     FROM tb_usuario U
+
     INNER JOIN tb_usuario_rol UR
         ON U.Consecutivo = UR.ConsecutivoUsuario
+
     INNER JOIN tb_rol R
         ON UR.ConsecutivoRol = R.Consecutivo
+
     WHERE
-        (
-            U.Identificacion = pIdentificacionCorreo
-            OR U.CorreoElectronico = pIdentificacionCorreo
-        )
-        AND U.Contrasenna = pContrasenna
-        AND U.Estado = 1
+    (
+        U.Identificacion = pIdentificacionCorreo
+        OR U.CorreoElectronico = pIdentificacionCorreo
+    )
+    AND U.Contrasenna = pContrasenna
+    AND U.Estado = 1
+
     LIMIT 1;
 
-END$$
+END $$
+
 
 
 DELIMITER ;
@@ -1649,3 +1655,243 @@ FROM tb_usuario;
 -- contrasennas
 SELECT *
 FROM tb_usuario;
+
+
+
+-- Administrador, apartado
+
+USE bdproyecto;
+
+DELIMITER $$
+
+
+DROP PROCEDURE IF EXISTS spAdminConsultarProductos $$
+
+CREATE PROCEDURE spAdminConsultarProductos()
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        RutaImagen,
+        Estado
+    FROM tb_producto
+    ORDER BY Consecutivo DESC;
+
+END $$
+
+
+DROP PROCEDURE IF EXISTS spAdminRegistrarProducto $$
+
+CREATE PROCEDURE spAdminRegistrarProducto
+(
+    IN pNombre VARCHAR(80),
+    IN pDescripcion TEXT,
+    IN pPrecio DECIMAL(10,2),
+    IN pStock INT,
+    IN pRutaImagen VARCHAR(1024),
+    IN pEstado INT
+)
+BEGIN
+
+    IF TRIM(pNombre) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe indicar el nombre del producto.' AS Mensaje;
+
+    ELSEIF pPrecio <= 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El precio debe ser mayor que cero.' AS Mensaje;
+
+    ELSEIF pStock < 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El stock no puede ser negativo.' AS Mensaje;
+
+    ELSE
+
+        INSERT INTO tb_producto
+        (
+            Nombre,
+            Descripcion,
+            Precio,
+            Stock,
+            RutaImagen,
+            Estado
+        )
+        VALUES
+        (
+            TRIM(pNombre),
+            NULLIF(TRIM(pDescripcion), ''),
+            pPrecio,
+            pStock,
+            pRutaImagen,
+            pEstado
+        );
+
+        SELECT
+            1 AS Resultado,
+            'El producto se registró correctamente.' AS Mensaje;
+
+    END IF;
+
+END $$
+
+
+DROP PROCEDURE IF EXISTS spAdminActualizarProducto $$
+
+DELIMITER $$
+
+CREATE PROCEDURE spAdminActualizarProducto
+(
+    IN pConsecutivo INT,
+    IN pNombre VARCHAR(80),
+    IN pDescripcion TEXT,
+    IN pPrecio DECIMAL(10,2),
+    IN pStock INT,
+    IN pRutaImagen VARCHAR(1024),
+    IN pEstado INT
+)
+BEGIN
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_producto
+        WHERE Consecutivo = pConsecutivo
+    ) THEN
+
+        SELECT
+            0 AS Resultado,
+            'El producto indicado no existe.' AS Mensaje;
+
+    ELSEIF pNombre IS NULL
+        OR TRIM(pNombre) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe indicar el nombre del producto.' AS Mensaje;
+
+    ELSEIF pPrecio <= 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El precio debe ser mayor que cero.' AS Mensaje;
+
+    ELSEIF pStock < 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El stock no puede ser negativo.' AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_producto
+        SET
+            Nombre = TRIM(pNombre),
+            Descripcion = NULLIF(
+                TRIM(pDescripcion),
+                ''
+            ),
+            Precio = pPrecio,
+            Stock = pStock,
+            RutaImagen = CASE
+                WHEN pRutaImagen IS NULL
+                    OR TRIM(pRutaImagen) = ''
+                THEN RutaImagen
+                ELSE pRutaImagen
+            END,
+            Estado = pEstado
+        WHERE Consecutivo = pConsecutivo;
+
+        SELECT
+            1 AS Resultado,
+            'El producto se actualizó correctamente.'
+                AS Mensaje;
+
+    END IF;
+
+END $$
+
+
+
+DROP PROCEDURE IF EXISTS spAdminCambiarEstadoProducto $$
+
+CREATE PROCEDURE spAdminCambiarEstadoProducto
+(
+    IN pConsecutivo INT,
+    IN pEstado INT
+)
+BEGIN
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_producto
+        WHERE Consecutivo = pConsecutivo
+    ) THEN
+
+        SELECT
+            0 AS Resultado,
+            'El producto indicado no existe.' AS Mensaje;
+
+    ELSEIF pEstado NOT IN (0, 1) THEN
+
+        SELECT
+            0 AS Resultado,
+            'El estado indicado no es válido.' AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_producto
+        SET Estado = pEstado
+        WHERE Consecutivo = pConsecutivo;
+
+        SELECT
+            1 AS Resultado,
+            CASE
+                WHEN pEstado = 1
+                    THEN 'El producto fue activado correctamente.'
+                ELSE 'El producto fue desactivado correctamente.'
+            END AS Mensaje;
+
+    END IF;
+
+END $$
+
+
+DELIMITER ;
+
+
+-- Prueba de consulta:
+CALL spAdminConsultarProductos();
+
+
+CALL spAdminActualizarProducto
+(
+    5,
+    'Short actualizado',
+    'Short cómodo actualizado desde phpMyAdmin.',
+    9500.00,
+    12,
+    NULL,
+    1
+);
+
+SELECT
+    Consecutivo,
+    Nombre,
+    Descripcion,
+    Precio,
+    Stock,
+    RutaImagen,
+    Estado
+FROM tb_producto
+WHERE Consecutivo = 5;
