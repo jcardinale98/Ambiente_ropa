@@ -85,6 +85,56 @@ CREATE TABLE `tb_producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+-- insert
+USE bdproyecto;
+
+INSERT INTO tb_producto
+(
+    Nombre,
+    Descripcion,
+    Precio,
+    Stock,
+    RutaImagen,
+    Estado
+)
+VALUES
+(
+    'Camiseta Negra',
+    'Camiseta negra de algodón para uso casual.',
+    12000.00,
+    15,
+    '../images/camiseta-negra.jpg',
+    1
+),
+(
+    'Pantalón Azul',
+    'Pantalón azul de corte moderno.',
+    18500.00,
+    10,
+    '../images/pantalon-azul.jpg',
+    1
+),
+(
+    'Sudadera Gris',
+    'Sudadera gris cómoda para clima frío.',
+    22000.00,
+    8,
+    '../images/sudadera-gris.jpg',
+    1
+),
+(
+    'Gorra Negra',
+    'Gorra negra ajustable.',
+    7500.00,
+    20,
+    '../images/gorra-negra.jpg',
+    1
+);
+
+SELECT *
+FROM tb_producto;
+
+
 --
 -- Dumping data for table `tb_producto`
 --
@@ -93,6 +143,908 @@ LOCK TABLES `tb_producto` WRITE;
 /*!40000 ALTER TABLE `tb_producto` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tb_producto` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Dumping structure for table `tb_carrito`
+--
+
+USE bdproyecto;
+
+CREATE TABLE tb_carrito
+(
+    Consecutivo INT NOT NULL AUTO_INCREMENT,
+    ConsecutivoUsuario INT NOT NULL,
+    FechaCreacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FechaModificacion TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+    Estado VARCHAR(20) NOT NULL DEFAULT 'Activo',
+
+    PRIMARY KEY (Consecutivo),
+
+    CONSTRAINT FK_tb_carrito_usuario
+        FOREIGN KEY (ConsecutivoUsuario)
+        REFERENCES tb_usuario (Consecutivo)
+);
+
+--
+-- Dumping structure for table `tb_carrito`
+--
+
+CREATE TABLE tb_carrito_detalle
+(
+    Consecutivo INT NOT NULL AUTO_INCREMENT,
+    ConsecutivoCarrito INT NOT NULL,
+    ConsecutivoProducto INT NOT NULL,
+    Cantidad INT NOT NULL,
+    PrecioUnitario DECIMAL(10,2) NOT NULL,
+    FechaCreacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FechaModificacion TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (Consecutivo),
+
+    CONSTRAINT UK_tb_carrito_producto
+        UNIQUE (ConsecutivoCarrito, ConsecutivoProducto),
+
+    CONSTRAINT FK_tb_carrito_detalle_carrito
+        FOREIGN KEY (ConsecutivoCarrito)
+        REFERENCES tb_carrito (Consecutivo),
+
+    CONSTRAINT FK_tb_carrito_detalle_producto
+        FOREIGN KEY (ConsecutivoProducto)
+        REFERENCES tb_producto (Consecutivo),
+
+    CONSTRAINT CK_tb_carrito_detalle_cantidad
+        CHECK (Cantidad > 0)
+);
+
+
+--
+-- PROCEDURE `spConsultarProductosDisponibles`
+--
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS spConsultarProductosDisponibles $$
+
+CREATE PROCEDURE spConsultarProductosDisponibles()
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        RutaImagen
+    FROM tb_producto
+    WHERE Estado = 1
+      AND Stock > 0
+    ORDER BY Nombre;
+
+END $$
+
+DELIMITER ;
+
+CALL spConsultarProductosDisponibles();
+
+--
+-- PROCEDURE `spObtenerCarritoActivo`
+--
+
+DROP PROCEDURE IF EXISTS spObtenerCarritoActivo $$
+
+DELIMITER $$
+CREATE PROCEDURE spObtenerCarritoActivo
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        INSERT INTO tb_carrito
+        (
+            ConsecutivoUsuario,
+            Estado
+        )
+        VALUES
+        (
+            pConsecutivoUsuario,
+            'Activo'
+        );
+
+        SET vConsecutivoCarrito = LAST_INSERT_ID();
+
+    END IF;
+
+    SELECT vConsecutivoCarrito AS ConsecutivoCarrito;
+
+END $$
+
+DELIMITER ;
+
+CALL spObtenerCarritoActivo(12);
+
+--
+-- PROCEDURE `spAgregarProductoCarrito`
+--
+
+DROP PROCEDURE IF EXISTS spAgregarProductoCarrito $$
+
+DELIMITER $$
+
+CREATE PROCEDURE spAgregarProductoCarrito
+(
+    IN pConsecutivoUsuario INT,
+    IN pConsecutivoProducto INT,
+    IN pCantidad INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vStock INT DEFAULT 0;
+    DECLARE vPrecio DECIMAL(10,2) DEFAULT 0;
+    DECLARE vCantidadActual INT DEFAULT 0;
+    DECLARE vNuevaCantidad INT DEFAULT 0;
+
+    SELECT
+        Stock,
+        Precio
+    INTO
+        vStock,
+        vPrecio
+    FROM tb_producto
+    WHERE Consecutivo = pConsecutivoProducto
+      AND Estado = 1;
+
+    IF pCantidad <= 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'La cantidad debe ser mayor que cero.' AS Mensaje;
+
+    ELSEIF vStock <= 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El producto no se encuentra disponible.' AS Mensaje;
+
+    ELSE
+
+        SELECT MAX(Consecutivo)
+        INTO vConsecutivoCarrito
+        FROM tb_carrito
+        WHERE ConsecutivoUsuario = pConsecutivoUsuario
+          AND Estado = 'Activo';
+
+        IF vConsecutivoCarrito IS NULL THEN
+
+            INSERT INTO tb_carrito
+            (
+                ConsecutivoUsuario,
+                Estado
+            )
+            VALUES
+            (
+                pConsecutivoUsuario,
+                'Activo'
+            );
+
+            SET vConsecutivoCarrito = LAST_INSERT_ID();
+
+        END IF;
+
+        SELECT IFNULL(MAX(Cantidad), 0)
+        INTO vCantidadActual
+        FROM tb_carrito_detalle
+        WHERE ConsecutivoCarrito = vConsecutivoCarrito
+          AND ConsecutivoProducto = pConsecutivoProducto;
+
+        SET vNuevaCantidad = vCantidadActual + pCantidad;
+
+        IF vNuevaCantidad > vStock THEN
+
+            SELECT
+                0 AS Resultado,
+                CONCAT(
+                    'La cantidad solicitada supera el stock disponible. Stock actual: ',
+                    vStock
+                ) AS Mensaje;
+
+        ELSE
+
+            IF vCantidadActual = 0 THEN
+
+                INSERT INTO tb_carrito_detalle
+                (
+                    ConsecutivoCarrito,
+                    ConsecutivoProducto,
+                    Cantidad,
+                    PrecioUnitario
+                )
+                VALUES
+                (
+                    vConsecutivoCarrito,
+                    pConsecutivoProducto,
+                    pCantidad,
+                    vPrecio
+                );
+
+            ELSE
+
+                UPDATE tb_carrito_detalle
+                SET
+                    Cantidad = vNuevaCantidad,
+                    PrecioUnitario = vPrecio
+                WHERE ConsecutivoCarrito = vConsecutivoCarrito
+                  AND ConsecutivoProducto = pConsecutivoProducto;
+
+            END IF;
+
+            SELECT
+                1 AS Resultado,
+                'El producto se agregó correctamente al carrito.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+
+-- probar la función de agregar
+
+SELECT
+    Consecutivo,
+    Nombre,
+    Precio,
+    Stock
+FROM tb_producto;
+
+CALL spAgregarProductoCarrito(12, 1, 2);
+
+SELECT *
+FROM tb_carrito_detalle;
+
+CALL spAgregarProductoCarrito(12, 1, 100);
+
+
+--
+-- PROCEDURE `spConsultarCarrito `
+--
+
+DROP PROCEDURE IF EXISTS spConsultarCarrito $$
+
+DELIMITER $$
+CREATE PROCEDURE spConsultarCarrito
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    SELECT
+        CD.Consecutivo,
+        CD.ConsecutivoProducto,
+        P.Nombre,
+        P.Descripcion,
+        P.RutaImagen,
+        CD.Cantidad,
+        CD.PrecioUnitario,
+        P.Stock,
+        CD.Cantidad * CD.PrecioUnitario AS Subtotal
+    FROM tb_carrito C
+    INNER JOIN tb_carrito_detalle CD
+        ON C.Consecutivo = CD.ConsecutivoCarrito
+    INNER JOIN tb_producto P
+        ON CD.ConsecutivoProducto = P.Consecutivo
+    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
+      AND C.Estado = 'Activo'
+    ORDER BY CD.FechaCreacion DESC;
+
+END $$
+
+DELIMITER ;
+
+CALL spConsultarCarrito(12);
+
+
+--
+-- PROCEDURE `spConsultarTotalCarrito `
+--
+
+
+DROP PROCEDURE IF EXISTS spConsultarTotalCarrito $$
+
+DELIMITER $$
+CREATE PROCEDURE spConsultarTotalCarrito
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    SELECT
+        IFNULL(
+            SUM(CD.Cantidad * CD.PrecioUnitario),
+            0
+        ) AS Total
+    FROM tb_carrito C
+    INNER JOIN tb_carrito_detalle CD
+        ON C.Consecutivo = CD.ConsecutivoCarrito
+    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
+      AND C.Estado = 'Activo';
+
+END $$
+
+DELIMITER ;
+
+
+--
+-- PROCEDURE `spModificarCantidadCarrito `
+--
+
+DROP PROCEDURE IF EXISTS spModificarCantidadCarrito $$
+
+DELIMITER $$
+CREATE PROCEDURE spModificarCantidadCarrito
+(
+    IN pConsecutivoUsuario INT,
+    IN pConsecutivoProducto INT,
+    IN pNuevaCantidad INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vConsecutivoDetalle INT DEFAULT NULL;
+    DECLARE vStock INT DEFAULT 0;
+
+    -- Buscar el carrito activo del usuario
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    -- Consultar el stock disponible del producto
+    SELECT IFNULL(MAX(Stock), 0)
+    INTO vStock
+    FROM tb_producto
+    WHERE Consecutivo = pConsecutivoProducto
+      AND Estado = 1;
+
+    -- Buscar el producto dentro del carrito
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoDetalle
+    FROM tb_carrito_detalle
+    WHERE ConsecutivoCarrito = vConsecutivoCarrito
+      AND ConsecutivoProducto = pConsecutivoProducto;
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no tiene un carrito activo.' AS Mensaje;
+
+    ELSEIF vConsecutivoDetalle IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El producto no se encuentra en el carrito.' AS Mensaje;
+
+    ELSEIF pNuevaCantidad <= 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'La cantidad debe ser mayor que cero.' AS Mensaje;
+
+    ELSEIF pNuevaCantidad > vStock THEN
+
+        SELECT
+            0 AS Resultado,
+            CONCAT(
+                'La cantidad solicitada supera el stock disponible. Stock actual: ',
+                vStock
+            ) AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_carrito_detalle
+        SET Cantidad = pNuevaCantidad
+        WHERE Consecutivo = vConsecutivoDetalle;
+
+        SELECT
+            1 AS Resultado,
+            'La cantidad se modificó correctamente.' AS Mensaje;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+CALL spConsultarCarrito(12);
+
+CALL spModificarCantidadCarrito(12, 1, 4);
+
+CALL spModificarCantidadCarrito(12, 1, 100);
+
+
+
+--
+-- PROCEDURE `spEliminarProductoCarrito `
+--
+
+DROP PROCEDURE IF EXISTS spEliminarProductoCarrito $$
+
+DELIMITER $$
+CREATE PROCEDURE spEliminarProductoCarrito
+(
+    IN pConsecutivoUsuario INT,
+    IN pConsecutivoProducto INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vConsecutivoDetalle INT DEFAULT NULL;
+
+    -- Buscar el carrito activo
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    -- Buscar el producto dentro del carrito
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoDetalle
+    FROM tb_carrito_detalle
+    WHERE ConsecutivoCarrito = vConsecutivoCarrito
+      AND ConsecutivoProducto = pConsecutivoProducto;
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no tiene un carrito activo.' AS Mensaje;
+
+    ELSEIF vConsecutivoDetalle IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El producto no se encuentra en el carrito.' AS Mensaje;
+
+    ELSE
+
+        DELETE FROM tb_carrito_detalle
+        WHERE Consecutivo = vConsecutivoDetalle;
+
+        SELECT
+            1 AS Resultado,
+            'El producto se eliminó correctamente del carrito.' AS Mensaje;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+CALL spAgregarProductoCarrito(12, 2, 2);
+
+CALL spConsultarCarrito(12);
+
+CALL spEliminarProductoCarrito(12, 2);
+
+
+
+--
+-- PROCEDURE `spVaciarCarrito `
+--
+
+
+
+DROP PROCEDURE IF EXISTS spVaciarCarrito $$
+
+DELIMITER $$
+CREATE PROCEDURE spVaciarCarrito
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vCantidadProductos INT DEFAULT 0;
+
+    -- Buscar el carrito activo
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no tiene un carrito activo.' AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vCantidadProductos
+        FROM tb_carrito_detalle
+        WHERE ConsecutivoCarrito = vConsecutivoCarrito;
+
+        IF vCantidadProductos = 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'El carrito ya se encuentra vacío.' AS Mensaje;
+
+        ELSE
+
+            DELETE FROM tb_carrito_detalle
+            WHERE ConsecutivoCarrito = vConsecutivoCarrito;
+
+            SELECT
+                1 AS Resultado,
+                'El carrito se vació correctamente.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+
+CALL spAgregarProductoCarrito(12, 1, 2);
+
+CALL spAgregarProductoCarrito(12, 2, 1);
+
+CALL spAgregarProductoCarrito(12, 3, 2);
+
+CALL spConsultarCarrito(12);
+
+CALL spVaciarCarrito(12);
+
+
+--
+-- PROCEDURE `spConsultarCantidadCarrito `
+--
+
+DROP PROCEDURE IF EXISTS spConsultarCantidadCarrito $$
+
+DELIMITER $$
+CREATE PROCEDURE spConsultarCantidadCarrito
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    SELECT
+        IFNULL(SUM(CD.Cantidad), 0) AS CantidadProductos
+    FROM tb_carrito C
+    INNER JOIN tb_carrito_detalle CD
+        ON C.Consecutivo = CD.ConsecutivoCarrito
+    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
+      AND C.Estado = 'Activo';
+
+END $$
+
+DELIMITER ;
+
+CALL spAgregarProductoCarrito(12, 1, 2);
+
+CALL spAgregarProductoCarrito(12, 2, 3);
+
+CALL spConsultarCantidadCarrito(12);
+
+
+
+--
+-- PROCEDURE `spConsultarProductoPorId `
+--
+
+
+DROP PROCEDURE IF EXISTS spConsultarProductoPorId $$
+
+DELIMITER $$
+CREATE PROCEDURE spConsultarProductoPorId
+(
+    IN pConsecutivoProducto INT
+)
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        RutaImagen,
+        Estado
+    FROM tb_producto
+    WHERE Consecutivo = pConsecutivoProducto
+      AND Estado = 1;
+
+END $$
+
+DELIMITER ;
+
+CALL spConsultarProductoPorId(1);
+
+SELECT *
+FROM tb_carrito;
+
+SELECT *
+FROM tb_carrito_detalle;
+
+
+--
+-- PROCEDURE `spConfirmarCompra `
+--
+
+DROP PROCEDURE IF EXISTS spConfirmarCompra $$
+
+DELIMITER $$
+CREATE PROCEDURE spConfirmarCompra
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vCantidadRegistros INT DEFAULT 0;
+    DECLARE vProductosSinStock INT DEFAULT 0;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+
+        SELECT
+            0 AS Resultado,
+            'Ocurrió un error al confirmar la compra.' AS Mensaje;
+    END;
+
+    START TRANSACTION;
+
+    -- Buscar el carrito activo del usuario
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        ROLLBACK;
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no tiene un carrito activo.' AS Mensaje;
+
+    ELSE
+
+        -- Verificar que el carrito tenga productos
+        SELECT COUNT(*)
+        INTO vCantidadRegistros
+        FROM tb_carrito_detalle
+        WHERE ConsecutivoCarrito = vConsecutivoCarrito;
+
+        IF vCantidadRegistros = 0 THEN
+
+            ROLLBACK;
+
+            SELECT
+                0 AS Resultado,
+                'El carrito se encuentra vacío.' AS Mensaje;
+
+        ELSE
+
+            -- Validar nuevamente el inventario
+            SELECT COUNT(*)
+            INTO vProductosSinStock
+            FROM tb_carrito_detalle CD
+            INNER JOIN tb_producto P
+                ON CD.ConsecutivoProducto = P.Consecutivo
+            WHERE CD.ConsecutivoCarrito = vConsecutivoCarrito
+              AND
+              (
+                  P.Estado <> 1
+                  OR CD.Cantidad > P.Stock
+              );
+
+            IF vProductosSinStock > 0 THEN
+
+                ROLLBACK;
+
+                SELECT
+                    0 AS Resultado,
+                    'Uno o más productos ya no tienen suficiente inventario.' AS Mensaje;
+
+            ELSE
+
+                -- Descontar las cantidades compradas
+                UPDATE tb_producto P
+                INNER JOIN tb_carrito_detalle CD
+                    ON P.Consecutivo = CD.ConsecutivoProducto
+                SET P.Stock = P.Stock - CD.Cantidad
+                WHERE CD.ConsecutivoCarrito = vConsecutivoCarrito;
+
+                -- Finalizar el carrito
+                UPDATE tb_carrito
+                SET
+                    Estado = 'Comprado',
+                    FechaModificacion = CURRENT_TIMESTAMP
+                WHERE Consecutivo = vConsecutivoCarrito;
+
+                COMMIT;
+
+                SELECT
+                    1 AS Resultado,
+                    'La compra se confirmó correctamente.' AS Mensaje;
+
+            END IF;
+
+        END IF;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+--
+-- PROCEDURE `spConsultarPerfilUsuario`
+--
+
+USE bdproyecto;
+
+DROP PROCEDURE IF EXISTS spConsultarPerfilUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spConsultarPerfilUsuario
+(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Identificacion,
+        Nombre,
+        CorreoElectronico,
+        RutaImagen,
+        Estado
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
+
+END $$
+
+DELIMITER ;
+
+CALL spConsultarPerfilUsuario(5);
+
+
+--
+-- PROCEDURE `spActualizarPerfilUsuario`
+--
+
+USE bdproyecto;
+
+DROP PROCEDURE IF EXISTS spActualizarPerfilUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spActualizarPerfilUsuario
+(
+    IN pConsecutivoUsuario INT,
+    IN pNombre VARCHAR(250),
+    IN pCorreoElectronico VARCHAR(100)
+)
+BEGIN
+
+    DECLARE vUsuarioExiste INT DEFAULT 0;
+    DECLARE vCorreoDuplicado INT DEFAULT 0;
+
+    SELECT COUNT(*)
+    INTO vUsuarioExiste
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
+
+    IF vUsuarioExiste = 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
+
+    ELSEIF pNombre IS NULL
+        OR TRIM(pNombre) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar el nombre.' AS Mensaje;
+
+    ELSEIF pCorreoElectronico IS NULL
+        OR TRIM(pCorreoElectronico) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar el correo electrónico.' AS Mensaje;
+
+    ELSEIF pCorreoElectronico NOT LIKE '%_@_%._%' THEN
+
+        SELECT
+            0 AS Resultado,
+            'El formato del correo electrónico no es válido.' AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vCorreoDuplicado
+        FROM tb_usuario
+        WHERE CorreoElectronico = TRIM(pCorreoElectronico)
+          AND Consecutivo <> pConsecutivoUsuario;
+
+        IF vCorreoDuplicado > 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'El correo electrónico ya está registrado por otro usuario.'
+                    AS Mensaje;
+
+        ELSE
+
+            UPDATE tb_usuario
+            SET
+                Nombre = TRIM(pNombre),
+                CorreoElectronico = TRIM(pCorreoElectronico)
+            WHERE Consecutivo = pConsecutivoUsuario
+              AND Estado = 1;
+
+            SELECT
+                1 AS Resultado,
+                'El perfil se actualizó correctamente.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+CALL spActualizarPerfilUsuario
+(
+    5,
+    'EDUARDO JOSE CALVO',
+    'ecalvo90415@ufide.ac.cr'
+);
+
+
+
+
+
+
+
+
 
 --
 -- Table structure for table `tb_rol`
@@ -225,19 +1177,107 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spActualizarContrasenna`(
-	pConsecutivo 	int, 
-    pContrasenna	varchar(10)
+USE bdproyecto;
+
+DROP PROCEDURE IF EXISTS spActualizarContrasenna;
+
+DELIMITER $$
+
+CREATE PROCEDURE spActualizarContrasenna
+(
+    IN pConsecutivoUsuario INT,
+    IN pContrasennaActual VARCHAR(100),
+    IN pNuevaContrasenna VARCHAR(100)
 )
 BEGIN
 
-	UPDATE 	tb_usuario
-	SET		Contrasenna = pContrasenna
-	WHERE 	Consecutivo = pConsecutivo;
+    DECLARE vUsuarioExiste INT DEFAULT 0;
+    DECLARE vContrasennaCorrecta INT DEFAULT 0;
 
-END ;;
+    SELECT COUNT(*)
+    INTO vUsuarioExiste
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
+
+    IF vUsuarioExiste = 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
+
+    ELSEIF pContrasennaActual IS NULL
+        OR TRIM(pContrasennaActual) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar la contraseña actual.' AS Mensaje;
+
+    ELSEIF pNuevaContrasenna IS NULL
+        OR TRIM(pNuevaContrasenna) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar la nueva contraseña.' AS Mensaje;
+
+    ELSEIF CHAR_LENGTH(pNuevaContrasenna) < 5 THEN
+
+        SELECT
+            0 AS Resultado,
+            'La nueva contraseña debe tener al menos 5 caracteres.'
+                AS Mensaje;
+
+    ELSEIF pContrasennaActual = pNuevaContrasenna THEN
+
+        SELECT
+            0 AS Resultado,
+            'La nueva contraseña debe ser diferente a la actual.'
+                AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vContrasennaCorrecta
+        FROM tb_usuario
+        WHERE Consecutivo = pConsecutivoUsuario
+          AND Contrasenna = pContrasennaActual
+          AND Estado = 1;
+
+        IF vContrasennaCorrecta = 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'La contraseña actual es incorrecta.' AS Mensaje;
+
+        ELSE
+
+            UPDATE tb_usuario
+            SET Contrasenna = pNuevaContrasenna
+            WHERE Consecutivo = pConsecutivoUsuario
+              AND Estado = 1;
+
+            SELECT
+                1 AS Resultado,
+                'La contraseña se actualizó correctamente.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END $$
+
 DELIMITER ;
+
+-- actializar la contrasenna nueva
+CALL spActualizarContrasenna
+(
+    5,
+    '1111111111',
+    'Nueva123'
+);
+
+
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -251,25 +1291,44 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spIniciarSesionUsuario`(
-	pIdentificacionCorreo 	varchar(100), 
-    pContrasenna			varchar(10)
+
+DROP PROCEDURE IF EXISTS spIniciarSesionUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spIniciarSesionUsuario
+(
+    pIdentificacionCorreo VARCHAR(100),
+    pContrasenna          VARCHAR(10)
 )
 BEGIN
 
-	SELECT 	Consecutivo,
-			Identificacion,
-			Nombre,
-			CorreoElectronico,
-			Estado
-	FROM 	tb_usuario
-    #WHERE	Identificacion = pIdentificacion
-	WHERE	(Identificacion = pIdentificacionCorreo OR CorreoElectronico = pIdentificacionCorreo)
-		AND Contrasenna = pContrasenna
-        AND Estado = 1;
+    SELECT
+        U.Consecutivo,
+        U.Identificacion,
+        U.Nombre,
+        U.CorreoElectronico,
+        U.RutaImagen,
+        U.Estado,
+        R.Consecutivo AS ConsecutivoRol,
+        R.Rol
+    FROM tb_usuario U
+    INNER JOIN tb_usuario_rol UR
+        ON U.Consecutivo = UR.ConsecutivoUsuario
+    INNER JOIN tb_rol R
+        ON UR.ConsecutivoRol = R.Consecutivo
+    WHERE
+        (
+            U.Identificacion = pIdentificacionCorreo
+            OR U.CorreoElectronico = pIdentificacionCorreo
+        )
+        AND U.Contrasenna = pContrasenna
+        AND U.Estado = 1
+    LIMIT 1;
 
-END ;;
+END$$
+
+
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -310,23 +1369,68 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spRegistrarUsuario`(
-	pIdentificacion 	varchar(15), 
-    pNombre				varchar(250), 
-    pCorreoElectronico	varchar(100), 
-    pContrasenna		varchar(10)
-    
+
+DROP PROCEDURE IF EXISTS spRegistrarUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spRegistrarUsuario
+(
+    pIdentificacion      VARCHAR(15),
+    pNombre              VARCHAR(250),
+    pCorreoElectronico   VARCHAR(100),
+    pContrasenna         VARCHAR(10)
 )
 BEGIN
 
-	INSERT INTO tb_usuario (Identificacion, Nombre, CorreoElectronico, Contrasenna, RutaImagen, Estado)
-	VALUES (pIdentificacion, pNombre, pCorreoElectronico, pContrasenna, null, 1);
-SET @ConsecutivoUsuario = LAST_INSERT_ID();
+    DECLARE vConsecutivoUsuario INT;
 
-    INSERT INTO tb_usuario_rol (ConsecutivoUsuario, ConsecutivoRol)
-    VALUES (@ConsecutivoUsuario, 1); -- Rol por defecto
-END ;;
+    START TRANSACTION;
+
+    INSERT INTO tb_usuario
+    (
+        Identificacion,
+        Nombre,
+        CorreoElectronico,
+        Contrasenna,
+        RutaImagen,
+        Estado
+    )
+    VALUES
+    (
+        pIdentificacion,
+        pNombre,
+        pCorreoElectronico,
+        pContrasenna,
+        NULL,
+        1
+    );
+
+    SET vConsecutivoUsuario = LAST_INSERT_ID();
+
+    INSERT INTO tb_usuario_rol
+    (
+        ConsecutivoUsuario,
+        ConsecutivoRol
+    )
+    VALUES
+    (
+        vConsecutivoUsuario,
+        1
+    );
+
+    COMMIT;
+
+    SELECT
+        1 AS Resultado,
+        'El usuario fue registrado correctamente como Cliente.' AS Mensaje;
+
+END$$
+
+DELIMITER ;
+
+
+
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -372,4 +1476,176 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-16  1:51:41
+
+-- Procedimiento para consultar usuarios y roles
+
+DROP PROCEDURE IF EXISTS spConsultarUsuariosRoles;
+
+DELIMITER $$
+
+CREATE PROCEDURE spConsultarUsuariosRoles()
+BEGIN
+
+    SELECT
+        U.Consecutivo,
+        U.Identificacion,
+        U.Nombre,
+        U.CorreoElectronico,
+        U.Estado,
+        R.Consecutivo AS ConsecutivoRol,
+        R.Rol
+    FROM tb_usuario U
+    INNER JOIN tb_usuario_rol UR
+        ON U.Consecutivo = UR.ConsecutivoUsuario
+    INNER JOIN tb_rol R
+        ON UR.ConsecutivoRol = R.Consecutivo
+    ORDER BY U.Nombre;
+
+END$$
+
+-- Procedimiento para modificar rol
+
+DROP PROCEDURE IF EXISTS spActualizarRolUsuario;
+
+DELIMITER $$
+
+CREATE PROCEDURE spActualizarRolUsuario
+(
+    pConsecutivoUsuario INT,
+    pConsecutivoRol     INT
+)
+BEGIN
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_usuario
+        WHERE Consecutivo = pConsecutivoUsuario
+    )
+    THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario indicado no existe.' AS Mensaje;
+
+    ELSEIF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_rol
+        WHERE Consecutivo = pConsecutivoRol
+    )
+    THEN
+
+        SELECT
+            0 AS Resultado,
+            'El rol indicado no existe.' AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_usuario_rol
+        SET
+            ConsecutivoRol = pConsecutivoRol,
+            FechaModificacion = CURRENT_TIMESTAMP
+        WHERE ConsecutivoUsuario = pConsecutivoUsuario;
+
+        IF ROW_COUNT() = 0 THEN
+
+            INSERT INTO tb_usuario_rol
+            (
+                ConsecutivoUsuario,
+                ConsecutivoRol
+            )
+            VALUES
+            (
+                pConsecutivoUsuario,
+                pConsecutivoRol
+            );
+
+        END IF;
+
+        SELECT
+            1 AS Resultado,
+            'El rol del usuario fue actualizado correctamente.' AS Mensaje;
+
+    END IF;
+
+END$$
+
+----------------------------------------------------------------------
+
+-- Asginar roles
+
+USE bdproyecto;
+
+UPDATE tb_rol
+SET Rol = 'Cliente'
+WHERE Consecutivo = 1;
+
+UPDATE tb_rol
+SET Rol = 'Administrador'
+WHERE Consecutivo = 2;
+
+-- Insert rol tabla
+
+INSERT INTO tb_usuario_rol
+(
+    ConsecutivoUsuario,
+    ConsecutivoRol
+)
+SELECT
+    U.Consecutivo,
+    1
+FROM tb_usuario U
+LEFT JOIN tb_usuario_rol UR
+    ON U.Consecutivo = UR.ConsecutivoUsuario
+WHERE UR.ConsecutivoUsuario IS NULL;
+
+
+-- Convertir usuario en administrador
+
+UPDATE tb_usuario_rol
+SET ConsecutivoRol = 2
+WHERE ConsecutivoUsuario =
+(
+    SELECT Consecutivo
+    FROM tb_usuario
+    WHERE CorreoElectronico = 'felipe@gmail.com'
+);
+
+-- Validaciones roles
+SELECT
+    U.Consecutivo,
+    U.Nombre,
+    U.CorreoElectronico,
+    R.Rol
+FROM tb_usuario U
+INNER JOIN tb_usuario_rol UR
+    ON U.Consecutivo = UR.ConsecutivoUsuario
+INNER JOIN tb_rol R
+    ON UR.ConsecutivoRol = R.Consecutivo;
+
+-- Para evitar que tengan 2 roles
+
+ALTER TABLE tb_usuario_rol
+ADD CONSTRAINT UQ_tb_usuario_rol_usuario
+UNIQUE (ConsecutivoUsuario);
+
+
+-- Procedimiento Almacenado Roles
+
+CALL spIniciarSesionUsuario(
+    'felipe@gmail.com',
+    '123456'
+);
+
+-- usuarios existentes
+SELECT
+    Consecutivo,
+    Nombre,
+    CorreoElectronico,
+    Estado
+FROM tb_usuario;
+
+-- contrasennas
+SELECT *
+FROM tb_usuario;

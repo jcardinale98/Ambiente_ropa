@@ -1,93 +1,65 @@
 <?php
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
 
-    function RegistrarUsuarioModel($identificacion,$nombre,$correoElectronico,$contrasenna)
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/UtilitarioModel.php';
+
+
+function IniciarSesionModel(
+    $identificacionCorreo,
+    $contrasenna
+)
+{
+    try
     {
-        try
+        $conn = OpenDB();
+
+        $sql = "CALL spIniciarSesionUsuario(?, ?)";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bind_param(
+            "ss",
+            $identificacionCorreo,
+            $contrasenna
+        );
+
+        $stmt->execute();
+
+        $response = $stmt->get_result();
+
+        $datosUsuario = null;
+
+        if ($response !== false)
         {
-            $conn = OpenDB();
+            $datosUsuario = $response->fetch_assoc();
 
-            $sql = "CALL spRegistrarUsuario('$identificacion','$nombre','$correoElectronico','$contrasenna')";
-            $response = $conn -> query($sql);
-
-            CloseDB($conn);
-            return $response;
+            $response->free();
         }
-        catch(Exception $e)
+
+        $stmt->close();
+
+        while (
+            $conn->more_results()
+            && $conn->next_result()
+        )
         {
-            AddError($e, 'RegistrarUsuarioModel');
-            return false;
-        }
-    }
-
-    function IniciarSesionModel($identificacion,$contrasenna)
-    {
-        try
-        {
-            $conn = OpenDB();
-
-            $sql = "CALL spIniciarSesionUsuario('$identificacion','$contrasenna')";
-            $response = $conn -> query($sql);
-
-            //Se guarda el resultado en una variable nueva
-            $datos = null;
-            while($fila = $response -> fetch_assoc())
+            if ($resultadoExtra = $conn->store_result())
             {
-                $datos = $fila;
+                $resultadoExtra->free();
             }
+        }
 
-            CloseDB($conn);
-            return $datos;
-        }
-        catch(Exception $e)
-        {
-            AddError($e, 'IniciarSesionModel');
-            return null;
-        }
+        CloseDB($conn);
+
+        return $datosUsuario;
     }
-
-    function ValidarCorreoModel($correoElectronico)
+    catch (Exception $e)
     {
-        try
-        {
-            $conn = OpenDB();
+        AddError(
+            $e,
+            'IniciarSesionModel'
+        );
 
-            $sql = "CALL spValidarCorreo('$correoElectronico')";
-            $response = $conn -> query($sql);
-
-            //Se guarda el resultado en una variable nueva
-            $datos = null;
-            while($fila = $response -> fetch_assoc())
-            {
-                $datos = $fila;
-            }
-
-            CloseDB($conn);
-            return $datos;
-        }
-        catch(Exception $e)
-        {
-            AddError($e, 'ValidarCorreoModel' );
-            return null;
-        }
+        return null;
     }
-
-    function ActualizarContrasennaModel($consecutivo,$contrasenna)
-    {
-        try
-        {
-            $conn = OpenDB();
-
-            $sql = "CALL spActualizarContrasenna('$consecutivo','$contrasenna')";
-            $response = $conn -> query($sql);
-
-            CloseDB($conn);
-            return $response;
-        }
-        catch(Exception $e)
-        {
-            AddError($e, 'ActualizarContrasennaModel');
-            return false;
-        }
-    }
-    
+}

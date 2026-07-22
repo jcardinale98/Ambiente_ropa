@@ -1,29 +1,106 @@
 <?php
 
-if (session_status() == PHP_SESSION_NONE) {
+if (session_status() == PHP_SESSION_NONE)
+{
     session_start();
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| CONEXIÓN A LA BASE DE DATOS
+|--------------------------------------------------------------------------
+*/
+
 function OpenDB()
 {
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    return new mysqli("127.0.0.1:3307", "root", "", "bdproyecto");
+    mysqli_report(
+        MYSQLI_REPORT_ERROR
+        | MYSQLI_REPORT_STRICT
+    );
+
+    $conn = new mysqli(
+        "127.0.0.1",
+        "root",
+        "",
+        "bdproyecto",
+        3307
+    );
+
+    $conn->set_charset("utf8mb4");
+
+    return $conn;
 }
+
 
 function CloseDB($conn)
 {
-    $conn->close();
+    if ($conn !== null)
+    {
+        $conn->close();
+    }
 }
 
- function AddError($error, $accion)
+
+/*
+|--------------------------------------------------------------------------
+| LIMPIAR RESULTADOS DE PROCEDIMIENTOS ALMACENADOS
+|--------------------------------------------------------------------------
+*/
+
+function LimpiarResultados($conn)
+{
+    while (
+        $conn->more_results()
+        && $conn->next_result()
+    )
+    {
+        $resultadoExtra = $conn->store_result();
+
+        if ($resultadoExtra)
+        {
+            $resultadoExtra->free();
+        }
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| REGISTRAR ERRORES
+|--------------------------------------------------------------------------
+*/
+
+function AddError($error, $accion)
+{
+    $conn = null;
+
+    try
     {
         $conn = OpenDB();
 
-        $mensaje = $conn -> real_escape_string($error -> getMessage());
-         $idUsuario = isset($_SESSION["ConsecutivoUsuario"]) ? $_SESSION["ConsecutivoUsuario"] : 0;
+        $mensaje = $conn->real_escape_string(
+            $error->getMessage()
+        );
 
-        $sql = "CALL spRegistrarError('$mensaje', '$accion', '$idUsuario')";
-        $response = $conn -> query($sql);           
-            
+        $accion = $conn->real_escape_string(
+            $accion
+        );
+
+        $consecutivoUsuario = isset(
+            $_SESSION["ConsecutivoUsuario"]
+        )
+            ? intval($_SESSION["ConsecutivoUsuario"])
+            : 0;
+
+        $sql = "CALL spRegistrarError(
+                    '$mensaje',
+                    '$accion',
+                    $consecutivoUsuario
+                )";
+
+        $conn->query($sql);
+
+        LimpiarResultados($conn);
         CloseDB($conn);
     }
