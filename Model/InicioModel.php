@@ -4,118 +4,16 @@ include_once $_SERVER['DOCUMENT_ROOT']
     . '/Ambiente_ropa/Model/UtilitarioModel.php';
 
 
-function RegistrarUsuarioModel(
-    $identificacion,
-    $nombre,
-    $correoElectronico,
-    $contrasenna
-)
-{
-    $conn = null;
-    $stmt = null;
-
-    try
-    {
-        $conn = OpenDB();
-
-        $sql = "CALL spRegistrarUsuario(
-                    ?,
-                    ?,
-                    ?,
-                    ?
-                )";
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bind_param(
-            "ssss",
-            $identificacion,
-            $nombre,
-            $correoElectronico,
-            $contrasenna
-        );
-
-        $stmt->execute();
-
-        $resultado = $stmt->get_result();
-
-        $datos = array(
-            "Resultado" => 0,
-            "Mensaje" => "No fue posible registrar el usuario."
-        );
-
-        if ($resultado !== false)
-        {
-            $fila = $resultado->fetch_assoc();
-
-            if ($fila)
-            {
-                $datos = $fila;
-            }
-
-            $resultado->free();
-        }
-
-        $stmt->close();
-
-        LimpiarResultados($conn);
-        CloseDB($conn);
-
-        return $datos;
-    }
-    catch (Exception $e)
-    {
-        if ($stmt !== null)
-        {
-            try
-            {
-                $stmt->close();
-            }
-            catch (Exception $errorStmt)
-            {
-            }
-        }
-
-        if ($conn !== null)
-        {
-            try
-            {
-                CloseDB($conn);
-            }
-            catch (Exception $errorConexion)
-            {
-            }
-        }
-
-        AddError(
-            $e,
-            "RegistrarUsuarioModel"
-        );
-
-        return array(
-            "Resultado" => 0,
-            "Mensaje" => "Ocurrió un error al registrar el usuario."
-        );
-    }
-}
-
-
 function IniciarSesionModel(
     $identificacionCorreo,
     $contrasenna
 )
 {
-    $conn = null;
-    $stmt = null;
-
     try
     {
         $conn = OpenDB();
 
-        $sql = "CALL spIniciarSesionUsuario(
-                    ?,
-                    ?
-                )";
+        $sql = "CALL spIniciarSesionUsuario(?, ?)";
 
         $stmt = $conn->prepare($sql);
 
@@ -127,203 +25,41 @@ function IniciarSesionModel(
 
         $stmt->execute();
 
-        $resultado = $stmt->get_result();
+        $response = $stmt->get_result();
 
-        $datos = null;
+        $datosUsuario = null;
 
-        if ($resultado !== false)
+        if ($response !== false)
         {
-            $fila = $resultado->fetch_assoc();
+            $datosUsuario = $response->fetch_assoc();
 
-            if ($fila)
-            {
-                $datos = $fila;
-            }
-
-            $resultado->free();
+            $response->free();
         }
 
         $stmt->close();
 
-        LimpiarResultados($conn);
+        while (
+            $conn->more_results()
+            && $conn->next_result()
+        )
+        {
+            if ($resultadoExtra = $conn->store_result())
+            {
+                $resultadoExtra->free();
+            }
+        }
+
         CloseDB($conn);
 
-        return $datos;
+        return $datosUsuario;
     }
     catch (Exception $e)
     {
-        if ($stmt !== null)
-        {
-            try
-            {
-                $stmt->close();
-            }
-            catch (Exception $errorStmt)
-            {
-            }
-        }
-
-        if ($conn !== null)
-        {
-            try
-            {
-                CloseDB($conn);
-            }
-            catch (Exception $errorConexion)
-            {
-            }
-        }
-
         AddError(
             $e,
-            "IniciarSesionModel"
+            'IniciarSesionModel'
         );
 
         return null;
-    }
-}
-
-
-function ValidarCorreoModel($correoElectronico)
-{
-    $conn = null;
-    $stmt = null;
-
-    try
-    {
-        $conn = OpenDB();
-
-        $sql = "CALL spValidarCorreo(?)";
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bind_param(
-            "s",
-            $correoElectronico
-        );
-
-        $stmt->execute();
-
-        $resultado = $stmt->get_result();
-
-        $datos = null;
-
-        if ($resultado !== false)
-        {
-            $fila = $resultado->fetch_assoc();
-
-            if ($fila)
-            {
-                $datos = $fila;
-            }
-
-            $resultado->free();
-        }
-
-        $stmt->close();
-
-        LimpiarResultados($conn);
-        CloseDB($conn);
-
-        return $datos;
-    }
-    catch (Exception $e)
-    {
-        if ($stmt !== null)
-        {
-            try
-            {
-                $stmt->close();
-            }
-            catch (Exception $errorStmt)
-            {
-            }
-        }
-
-        if ($conn !== null)
-        {
-            try
-            {
-                CloseDB($conn);
-            }
-            catch (Exception $errorConexion)
-            {
-            }
-        }
-
-        AddError(
-            $e,
-            "ValidarCorreoModel"
-        );
-
-        return null;
-    }
-}
-
-
-function ActualizarContrasennaModel(
-    $consecutivo,
-    $contrasenna
-)
-{
-    $conn = null;
-    $stmt = null;
-
-    try
-    {
-        $conn = OpenDB();
-
-        $sql = "CALL spActualizarContrasenna(
-                    ?,
-                    ?
-                )";
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bind_param(
-            "is",
-            $consecutivo,
-            $contrasenna
-        );
-
-        $resultado = $stmt->execute();
-
-        $stmt->close();
-
-        LimpiarResultados($conn);
-        CloseDB($conn);
-
-        return $resultado;
-    }
-    catch (Exception $e)
-    {
-        if ($stmt !== null)
-        {
-            try
-            {
-                $stmt->close();
-            }
-            catch (Exception $errorStmt)
-            {
-            }
-        }
-
-        if ($conn !== null)
-        {
-            try
-            {
-                CloseDB($conn);
-            }
-            catch (Exception $errorConexion)
-            {
-            }
-        }
-
-        AddError(
-            $e,
-            "ActualizarContrasennaModel"
-        );
-
-        return false;
     }
 }
