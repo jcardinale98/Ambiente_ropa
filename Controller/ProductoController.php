@@ -10,10 +10,10 @@ if(isset($_POST["btnRegistrarProducto"]))
   $imagen = $_POST["imagen"];
   $stock = $_POST["stock"];
 
-  $datos = RegistrarProductoModel($consecutivoCategoria, $nombre, $descripcion, $precio, $imagen, $stock);
+  $datos = RegistrarProductoModel($consecutivoCategoria, $nombre, $descripcion, $precio, $stock, $imagen);
   if($datos)
   {
-    header("Location: /Ambiente_ropa/View/Producto/ConsultarProductos.php");
+    header("Location: /Ambiente_ropa/View/vGestion/GestionProductos.php");
     exit();
   }
   else
@@ -34,7 +34,7 @@ if(isset($_POST["btnActualizarProducto"]))
   $datos = ActualizarProductoModel($consecutivo, $consecutivoCategoria, $nombre, $descripcion, $precio, $imagen, $stock);
   if($datos)
   {
-    header("Location: /Ambiente_ropa/View/Producto/ConsultarProductos.php");
+    header("Location: /Ambiente_ropa/View/vGestion/GestionProductos.php");
     exit();
   }
   else
@@ -50,7 +50,7 @@ if(isset($_POST["btnActualizarProducto"]))
     $datos = EliminarProductoModel($consecutivo);
     if($datos)
     {
-      header("Location: /Ambiente_ropa/View/Producto/ConsultarProductos.php");
+      header("Location: /Ambiente_ropa/View/vGestion/GestionProductos.php");
       exit();
     }
     else
@@ -70,3 +70,14 @@ if(isset($_POST["btnActualizarProducto"]))
     $datos = ConsultarProductosModel();
     return $datos;
   }
+  
+  function BuscarProductosController($nombre, $consecutivoCategoria)
+  {
+    return BuscarProductosModel($nombre, $consecutivoCategoria);
+  }
+
+  function BuscarProductosAdminController($nombre, $consecutivoCategoria)
+{
+    $datos = BuscarProductosAdminModel($nombre, $consecutivoCategoria);
+    return $datos;
+}

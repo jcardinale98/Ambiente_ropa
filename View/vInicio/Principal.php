@@ -129,8 +129,8 @@ RequerirRol("Cliente");
           <div class="mt-auto">
 
             <?php
-    $idProducto = intval($fila["Consecutivo"]);
-    $stockProducto = intval($fila["Stock"]);?>
+              $idProducto = intval($fila["Consecutivo"]);
+              $stockProducto = intval($fila["Stock"]);?>
             <div class="d-flex gap-2 align-items-center">
               <input type="number" id="cantidad_<?php echo $idProducto; ?>" class="form-control cantidad-input"
                 value="1" min="1" max="<?php echo $stockProducto; ?>">
@@ -193,56 +193,10 @@ RequerirRol("Cliente");
     </div>
     <hr />
   </section>
-
-
-
-  <!-- -------------------------------------------------------------General Footer------------------------------------------------------------ -->
-  <?php
-       FooterInfo();
-    ?>
-
-
-
-  <!-- Accesos principales -->
-
-  <section class="padding-medium">
-
-    <div class="container text-center">
-
-      <h2>Conoce nuestros productos</h2>
-
-      <p>
-        Consulta el catálogo, agrega artículos al carrito y
-        realiza tus compras.
-      </p>
-
-      <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
-
-        <a href="Productos.php" class="btn btn-dark">
-
-          <i class="fa-solid fa-shirt"></i>
-
-          Ver productos
-
-        </a>
-
-        <a href="Perfil.php" class="btn btn-outline-dark">
-
-          <i class="fa-solid fa-user-gear"></i>
-
-          Mi perfil
-
-        </a>
-
-      </div>
-
-    </div>
-
-  </section>
   <script src="../js/jquery-1.11.0.min.js"></script>
   <script src="../js/carrito.js"></script>
   <?php
-        FooterInfo();
+       FooterInfo();
     ?>
 
   <?php
