@@ -69,37 +69,6 @@ $nombreRol = $_SESSION["RolUsuario"];
     $nombreProducto = $_POST["nombreProducto"];
   }
  
-  if(isset($_SESSION["ConsecutivoRol"]) && $_SESSION["ConsecutivoRol"] == 1)
-  {
- $menuAdministracion = '
-<li class="nav-item dropdown">
-
-    <a class="nav-link dropdown-toggle js-dropdown-toggle"
-       href="#"
-       aria-expanded="false">
-        Administración
-    </a>
-
-    <ul class="dropdown-menu">
-        <li>
-            <a class="dropdown-item"
-               href="/Ambiente_ropa/View/Producto/ConsultarProductos.php">
-                Gestión de Productos
-            </a>
-        </li>
-
-        <li>
-            <a class="dropdown-item"
-               href="/Ambiente_ropa/View/Categoria/ConsultarCategorias.php">
-                Gestión de Categorías
-            </a>
-        </li>
-    </ul>
-
-</li>
-';
-  }
-
   echo '
    <header id="header">
 
@@ -154,10 +123,9 @@ $nombreRol = $_SESSION["RolUsuario"];
                       </div>
 
                     <!-- Usuario -->
-                    <div class="col-lg-4">
+                    <div class="col-lg-3 d-flex justify-content-end align-items-center">
 
-                        <ul class="d-flex justify-content-end align-items-center gap-3 list-unstyled mb-0">
-                          ' . $menuAdministracion . '
+                        <ul class="nav justify-content-end align-items-center mb-0">
                             
                             <li>
                                 <a href="/Ambiente_ropa/View/vInicio/Carrito.php" title="Carrito">
@@ -194,15 +162,11 @@ $nombreRol = $_SESSION["RolUsuario"];
 
 <ul class="dropdown-menu dropdown-menu-end shadow p-2" aria-labelledby="dropdownUsuario">
   <li>
-    <a class="dropdown-item rounded py-2" href="/Ambiente_ropa/View/vUsuario/CambiarPerfil.php">
+    <a class="dropdown-item rounded py-2" href="/Ambiente_ropa/View/vInicio/Perfil.php">
       <i class="fa fa-user me-2"></i> Mi perfil
     </a>
   </li>
-  <li>
-    <a class="dropdown-item rounded py-2" href="/Ambiente_ropa/View/vUsuario/CambiarContrasenna.php">
-      <i class="fa fa-lock me-2"></i> Seguridad
-    </a>
-  </li>
+  
   <li>
     <hr class="dropdown-divider">
   </li>
@@ -303,6 +267,7 @@ echo '
   </div>
   <hr />
 </footer>
+
 
 <div id="footer-bottom">
   <div class="container">

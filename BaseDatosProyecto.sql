@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `bdproyecto` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `bdproyecto`;
--- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: bdproyecto
 -- ------------------------------------------------------
@@ -16,6 +16,95 @@ USE `bdproyecto`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `tb_carrito`
+--
+
+DROP TABLE IF EXISTS `tb_carrito`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_carrito` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `ConsecutivoUsuario` int(11) NOT NULL,
+  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `Estado` varchar(20) NOT NULL DEFAULT 'Activo',
+  PRIMARY KEY (`Consecutivo`),
+  KEY `FK_tb_carrito_usuario` (`ConsecutivoUsuario`),
+  CONSTRAINT `FK_tb_carrito_usuario` FOREIGN KEY (`ConsecutivoUsuario`) REFERENCES `tb_usuario` (`Consecutivo`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_carrito`
+--
+
+LOCK TABLES `tb_carrito` WRITE;
+/*!40000 ALTER TABLE `tb_carrito` DISABLE KEYS */;
+INSERT INTO `tb_carrito` VALUES (1,12,'2026-07-21 09:24:00','2026-07-21 09:24:00','Activo'),(2,13,'2026-07-22 11:06:21','2026-07-22 11:06:50','Comprado'),(3,13,'2026-07-22 19:18:09','2026-07-22 19:18:56','Comprado'),(4,13,'2026-07-22 19:19:43','2026-07-22 19:21:23','Comprado'),(5,13,'2026-07-22 19:25:22','2026-07-22 19:25:29','Comprado'),(6,13,'2026-07-22 19:33:29','2026-07-22 19:33:34','Comprado'),(7,13,'2026-07-22 22:40:45','2026-07-22 22:40:57','Comprado'),(8,13,'2026-07-22 22:42:57','2026-07-22 22:42:57','Activo');
+/*!40000 ALTER TABLE `tb_carrito` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_carrito_detalle`
+--
+
+DROP TABLE IF EXISTS `tb_carrito_detalle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_carrito_detalle` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `ConsecutivoCarrito` int(11) NOT NULL,
+  `ConsecutivoProducto` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `PrecioUnitario` decimal(10,2) NOT NULL,
+  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`Consecutivo`),
+  UNIQUE KEY `UK_tb_carrito_producto` (`ConsecutivoCarrito`,`ConsecutivoProducto`),
+  KEY `FK_tb_carrito_detalle_producto` (`ConsecutivoProducto`),
+  CONSTRAINT `FK_tb_carrito_detalle_carrito` FOREIGN KEY (`ConsecutivoCarrito`) REFERENCES `tb_carrito` (`Consecutivo`),
+  CONSTRAINT `FK_tb_carrito_detalle_producto` FOREIGN KEY (`ConsecutivoProducto`) REFERENCES `tb_producto` (`Consecutivo`),
+  CONSTRAINT `CK_tb_carrito_detalle_cantidad` CHECK (`Cantidad` > 0)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_carrito_detalle`
+--
+
+LOCK TABLES `tb_carrito_detalle` WRITE;
+/*!40000 ALTER TABLE `tb_carrito_detalle` DISABLE KEYS */;
+INSERT INTO `tb_carrito_detalle` VALUES (5,1,1,2,12000.00,'2026-07-21 09:24:01','2026-07-21 09:24:01'),(6,1,2,3,18500.00,'2026-07-21 09:24:01','2026-07-21 09:24:01'),(8,2,4,1,7500.00,'2026-07-22 11:06:40','2026-07-22 11:06:40'),(9,3,1,4,12000.00,'2026-07-22 19:18:09','2026-07-22 19:18:38'),(11,4,1,1,12000.00,'2026-07-22 19:20:21','2026-07-22 19:21:12'),(12,5,1,1,12000.00,'2026-07-22 19:25:22','2026-07-22 19:25:22'),(13,6,1,1,12000.00,'2026-07-22 19:33:29','2026-07-22 19:33:29'),(14,7,8,4,65000.00,'2026-07-22 22:40:45','2026-07-22 22:40:45');
+/*!40000 ALTER TABLE `tb_carrito_detalle` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_categoria`
+--
+
+DROP TABLE IF EXISTS `tb_categoria`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_categoria` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(80) NOT NULL,
+  `Descripcion` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`Consecutivo`),
+  UNIQUE KEY `UK_tb_categoria_nombre` (`Nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_categoria`
+--
+
+LOCK TABLES `tb_categoria` WRITE;
+/*!40000 ALTER TABLE `tb_categoria` DISABLE KEYS */;
+INSERT INTO `tb_categoria` VALUES (1,'Camisetas','Camisetas para hombre y mujer'),(2,'Hoodies','Sudaderas con capucha'),(7,'Pantalones','Categoría para pantalones y prendas inferiores.'),(8,'Sudaderas','Categoría para sudaderas y prendas para clima frío.'),(9,'Accesorios','Categoría para gorras y otros accesorios.');
+/*!40000 ALTER TABLE `tb_categoria` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tb_error`
@@ -81,59 +170,12 @@ CREATE TABLE `tb_producto` (
   `Stock` int(11) NOT NULL,
   `RutaImagen` varchar(1024) DEFAULT NULL,
   `Estado` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`Consecutivo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `ConsecutivoCategoria` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Consecutivo`),
+  KEY `FK_tb_producto_categoria` (`ConsecutivoCategoria`),
+  CONSTRAINT `FK_tb_producto_categoria` FOREIGN KEY (`ConsecutivoCategoria`) REFERENCES `tb_categoria` (`Consecutivo`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
--- insert
-USE bdproyecto;
-
-INSERT INTO tb_producto
-(
-    Nombre,
-    Descripcion,
-    Precio,
-    Stock,
-    RutaImagen,
-    Estado
-)
-VALUES
-(
-    'Camiseta Negra',
-    'Camiseta negra de algodón para uso casual.',
-    12000.00,
-    15,
-    '../images/camiseta-negra.jpg',
-    1
-),
-(
-    'Pantalón Azul',
-    'Pantalón azul de corte moderno.',
-    18500.00,
-    10,
-    '../images/pantalon-azul.jpg',
-    1
-),
-(
-    'Sudadera Gris',
-    'Sudadera gris cómoda para clima frío.',
-    22000.00,
-    8,
-    '../images/sudadera-gris.jpg',
-    1
-),
-(
-    'Gorra Negra',
-    'Gorra negra ajustable.',
-    7500.00,
-    20,
-    '../images/gorra-negra.jpg',
-    1
-);
-
-SELECT *
-FROM tb_producto;
-
 
 --
 -- Dumping data for table `tb_producto`
@@ -141,152 +183,381 @@ FROM tb_producto;
 
 LOCK TABLES `tb_producto` WRITE;
 /*!40000 ALTER TABLE `tb_producto` DISABLE KEYS */;
+INSERT INTO `tb_producto` VALUES (1,'Camiseta Negra','Camiseta negra de algodón para uso casual.',12000.00,8,'../images/camiseta-negra.jpg',_binary '',1),(2,'Pantalón Azul','Pantalón azul de corte moderno.',18500.00,10,'../images/pantalon-azul.jpg',_binary '',7),(3,'Sudadera Gris','Sudadera gris cómoda para clima frío.',22000.00,8,'../images/sudadera-gris.jpg',_binary '',8),(4,'Gorra Negra','Gorra negra ajustable.',7500.00,19,'../images/gorra-negra.jpg',_binary '\0',9),(5,'Aretes','Aretes',1500.00,0,'5',_binary '\0',9),(6,'Vaqueros','Estilo clásico de pantalones',1200.00,0,'12',_binary '\0',7),(7,'Q','swwssqs',120000.00,20,'/Ambiente_ropa/View/images/main-logo.png',_binary '',9),(8,'Barca','Camiseta del FC Barcelona',65000.00,96,'/Ambiente_ropa/View/images/main-logo.png',_binary '',1);
 /*!40000 ALTER TABLE `tb_producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
 --
--- Dumping structure for table `tb_carrito`
---
-
-USE bdproyecto;
-
-CREATE TABLE tb_carrito
-(
-    Consecutivo INT NOT NULL AUTO_INCREMENT,
-    ConsecutivoUsuario INT NOT NULL,
-    FechaCreacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FechaModificacion TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-    Estado VARCHAR(20) NOT NULL DEFAULT 'Activo',
-
-    PRIMARY KEY (Consecutivo),
-
-    CONSTRAINT FK_tb_carrito_usuario
-        FOREIGN KEY (ConsecutivoUsuario)
-        REFERENCES tb_usuario (Consecutivo)
-);
-
---
--- Dumping structure for table `tb_carrito`
+-- Table structure for table `tb_rol`
 --
 
-CREATE TABLE tb_carrito_detalle
-(
-    Consecutivo INT NOT NULL AUTO_INCREMENT,
-    ConsecutivoCarrito INT NOT NULL,
-    ConsecutivoProducto INT NOT NULL,
-    Cantidad INT NOT NULL,
-    PrecioUnitario DECIMAL(10,2) NOT NULL,
-    FechaCreacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FechaModificacion TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-
-    PRIMARY KEY (Consecutivo),
-
-    CONSTRAINT UK_tb_carrito_producto
-        UNIQUE (ConsecutivoCarrito, ConsecutivoProducto),
-
-    CONSTRAINT FK_tb_carrito_detalle_carrito
-        FOREIGN KEY (ConsecutivoCarrito)
-        REFERENCES tb_carrito (Consecutivo),
-
-    CONSTRAINT FK_tb_carrito_detalle_producto
-        FOREIGN KEY (ConsecutivoProducto)
-        REFERENCES tb_producto (Consecutivo),
-
-    CONSTRAINT CK_tb_carrito_detalle_cantidad
-        CHECK (Cantidad > 0)
-);
-
+DROP TABLE IF EXISTS `tb_rol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_rol` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `Rol` varchar(20) NOT NULL,
+  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`Consecutivo`),
+  UNIQUE KEY `Rol` (`Rol`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- PROCEDURE `spConsultarProductosDisponibles`
+-- Dumping data for table `tb_rol`
 --
 
-DELIMITER $$
-
-DROP PROCEDURE IF EXISTS spConsultarProductosDisponibles $$
-
-CREATE PROCEDURE spConsultarProductosDisponibles()
-BEGIN
-
-    SELECT
-        Consecutivo,
-        Nombre,
-        Descripcion,
-        Precio,
-        Stock,
-        RutaImagen
-    FROM tb_producto
-    WHERE Estado = 1
-      AND Stock > 0
-    ORDER BY Nombre;
-
-END $$
-
-DELIMITER ;
-
-CALL spConsultarProductosDisponibles();
+LOCK TABLES `tb_rol` WRITE;
+/*!40000 ALTER TABLE `tb_rol` DISABLE KEYS */;
+INSERT INTO `tb_rol` VALUES (1,'Cliente','2026-07-16 05:06:07','2026-07-21 09:31:38'),(2,'Administrador','2026-07-16 05:06:07','2026-07-16 05:06:07');
+/*!40000 ALTER TABLE `tb_rol` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- PROCEDURE `spObtenerCarritoActivo`
+-- Table structure for table `tb_usuario`
 --
 
-DROP PROCEDURE IF EXISTS spObtenerCarritoActivo $$
+DROP TABLE IF EXISTS `tb_usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_usuario` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `Identificacion` varchar(15) NOT NULL,
+  `Nombre` varchar(250) NOT NULL,
+  `CorreoElectronico` varchar(100) NOT NULL,
+  `Contrasenna` varchar(100) NOT NULL,
+  `RutaImagen` varchar(1024) DEFAULT NULL,
+  `Estado` bit(1) NOT NULL,
+  PRIMARY KEY (`Consecutivo`),
+  UNIQUE KEY `Identificacion` (`Identificacion`),
+  UNIQUE KEY `CorreoElectronico` (`CorreoElectronico`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-DELIMITER $$
-CREATE PROCEDURE spObtenerCarritoActivo
-(
-    IN pConsecutivoUsuario INT
+--
+-- Dumping data for table `tb_usuario`
+--
+
+LOCK TABLES `tb_usuario` WRITE;
+/*!40000 ALTER TABLE `tb_usuario` DISABLE KEYS */;
+INSERT INTO `tb_usuario` VALUES (13,'120050858','QUESADA CESPEDES MELISSA','meli.cespedes12@gmail.com','Meli1234',NULL,_binary ''),(14,'123456789','Administrador','admin@ultras.com','NuevaClaveSegura123!','',_binary '');
+/*!40000 ALTER TABLE `tb_usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_usuario_rol`
+--
+
+DROP TABLE IF EXISTS `tb_usuario_rol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_usuario_rol` (
+  `ConsecutivoUsuario` int(11) NOT NULL,
+  `ConsecutivoRol` int(11) NOT NULL,
+  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ConsecutivoUsuario`,`ConsecutivoRol`),
+  UNIQUE KEY `UQ_tb_usuario_rol_usuario` (`ConsecutivoUsuario`),
+  KEY `FK_tb_usuario_rol_rol` (`ConsecutivoRol`),
+  CONSTRAINT `FK_tb_usuario_rol_rol` FOREIGN KEY (`ConsecutivoRol`) REFERENCES `tb_rol` (`Consecutivo`),
+  CONSTRAINT `FK_tb_usuario_rol_usuario` FOREIGN KEY (`ConsecutivoUsuario`) REFERENCES `tb_usuario` (`Consecutivo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_usuario_rol`
+--
+
+LOCK TABLES `tb_usuario_rol` WRITE;
+/*!40000 ALTER TABLE `tb_usuario_rol` DISABLE KEYS */;
+INSERT INTO `tb_usuario_rol` VALUES (13,2,'2026-07-21 09:45:38','2026-07-22 22:44:38'),(14,1,'2026-07-22 13:38:05','2026-07-22 21:57:09');
+/*!40000 ALTER TABLE `tb_usuario_rol` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_venta`
+--
+
+DROP TABLE IF EXISTS `tb_venta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_venta` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `ConsecutivoFactura` int(11) NOT NULL,
+  `ConsecutivoProducto` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `PrecioHistorico` decimal(12,2) NOT NULL CHECK (`PrecioHistorico` >= 0),
+  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`Consecutivo`),
+  KEY `FK_tb_venta_factura` (`ConsecutivoFactura`),
+  KEY `FK_tb_venta_producto` (`ConsecutivoProducto`),
+  CONSTRAINT `FK_tb_venta_factura` FOREIGN KEY (`ConsecutivoFactura`) REFERENCES `tb_factura` (`Consecutivo`),
+  CONSTRAINT `FK_tb_venta_producto` FOREIGN KEY (`ConsecutivoProducto`) REFERENCES `tb_producto` (`Consecutivo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_venta`
+--
+
+LOCK TABLES `tb_venta` WRITE;
+/*!40000 ALTER TABLE `tb_venta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tb_venta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'bdproyecto'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `spActualizarCategoria` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spActualizarCategoria`(
+    pConsecutivo INT,
+    pNombre VARCHAR(80),
+    pDescripcion VARCHAR(250)
 )
 BEGIN
 
-    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    UPDATE tb_categoria
+    SET
+        Nombre = pNombre,
+        Descripcion = pDescripcion
+    WHERE Consecutivo = pConsecutivo;
 
-    SELECT MAX(Consecutivo)
-    INTO vConsecutivoCarrito
-    FROM tb_carrito
-    WHERE ConsecutivoUsuario = pConsecutivoUsuario
-      AND Estado = 'Activo';
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spActualizarContrasenna` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spActualizarContrasenna`(
+    IN pConsecutivoUsuario INT,
+    IN pContrasennaActual VARCHAR(100),
+    IN pNuevaContrasenna VARCHAR(100)
+)
+BEGIN
 
-    IF vConsecutivoCarrito IS NULL THEN
+    DECLARE vUsuarioExiste INT DEFAULT 0;
+    DECLARE vContrasennaCorrecta INT DEFAULT 0;
 
-        INSERT INTO tb_carrito
-        (
-            ConsecutivoUsuario,
-            Estado
-        )
-        VALUES
-        (
-            pConsecutivoUsuario,
-            'Activo'
-        );
+    SELECT COUNT(*)
+    INTO vUsuarioExiste
+    FROM tb_usuario
+    WHERE Consecutivo = pConsecutivoUsuario
+      AND Estado = 1;
 
-        SET vConsecutivoCarrito = LAST_INSERT_ID();
+    IF vUsuarioExiste = 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
+
+    ELSEIF pContrasennaActual IS NULL
+        OR TRIM(pContrasennaActual) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar la contraseña actual.' AS Mensaje;
+
+    ELSEIF pNuevaContrasenna IS NULL
+        OR TRIM(pNuevaContrasenna) = '' THEN
+
+        SELECT
+            0 AS Resultado,
+            'Debe ingresar la nueva contraseña.' AS Mensaje;
+
+    ELSEIF CHAR_LENGTH(pNuevaContrasenna) < 5 THEN
+
+        SELECT
+            0 AS Resultado,
+            'La nueva contraseña debe tener al menos 5 caracteres.'
+                AS Mensaje;
+
+    ELSEIF pContrasennaActual = pNuevaContrasenna THEN
+
+        SELECT
+            0 AS Resultado,
+            'La nueva contraseña debe ser diferente a la actual.'
+                AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vContrasennaCorrecta
+        FROM tb_usuario
+        WHERE Consecutivo = pConsecutivoUsuario
+          AND Contrasenna = pContrasennaActual
+          AND Estado = 1;
+
+        IF vContrasennaCorrecta = 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'La contraseña actual es incorrecta.' AS Mensaje;
+
+        ELSE
+
+            UPDATE tb_usuario
+            SET Contrasenna = pNuevaContrasenna
+            WHERE Consecutivo = pConsecutivoUsuario
+              AND Estado = 1;
+
+            SELECT
+                1 AS Resultado,
+                'La contraseña se actualizó correctamente.' AS Mensaje;
+
+        END IF;
 
     END IF;
 
-    SELECT vConsecutivoCarrito AS ConsecutivoCarrito;
-
-END $$
-
+END ;;
 DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spActualizarProducto` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spActualizarProducto`(
+    pConsecutivo INT,
+    pConsecutivoCategoria INT,
+    pNombre VARCHAR(80),
+    pDescripcion TEXT,
+    pPrecio DECIMAL(10,2),
+    pStock INT,
+    pRutaImagen VARCHAR(1024)
+)
+BEGIN
 
-CALL spObtenerCarritoActivo(12);
+    UPDATE tb_producto
+    SET
+        ConsecutivoCategoria = pConsecutivoCategoria,
+        Nombre = pNombre,
+        Descripcion = pDescripcion,
+        Precio = pPrecio,
+        Stock = pStock,
+        RutaImagen = pRutaImagen
+    WHERE Consecutivo = pConsecutivo;
 
---
--- PROCEDURE `spAgregarProductoCarrito`
---
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spActualizarRolUsuario` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spActualizarRolUsuario`(
+    pConsecutivoUsuario INT,
+    pConsecutivoRol     INT
+)
+BEGIN
 
-DROP PROCEDURE IF EXISTS spAgregarProductoCarrito $$
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_usuario
+        WHERE Consecutivo = pConsecutivoUsuario
+    )
+    THEN
 
-DELIMITER $$
+        SELECT
+            0 AS Resultado,
+            'El usuario indicado no existe.' AS Mensaje;
 
-CREATE PROCEDURE spAgregarProductoCarrito
-(
+    ELSEIF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_rol
+        WHERE Consecutivo = pConsecutivoRol
+    )
+    THEN
+
+        SELECT
+            0 AS Resultado,
+            'El rol indicado no existe.' AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_usuario_rol
+        SET
+            ConsecutivoRol = pConsecutivoRol,
+            FechaModificacion = CURRENT_TIMESTAMP
+        WHERE ConsecutivoUsuario = pConsecutivoUsuario;
+
+        IF ROW_COUNT() = 0 THEN
+
+            INSERT INTO tb_usuario_rol
+            (
+                ConsecutivoUsuario,
+                ConsecutivoRol
+            )
+            VALUES
+            (
+                pConsecutivoUsuario,
+                pConsecutivoRol
+            );
+
+        END IF;
+
+        SELECT
+            1 AS Resultado,
+            'El rol del usuario fue actualizado correctamente.' AS Mensaje;
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spAgregarProductoCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spAgregarProductoCarrito`(
     IN pConsecutivoUsuario INT,
     IN pConsecutivoProducto INT,
     IN pCantidad INT
@@ -401,408 +672,118 @@ BEGIN
 
     END IF;
 
-END $$
-
+END ;;
 DELIMITER ;
-
-
--- probar la función de agregar
-
-SELECT
-    Consecutivo,
-    Nombre,
-    Precio,
-    Stock
-FROM tb_producto;
-
-CALL spAgregarProductoCarrito(12, 1, 2);
-
-SELECT *
-FROM tb_carrito_detalle;
-
-CALL spAgregarProductoCarrito(12, 1, 100);
-
-
---
--- PROCEDURE `spConsultarCarrito `
---
-
-DROP PROCEDURE IF EXISTS spConsultarCarrito $$
-
-DELIMITER $$
-CREATE PROCEDURE spConsultarCarrito
-(
-    IN pConsecutivoUsuario INT
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spBuscarProductos` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spBuscarProductos`(
+    pNombre VARCHAR(80),
+    pConsecutivoCategoria INT
 )
 BEGIN
 
     SELECT
-        CD.Consecutivo,
-        CD.ConsecutivoProducto,
+        P.Consecutivo,
+        P.ConsecutivoCategoria,
+        C.Nombre AS Categoria,
         P.Nombre,
         P.Descripcion,
-        P.RutaImagen,
-        CD.Cantidad,
-        CD.PrecioUnitario,
+        P.Precio,
         P.Stock,
-        CD.Cantidad * CD.PrecioUnitario AS Subtotal
-    FROM tb_carrito C
-    INNER JOIN tb_carrito_detalle CD
-        ON C.Consecutivo = CD.ConsecutivoCarrito
-    INNER JOIN tb_producto P
-        ON CD.ConsecutivoProducto = P.Consecutivo
-    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
-      AND C.Estado = 'Activo'
-    ORDER BY CD.FechaCreacion DESC;
+        P.RutaImagen
+    FROM tb_producto P
+    INNER JOIN tb_categoria C
+        ON P.ConsecutivoCategoria = C.Consecutivo
+    WHERE P.Estado = 1
+      AND P.Stock > 0
+      AND
+      (
+          pNombre = ''
+          OR P.Nombre LIKE CONCAT('%', pNombre, '%')
+      )
+      AND
+      (
+          pConsecutivoCategoria = 0
+          OR P.ConsecutivoCategoria = pConsecutivoCategoria
+      )
+    ORDER BY P.Nombre;
 
-END $$
-
+END ;;
 DELIMITER ;
-
-CALL spConsultarCarrito(12);
-
-
---
--- PROCEDURE `spConsultarTotalCarrito `
---
-
-
-DROP PROCEDURE IF EXISTS spConsultarTotalCarrito $$
-
-DELIMITER $$
-CREATE PROCEDURE spConsultarTotalCarrito
-(
-    IN pConsecutivoUsuario INT
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spBuscarProductosAdmin` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spBuscarProductosAdmin`(
+    IN pNombre VARCHAR(80),
+    IN pConsecutivoCategoria INT
 )
 BEGIN
 
     SELECT
-        IFNULL(
-            SUM(CD.Cantidad * CD.PrecioUnitario),
-            0
-        ) AS Total
-    FROM tb_carrito C
-    INNER JOIN tb_carrito_detalle CD
-        ON C.Consecutivo = CD.ConsecutivoCarrito
-    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
-      AND C.Estado = 'Activo';
+        P.Consecutivo,
+        P.ConsecutivoCategoria,
+        C.Nombre AS Categoria,
+        P.Nombre,
+        P.Descripcion,
+        P.Precio,
+        P.Stock,
+        P.Estado,
+        P.RutaImagen
+    FROM tb_producto P
+    INNER JOIN tb_categoria C
+        ON P.ConsecutivoCategoria = C.Consecutivo
+    WHERE
+        (
+            pNombre = ''
+            OR P.Nombre LIKE CONCAT('%', pNombre, '%')
+        )
+        AND
+        (
+            pConsecutivoCategoria = 0
+            OR P.ConsecutivoCategoria = pConsecutivoCategoria
+        )
+    ORDER BY P.Nombre;
 
-END $$
-
+END ;;
 DELIMITER ;
-
-
---
--- PROCEDURE `spModificarCantidadCarrito `
---
-
-DROP PROCEDURE IF EXISTS spModificarCantidadCarrito $$
-
-DELIMITER $$
-CREATE PROCEDURE spModificarCantidadCarrito
-(
-    IN pConsecutivoUsuario INT,
-    IN pConsecutivoProducto INT,
-    IN pNuevaCantidad INT
-)
-BEGIN
-
-    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
-    DECLARE vConsecutivoDetalle INT DEFAULT NULL;
-    DECLARE vStock INT DEFAULT 0;
-
-    -- Buscar el carrito activo del usuario
-    SELECT MAX(Consecutivo)
-    INTO vConsecutivoCarrito
-    FROM tb_carrito
-    WHERE ConsecutivoUsuario = pConsecutivoUsuario
-      AND Estado = 'Activo';
-
-    -- Consultar el stock disponible del producto
-    SELECT IFNULL(MAX(Stock), 0)
-    INTO vStock
-    FROM tb_producto
-    WHERE Consecutivo = pConsecutivoProducto
-      AND Estado = 1;
-
-    -- Buscar el producto dentro del carrito
-    SELECT MAX(Consecutivo)
-    INTO vConsecutivoDetalle
-    FROM tb_carrito_detalle
-    WHERE ConsecutivoCarrito = vConsecutivoCarrito
-      AND ConsecutivoProducto = pConsecutivoProducto;
-
-    IF vConsecutivoCarrito IS NULL THEN
-
-        SELECT
-            0 AS Resultado,
-            'El usuario no tiene un carrito activo.' AS Mensaje;
-
-    ELSEIF vConsecutivoDetalle IS NULL THEN
-
-        SELECT
-            0 AS Resultado,
-            'El producto no se encuentra en el carrito.' AS Mensaje;
-
-    ELSEIF pNuevaCantidad <= 0 THEN
-
-        SELECT
-            0 AS Resultado,
-            'La cantidad debe ser mayor que cero.' AS Mensaje;
-
-    ELSEIF pNuevaCantidad > vStock THEN
-
-        SELECT
-            0 AS Resultado,
-            CONCAT(
-                'La cantidad solicitada supera el stock disponible. Stock actual: ',
-                vStock
-            ) AS Mensaje;
-
-    ELSE
-
-        UPDATE tb_carrito_detalle
-        SET Cantidad = pNuevaCantidad
-        WHERE Consecutivo = vConsecutivoDetalle;
-
-        SELECT
-            1 AS Resultado,
-            'La cantidad se modificó correctamente.' AS Mensaje;
-
-    END IF;
-
-END $$
-
-DELIMITER ;
-
-CALL spConsultarCarrito(12);
-
-CALL spModificarCantidadCarrito(12, 1, 4);
-
-CALL spModificarCantidadCarrito(12, 1, 100);
-
-
-
---
--- PROCEDURE `spEliminarProductoCarrito `
---
-
-DROP PROCEDURE IF EXISTS spEliminarProductoCarrito $$
-
-DELIMITER $$
-CREATE PROCEDURE spEliminarProductoCarrito
-(
-    IN pConsecutivoUsuario INT,
-    IN pConsecutivoProducto INT
-)
-BEGIN
-
-    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
-    DECLARE vConsecutivoDetalle INT DEFAULT NULL;
-
-    -- Buscar el carrito activo
-    SELECT MAX(Consecutivo)
-    INTO vConsecutivoCarrito
-    FROM tb_carrito
-    WHERE ConsecutivoUsuario = pConsecutivoUsuario
-      AND Estado = 'Activo';
-
-    -- Buscar el producto dentro del carrito
-    SELECT MAX(Consecutivo)
-    INTO vConsecutivoDetalle
-    FROM tb_carrito_detalle
-    WHERE ConsecutivoCarrito = vConsecutivoCarrito
-      AND ConsecutivoProducto = pConsecutivoProducto;
-
-    IF vConsecutivoCarrito IS NULL THEN
-
-        SELECT
-            0 AS Resultado,
-            'El usuario no tiene un carrito activo.' AS Mensaje;
-
-    ELSEIF vConsecutivoDetalle IS NULL THEN
-
-        SELECT
-            0 AS Resultado,
-            'El producto no se encuentra en el carrito.' AS Mensaje;
-
-    ELSE
-
-        DELETE FROM tb_carrito_detalle
-        WHERE Consecutivo = vConsecutivoDetalle;
-
-        SELECT
-            1 AS Resultado,
-            'El producto se eliminó correctamente del carrito.' AS Mensaje;
-
-    END IF;
-
-END $$
-
-DELIMITER ;
-
-CALL spAgregarProductoCarrito(12, 2, 2);
-
-CALL spConsultarCarrito(12);
-
-CALL spEliminarProductoCarrito(12, 2);
-
-
-
---
--- PROCEDURE `spVaciarCarrito `
---
-
-
-
-DROP PROCEDURE IF EXISTS spVaciarCarrito $$
-
-DELIMITER $$
-CREATE PROCEDURE spVaciarCarrito
-(
-    IN pConsecutivoUsuario INT
-)
-BEGIN
-
-    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
-    DECLARE vCantidadProductos INT DEFAULT 0;
-
-    -- Buscar el carrito activo
-    SELECT MAX(Consecutivo)
-    INTO vConsecutivoCarrito
-    FROM tb_carrito
-    WHERE ConsecutivoUsuario = pConsecutivoUsuario
-      AND Estado = 'Activo';
-
-    IF vConsecutivoCarrito IS NULL THEN
-
-        SELECT
-            0 AS Resultado,
-            'El usuario no tiene un carrito activo.' AS Mensaje;
-
-    ELSE
-
-        SELECT COUNT(*)
-        INTO vCantidadProductos
-        FROM tb_carrito_detalle
-        WHERE ConsecutivoCarrito = vConsecutivoCarrito;
-
-        IF vCantidadProductos = 0 THEN
-
-            SELECT
-                0 AS Resultado,
-                'El carrito ya se encuentra vacío.' AS Mensaje;
-
-        ELSE
-
-            DELETE FROM tb_carrito_detalle
-            WHERE ConsecutivoCarrito = vConsecutivoCarrito;
-
-            SELECT
-                1 AS Resultado,
-                'El carrito se vació correctamente.' AS Mensaje;
-
-        END IF;
-
-    END IF;
-
-END $$
-
-DELIMITER ;
-
-
-CALL spAgregarProductoCarrito(12, 1, 2);
-
-CALL spAgregarProductoCarrito(12, 2, 1);
-
-CALL spAgregarProductoCarrito(12, 3, 2);
-
-CALL spConsultarCarrito(12);
-
-CALL spVaciarCarrito(12);
-
-
---
--- PROCEDURE `spConsultarCantidadCarrito `
---
-
-DROP PROCEDURE IF EXISTS spConsultarCantidadCarrito $$
-
-DELIMITER $$
-CREATE PROCEDURE spConsultarCantidadCarrito
-(
-    IN pConsecutivoUsuario INT
-)
-BEGIN
-
-    SELECT
-        IFNULL(SUM(CD.Cantidad), 0) AS CantidadProductos
-    FROM tb_carrito C
-    INNER JOIN tb_carrito_detalle CD
-        ON C.Consecutivo = CD.ConsecutivoCarrito
-    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
-      AND C.Estado = 'Activo';
-
-END $$
-
-DELIMITER ;
-
-CALL spAgregarProductoCarrito(12, 1, 2);
-
-CALL spAgregarProductoCarrito(12, 2, 3);
-
-CALL spConsultarCantidadCarrito(12);
-
-
-
---
--- PROCEDURE `spConsultarProductoPorId `
---
-
-
-DROP PROCEDURE IF EXISTS spConsultarProductoPorId $$
-
-DELIMITER $$
-CREATE PROCEDURE spConsultarProductoPorId
-(
-    IN pConsecutivoProducto INT
-)
-BEGIN
-
-    SELECT
-        Consecutivo,
-        Nombre,
-        Descripcion,
-        Precio,
-        Stock,
-        RutaImagen,
-        Estado
-    FROM tb_producto
-    WHERE Consecutivo = pConsecutivoProducto
-      AND Estado = 1;
-
-END $$
-
-DELIMITER ;
-
-CALL spConsultarProductoPorId(1);
-
-SELECT *
-FROM tb_carrito;
-
-SELECT *
-FROM tb_carrito_detalle;
-
-
---
--- PROCEDURE `spConfirmarCompra `
---
-
-DROP PROCEDURE IF EXISTS spConfirmarCompra $$
-
-DELIMITER $$
-CREATE PROCEDURE spConfirmarCompra
-(
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConfirmarCompra` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConfirmarCompra`(
     IN pConsecutivoUsuario INT
 )
 BEGIN
@@ -904,22 +885,146 @@ BEGIN
 
     END IF;
 
-END $$
-
+END ;;
 DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarCantidadCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarCantidadCarrito`(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
 
---
--- PROCEDURE `spConsultarPerfilUsuario`
---
+    SELECT
+        IFNULL(SUM(CD.Cantidad), 0) AS CantidadProductos
+    FROM tb_carrito C
+    INNER JOIN tb_carrito_detalle CD
+        ON C.Consecutivo = CD.ConsecutivoCarrito
+    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
+      AND C.Estado = 'Activo';
 
-USE bdproyecto;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarCarrito`(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
 
-DROP PROCEDURE IF EXISTS spConsultarPerfilUsuario;
+    SELECT
+        CD.Consecutivo,
+        CD.ConsecutivoProducto,
+        P.Nombre,
+        P.Descripcion,
+        P.RutaImagen,
+        CD.Cantidad,
+        CD.PrecioUnitario,
+        P.Stock,
+        CD.Cantidad * CD.PrecioUnitario AS Subtotal
+    FROM tb_carrito C
+    INNER JOIN tb_carrito_detalle CD
+        ON C.Consecutivo = CD.ConsecutivoCarrito
+    INNER JOIN tb_producto P
+        ON CD.ConsecutivoProducto = P.Consecutivo
+    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
+      AND C.Estado = 'Activo'
+    ORDER BY CD.FechaCreacion DESC;
 
-DELIMITER $$
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarCategoria` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarCategoria`(
+    pConsecutivo INT
+)
+BEGIN
 
-CREATE PROCEDURE spConsultarPerfilUsuario
-(
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion
+    FROM tb_categoria
+    WHERE Consecutivo = pConsecutivo;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarCategorias` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarCategorias`()
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion
+    FROM tb_categoria
+    ORDER BY Nombre;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarPerfilUsuario` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarPerfilUsuario`(
     IN pConsecutivoUsuario INT
 )
 BEGIN
@@ -935,240 +1040,142 @@ BEGIN
     WHERE Consecutivo = pConsecutivoUsuario
       AND Estado = 1;
 
-END $$
-
+END ;;
 DELIMITER ;
-
-CALL spConsultarPerfilUsuario(5);
-
-
---
--- PROCEDURE `spActualizarPerfilUsuario`
---
-
-USE bdproyecto;
-
-DROP PROCEDURE IF EXISTS spActualizarPerfilUsuario;
-
-DELIMITER $$
-
-CREATE PROCEDURE spActualizarPerfilUsuario
-(
-    IN pConsecutivoUsuario INT,
-    IN pNombre VARCHAR(250),
-    IN pCorreoElectronico VARCHAR(100)
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarProductoPorId` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarProductoPorId`(
+    IN pConsecutivoProducto INT
 )
 BEGIN
 
-    DECLARE vUsuarioExiste INT DEFAULT 0;
-    DECLARE vCorreoDuplicado INT DEFAULT 0;
-
-    SELECT COUNT(*)
-    INTO vUsuarioExiste
-    FROM tb_usuario
-    WHERE Consecutivo = pConsecutivoUsuario
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        RutaImagen,
+        Estado
+    FROM tb_producto
+    WHERE Consecutivo = pConsecutivoProducto
       AND Estado = 1;
 
-    IF vUsuarioExiste = 0 THEN
-
-        SELECT
-            0 AS Resultado,
-            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
-
-    ELSEIF pNombre IS NULL
-        OR TRIM(pNombre) = '' THEN
-
-        SELECT
-            0 AS Resultado,
-            'Debe ingresar el nombre.' AS Mensaje;
-
-    ELSEIF pCorreoElectronico IS NULL
-        OR TRIM(pCorreoElectronico) = '' THEN
-
-        SELECT
-            0 AS Resultado,
-            'Debe ingresar el correo electrónico.' AS Mensaje;
-
-    ELSEIF pCorreoElectronico NOT LIKE '%_@_%._%' THEN
-
-        SELECT
-            0 AS Resultado,
-            'El formato del correo electrónico no es válido.' AS Mensaje;
-
-    ELSE
-
-        SELECT COUNT(*)
-        INTO vCorreoDuplicado
-        FROM tb_usuario
-        WHERE CorreoElectronico = TRIM(pCorreoElectronico)
-          AND Consecutivo <> pConsecutivoUsuario;
-
-        IF vCorreoDuplicado > 0 THEN
-
-            SELECT
-                0 AS Resultado,
-                'El correo electrónico ya está registrado por otro usuario.'
-                    AS Mensaje;
-
-        ELSE
-
-            UPDATE tb_usuario
-            SET
-                Nombre = TRIM(pNombre),
-                CorreoElectronico = TRIM(pCorreoElectronico)
-            WHERE Consecutivo = pConsecutivoUsuario
-              AND Estado = 1;
-
-            SELECT
-                1 AS Resultado,
-                'El perfil se actualizó correctamente.' AS Mensaje;
-
-        END IF;
-
-    END IF;
-
-END $$
-
+END ;;
 DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarProductos` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarProductos`()
+BEGIN
 
-CALL spActualizarPerfilUsuario
-(
-    5,
-    'EDUARDO JOSE CALVO',
-    'ecalvo90415@ufide.ac.cr'
-);
+    SELECT
+        P.Consecutivo,
+        C.Nombre AS Categoria,
+        P.Nombre,
+        P.Descripcion,
+        P.Precio,
+        P.Stock,
+        P.RutaImagen,
+        P.Estado
+    FROM tb_producto P
+    INNER JOIN tb_categoria C
+        ON P.ConsecutivoCategoria = C.Consecutivo
+    ORDER BY P.Consecutivo DESC;
 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarProductosDisponibles` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarProductosDisponibles`()
+BEGIN
 
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        RutaImagen
+    FROM tb_producto
+    WHERE Estado = 1
+      AND Stock > 0
+    ORDER BY Nombre;
 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarTotalCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarTotalCarrito`(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
 
+    SELECT
+        IFNULL(
+            SUM(CD.Cantidad * CD.PrecioUnitario),
+            0
+        ) AS Total
+    FROM tb_carrito C
+    INNER JOIN tb_carrito_detalle CD
+        ON C.Consecutivo = CD.ConsecutivoCarrito
+    WHERE C.ConsecutivoUsuario = pConsecutivoUsuario
+      AND C.Estado = 'Activo';
 
-
-
-
-
---
--- Table structure for table `tb_rol`
---
-
-DROP TABLE IF EXISTS `tb_rol`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tb_rol` (
-  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
-  `Rol` varchar(20) NOT NULL,
-  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
-  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`Consecutivo`),
-  UNIQUE KEY `Rol` (`Rol`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tb_rol`
---
-
-LOCK TABLES `tb_rol` WRITE;
-/*!40000 ALTER TABLE `tb_rol` DISABLE KEYS */;
-INSERT INTO `tb_rol` VALUES (1,'Usuario','2026-07-16 05:06:07','2026-07-16 05:06:07'),(2,'Administrador','2026-07-16 05:06:07','2026-07-16 05:06:07');
-/*!40000 ALTER TABLE `tb_rol` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tb_usuario`
---
-
-DROP TABLE IF EXISTS `tb_usuario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tb_usuario` (
-  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
-  `Identificacion` varchar(15) NOT NULL,
-  `Nombre` varchar(250) NOT NULL,
-  `CorreoElectronico` varchar(100) NOT NULL,
-  `Contrasenna` varchar(100) NOT NULL,
-  `RutaImagen` varchar(1024) DEFAULT NULL,
-  `Estado` bit(1) NOT NULL,
-  PRIMARY KEY (`Consecutivo`),
-  UNIQUE KEY `Identificacion` (`Identificacion`),
-  UNIQUE KEY `CorreoElectronico` (`CorreoElectronico`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tb_usuario`
---
-
-LOCK TABLES `tb_usuario` WRITE;
-/*!40000 ALTER TABLE `tb_usuario` DISABLE KEYS */;
-INSERT INTO `tb_usuario` VALUES (1,'119860731','SALAS MORA BRENDA SOFIA','felipemoralestorelli@gmail.com','VCK9020N',NULL,_binary ''),(5,'304590415','EDUARDO JOSE CALVO CASTILLO','ecalvo90415@ufide.ac.cr','1111111111',NULL,_binary ''),(6,'120180740','GUADAMUZ MELENDEZ ASHLEY FIORELLA','nose@gmail.com','123456',NULL,_binary ''),(8,'120180741','NODARSE QUIROS DERECK DAVID','sisQ!@gmail.com','123456',NULL,_binary ''),(10,'120110696','FELIPE ANTONIO MORALES TORELLI','felipe@gmail.com','123456',NULL,_binary ''),(11,'120110698','RODRIGUEZ CHANTO DAVID JOSE','chanto@gmail.com','123456',NULL,_binary ''),(12,'120110610','MECKBEL PANIAGUA SANTIAGO','otrapurebarol@gmail.com','123456',NULL,_binary '');
-/*!40000 ALTER TABLE `tb_usuario` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tb_usuario_rol`
---
-
-DROP TABLE IF EXISTS `tb_usuario_rol`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tb_usuario_rol` (
-  `ConsecutivoUsuario` int(11) NOT NULL,
-  `ConsecutivoRol` int(11) NOT NULL,
-  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
-  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`ConsecutivoUsuario`,`ConsecutivoRol`),
-  KEY `FK_tb_usuario_rol_rol` (`ConsecutivoRol`),
-  CONSTRAINT `FK_tb_usuario_rol_rol` FOREIGN KEY (`ConsecutivoRol`) REFERENCES `tb_rol` (`Consecutivo`),
-  CONSTRAINT `FK_tb_usuario_rol_usuario` FOREIGN KEY (`ConsecutivoUsuario`) REFERENCES `tb_usuario` (`Consecutivo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tb_usuario_rol`
---
-
-LOCK TABLES `tb_usuario_rol` WRITE;
-/*!40000 ALTER TABLE `tb_usuario_rol` DISABLE KEYS */;
-INSERT INTO `tb_usuario_rol` VALUES (12,1,'2026-07-16 05:06:34','2026-07-16 05:06:34');
-/*!40000 ALTER TABLE `tb_usuario_rol` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tb_venta`
---
-
-DROP TABLE IF EXISTS `tb_venta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tb_venta` (
-  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
-  `ConsecutivoFactura` int(11) NOT NULL,
-  `ConsecutivoProducto` int(11) NOT NULL,
-  `Cantidad` int(11) NOT NULL,
-  `PrecioHistorico` decimal(12,2) NOT NULL CHECK (`PrecioHistorico` >= 0),
-  `FechaCreacion` timestamp NOT NULL DEFAULT current_timestamp(),
-  `FechaModificacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`Consecutivo`),
-  KEY `FK_tb_venta_factura` (`ConsecutivoFactura`),
-  KEY `FK_tb_venta_producto` (`ConsecutivoProducto`),
-  CONSTRAINT `FK_tb_venta_factura` FOREIGN KEY (`ConsecutivoFactura`) REFERENCES `tb_factura` (`Consecutivo`),
-  CONSTRAINT `FK_tb_venta_producto` FOREIGN KEY (`ConsecutivoProducto`) REFERENCES `tb_producto` (`Consecutivo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tb_venta`
---
-
-LOCK TABLES `tb_venta` WRITE;
-/*!40000 ALTER TABLE `tb_venta` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tb_venta` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping routines for database 'bdproyecto'
---
-/*!50003 DROP PROCEDURE IF EXISTS `spActualizarContrasenna` */;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spConsultarUsuariosRoles` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1177,107 +1184,139 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-USE bdproyecto;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarUsuariosRoles`()
+BEGIN
 
-DROP PROCEDURE IF EXISTS spActualizarContrasenna;
+    SELECT
+        U.Consecutivo,
+        U.Identificacion,
+        U.Nombre,
+        U.CorreoElectronico,
+        U.Estado,
+        R.Consecutivo AS ConsecutivoRol,
+        R.Rol
+    FROM tb_usuario U
+    INNER JOIN tb_usuario_rol UR
+        ON U.Consecutivo = UR.ConsecutivoUsuario
+    INNER JOIN tb_rol R
+        ON UR.ConsecutivoRol = R.Consecutivo
+    ORDER BY U.Nombre;
 
-DELIMITER $$
-
-CREATE PROCEDURE spActualizarContrasenna
-(
-    IN pConsecutivoUsuario INT,
-    IN pContrasennaActual VARCHAR(100),
-    IN pNuevaContrasenna VARCHAR(100)
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spEliminarCategoria` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spEliminarCategoria`(
+    pConsecutivo INT
 )
 BEGIN
 
-    DECLARE vUsuarioExiste INT DEFAULT 0;
-    DECLARE vContrasennaCorrecta INT DEFAULT 0;
+    DELETE
+    FROM tb_categoria
+    WHERE Consecutivo = pConsecutivo;
 
-    SELECT COUNT(*)
-    INTO vUsuarioExiste
-    FROM tb_usuario
-    WHERE Consecutivo = pConsecutivoUsuario
-      AND Estado = 1;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spEliminarProducto` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spEliminarProducto`(
+    pConsecutivo INT
+)
+BEGIN
 
-    IF vUsuarioExiste = 0 THEN
+    UPDATE tb_producto
+    SET Estado = 0
+    WHERE Consecutivo = pConsecutivo;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spEliminarProductoCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spEliminarProductoCarrito`(
+    IN pConsecutivoUsuario INT,
+    IN pConsecutivoProducto INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vConsecutivoDetalle INT DEFAULT NULL;
+
+    -- Buscar el carrito activo
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    -- Buscar el producto dentro del carrito
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoDetalle
+    FROM tb_carrito_detalle
+    WHERE ConsecutivoCarrito = vConsecutivoCarrito
+      AND ConsecutivoProducto = pConsecutivoProducto;
+
+    IF vConsecutivoCarrito IS NULL THEN
 
         SELECT
             0 AS Resultado,
-            'El usuario no existe o se encuentra inactivo.' AS Mensaje;
+            'El usuario no tiene un carrito activo.' AS Mensaje;
 
-    ELSEIF pContrasennaActual IS NULL
-        OR TRIM(pContrasennaActual) = '' THEN
-
-        SELECT
-            0 AS Resultado,
-            'Debe ingresar la contraseña actual.' AS Mensaje;
-
-    ELSEIF pNuevaContrasenna IS NULL
-        OR TRIM(pNuevaContrasenna) = '' THEN
+    ELSEIF vConsecutivoDetalle IS NULL THEN
 
         SELECT
             0 AS Resultado,
-            'Debe ingresar la nueva contraseña.' AS Mensaje;
-
-    ELSEIF CHAR_LENGTH(pNuevaContrasenna) < 5 THEN
-
-        SELECT
-            0 AS Resultado,
-            'La nueva contraseña debe tener al menos 5 caracteres.'
-                AS Mensaje;
-
-    ELSEIF pContrasennaActual = pNuevaContrasenna THEN
-
-        SELECT
-            0 AS Resultado,
-            'La nueva contraseña debe ser diferente a la actual.'
-                AS Mensaje;
+            'El producto no se encuentra en el carrito.' AS Mensaje;
 
     ELSE
 
-        SELECT COUNT(*)
-        INTO vContrasennaCorrecta
-        FROM tb_usuario
-        WHERE Consecutivo = pConsecutivoUsuario
-          AND Contrasenna = pContrasennaActual
-          AND Estado = 1;
+        DELETE FROM tb_carrito_detalle
+        WHERE Consecutivo = vConsecutivoDetalle;
 
-        IF vContrasennaCorrecta = 0 THEN
-
-            SELECT
-                0 AS Resultado,
-                'La contraseña actual es incorrecta.' AS Mensaje;
-
-        ELSE
-
-            UPDATE tb_usuario
-            SET Contrasenna = pNuevaContrasenna
-            WHERE Consecutivo = pConsecutivoUsuario
-              AND Estado = 1;
-
-            SELECT
-                1 AS Resultado,
-                'La contraseña se actualizó correctamente.' AS Mensaje;
-
-        END IF;
+        SELECT
+            1 AS Resultado,
+            'El producto se eliminó correctamente del carrito.' AS Mensaje;
 
     END IF;
 
-END $$
-
+END ;;
 DELIMITER ;
-
--- actializar la contrasenna nueva
-CALL spActualizarContrasenna
-(
-    5,
-    '1111111111',
-    'Nueva123'
-);
-
-
-
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -1291,13 +1330,8 @@ CALL spActualizarContrasenna
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-
-DROP PROCEDURE IF EXISTS spIniciarSesionUsuario;
-
-DELIMITER $$
-
-CREATE PROCEDURE spIniciarSesionUsuario
-(
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spIniciarSesionUsuario`(
     pIdentificacionCorreo VARCHAR(100),
     pContrasenna          VARCHAR(10)
 )
@@ -1326,9 +1360,175 @@ BEGIN
         AND U.Estado = 1
     LIMIT 1;
 
-END$$
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spModificarCantidadCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spModificarCantidadCarrito`(
+    IN pConsecutivoUsuario INT,
+    IN pConsecutivoProducto INT,
+    IN pNuevaCantidad INT
+)
+BEGIN
 
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vConsecutivoDetalle INT DEFAULT NULL;
+    DECLARE vStock INT DEFAULT 0;
 
+    -- Buscar el carrito activo del usuario
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    -- Consultar el stock disponible del producto
+    SELECT IFNULL(MAX(Stock), 0)
+    INTO vStock
+    FROM tb_producto
+    WHERE Consecutivo = pConsecutivoProducto
+      AND Estado = 1;
+
+    -- Buscar el producto dentro del carrito
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoDetalle
+    FROM tb_carrito_detalle
+    WHERE ConsecutivoCarrito = vConsecutivoCarrito
+      AND ConsecutivoProducto = pConsecutivoProducto;
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no tiene un carrito activo.' AS Mensaje;
+
+    ELSEIF vConsecutivoDetalle IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El producto no se encuentra en el carrito.' AS Mensaje;
+
+    ELSEIF pNuevaCantidad <= 0 THEN
+
+        SELECT
+            0 AS Resultado,
+            'La cantidad debe ser mayor que cero.' AS Mensaje;
+
+    ELSEIF pNuevaCantidad > vStock THEN
+
+        SELECT
+            0 AS Resultado,
+            CONCAT(
+                'La cantidad solicitada supera el stock disponible. Stock actual: ',
+                vStock
+            ) AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_carrito_detalle
+        SET Cantidad = pNuevaCantidad
+        WHERE Consecutivo = vConsecutivoDetalle;
+
+        SELECT
+            1 AS Resultado,
+            'La cantidad se modificó correctamente.' AS Mensaje;
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spObtenerCarritoActivo` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spObtenerCarritoActivo`(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
+
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
+
+    IF vConsecutivoCarrito IS NULL THEN
+
+        INSERT INTO tb_carrito
+        (
+            ConsecutivoUsuario,
+            Estado
+        )
+        VALUES
+        (
+            pConsecutivoUsuario,
+            'Activo'
+        );
+
+        SET vConsecutivoCarrito = LAST_INSERT_ID();
+
+    END IF;
+
+    SELECT vConsecutivoCarrito AS ConsecutivoCarrito;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spRegistrarCategoria` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spRegistrarCategoria`(
+    pNombre VARCHAR(80),
+    pDescripcion VARCHAR(250)
+)
+BEGIN
+
+    INSERT INTO tb_categoria
+    (
+        Nombre,
+        Descripcion
+    )
+    VALUES
+    (
+        pNombre,
+        pDescripcion
+    );
+
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1360,6 +1560,53 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spRegistrarProducto` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spRegistrarProducto`(
+    pConsecutivoCategoria INT,
+    pNombre VARCHAR(80),
+    pDescripcion TEXT,
+    pPrecio DECIMAL(10,2),
+    pStock INT,
+    pRutaImagen VARCHAR(1024)
+)
+BEGIN
+
+    INSERT INTO tb_producto
+    (
+        ConsecutivoCategoria,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        RutaImagen,
+        Estado
+    )
+    VALUES
+    (
+        pConsecutivoCategoria,
+        pNombre,
+        pDescripcion,
+        pPrecio,
+        pStock,
+        pRutaImagen,
+        1
+    );
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `spRegistrarUsuario` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1369,13 +1616,8 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
-
-DROP PROCEDURE IF EXISTS spRegistrarUsuario;
-
-DELIMITER $$
-
-CREATE PROCEDURE spRegistrarUsuario
-(
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spRegistrarUsuario`(
     pIdentificacion      VARCHAR(15),
     pNombre              VARCHAR(250),
     pCorreoElectronico   VARCHAR(100),
@@ -1425,12 +1667,70 @@ BEGIN
         1 AS Resultado,
         'El usuario fue registrado correctamente como Cliente.' AS Mensaje;
 
-END$$
-
+END ;;
 DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spVaciarCarrito` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spVaciarCarrito`(
+    IN pConsecutivoUsuario INT
+)
+BEGIN
 
+    DECLARE vConsecutivoCarrito INT DEFAULT NULL;
+    DECLARE vCantidadProductos INT DEFAULT 0;
 
+    -- Buscar el carrito activo
+    SELECT MAX(Consecutivo)
+    INTO vConsecutivoCarrito
+    FROM tb_carrito
+    WHERE ConsecutivoUsuario = pConsecutivoUsuario
+      AND Estado = 'Activo';
 
+    IF vConsecutivoCarrito IS NULL THEN
+
+        SELECT
+            0 AS Resultado,
+            'El usuario no tiene un carrito activo.' AS Mensaje;
+
+    ELSE
+
+        SELECT COUNT(*)
+        INTO vCantidadProductos
+        FROM tb_carrito_detalle
+        WHERE ConsecutivoCarrito = vConsecutivoCarrito;
+
+        IF vCantidadProductos = 0 THEN
+
+            SELECT
+                0 AS Resultado,
+                'El carrito ya se encuentra vacío.' AS Mensaje;
+
+        ELSE
+
+            DELETE FROM tb_carrito_detalle
+            WHERE ConsecutivoCarrito = vConsecutivoCarrito;
+
+            SELECT
+                1 AS Resultado,
+                'El carrito se vació correctamente.' AS Mensaje;
+
+        END IF;
+
+    END IF;
+
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1476,176 +1776,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-
--- Procedimiento para consultar usuarios y roles
-
-DROP PROCEDURE IF EXISTS spConsultarUsuariosRoles;
-
-DELIMITER $$
-
-CREATE PROCEDURE spConsultarUsuariosRoles()
-BEGIN
-
-    SELECT
-        U.Consecutivo,
-        U.Identificacion,
-        U.Nombre,
-        U.CorreoElectronico,
-        U.Estado,
-        R.Consecutivo AS ConsecutivoRol,
-        R.Rol
-    FROM tb_usuario U
-    INNER JOIN tb_usuario_rol UR
-        ON U.Consecutivo = UR.ConsecutivoUsuario
-    INNER JOIN tb_rol R
-        ON UR.ConsecutivoRol = R.Consecutivo
-    ORDER BY U.Nombre;
-
-END$$
-
--- Procedimiento para modificar rol
-
-DROP PROCEDURE IF EXISTS spActualizarRolUsuario;
-
-DELIMITER $$
-
-CREATE PROCEDURE spActualizarRolUsuario
-(
-    pConsecutivoUsuario INT,
-    pConsecutivoRol     INT
-)
-BEGIN
-
-    IF NOT EXISTS
-    (
-        SELECT 1
-        FROM tb_usuario
-        WHERE Consecutivo = pConsecutivoUsuario
-    )
-    THEN
-
-        SELECT
-            0 AS Resultado,
-            'El usuario indicado no existe.' AS Mensaje;
-
-    ELSEIF NOT EXISTS
-    (
-        SELECT 1
-        FROM tb_rol
-        WHERE Consecutivo = pConsecutivoRol
-    )
-    THEN
-
-        SELECT
-            0 AS Resultado,
-            'El rol indicado no existe.' AS Mensaje;
-
-    ELSE
-
-        UPDATE tb_usuario_rol
-        SET
-            ConsecutivoRol = pConsecutivoRol,
-            FechaModificacion = CURRENT_TIMESTAMP
-        WHERE ConsecutivoUsuario = pConsecutivoUsuario;
-
-        IF ROW_COUNT() = 0 THEN
-
-            INSERT INTO tb_usuario_rol
-            (
-                ConsecutivoUsuario,
-                ConsecutivoRol
-            )
-            VALUES
-            (
-                pConsecutivoUsuario,
-                pConsecutivoRol
-            );
-
-        END IF;
-
-        SELECT
-            1 AS Resultado,
-            'El rol del usuario fue actualizado correctamente.' AS Mensaje;
-
-    END IF;
-
-END$$
-
-----------------------------------------------------------------------
-
--- Asginar roles
-
-USE bdproyecto;
-
-UPDATE tb_rol
-SET Rol = 'Cliente'
-WHERE Consecutivo = 1;
-
-UPDATE tb_rol
-SET Rol = 'Administrador'
-WHERE Consecutivo = 2;
-
--- Insert rol tabla
-
-INSERT INTO tb_usuario_rol
-(
-    ConsecutivoUsuario,
-    ConsecutivoRol
-)
-SELECT
-    U.Consecutivo,
-    1
-FROM tb_usuario U
-LEFT JOIN tb_usuario_rol UR
-    ON U.Consecutivo = UR.ConsecutivoUsuario
-WHERE UR.ConsecutivoUsuario IS NULL;
-
-
--- Convertir usuario en administrador
-
-UPDATE tb_usuario_rol
-SET ConsecutivoRol = 2
-WHERE ConsecutivoUsuario =
-(
-    SELECT Consecutivo
-    FROM tb_usuario
-    WHERE CorreoElectronico = 'felipe@gmail.com'
-);
-
--- Validaciones roles
-SELECT
-    U.Consecutivo,
-    U.Nombre,
-    U.CorreoElectronico,
-    R.Rol
-FROM tb_usuario U
-INNER JOIN tb_usuario_rol UR
-    ON U.Consecutivo = UR.ConsecutivoUsuario
-INNER JOIN tb_rol R
-    ON UR.ConsecutivoRol = R.Consecutivo;
-
--- Para evitar que tengan 2 roles
-
-ALTER TABLE tb_usuario_rol
-ADD CONSTRAINT UQ_tb_usuario_rol_usuario
-UNIQUE (ConsecutivoUsuario);
-
-
--- Procedimiento Almacenado Roles
-
-CALL spIniciarSesionUsuario(
-    'felipe@gmail.com',
-    '123456'
-);
-
--- usuarios existentes
-SELECT
-    Consecutivo,
-    Nombre,
-    CorreoElectronico,
-    Estado
-FROM tb_usuario;
-
--- contrasennas
-SELECT *
-FROM tb_usuario;
+-- Dump completed on 2026-07-22 16:55:00

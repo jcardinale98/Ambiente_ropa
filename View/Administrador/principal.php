@@ -1,13 +1,10 @@
 <?php
 
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/UtilitarioModel.php';
-
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
 RequerirRol("Administrador");
 
 ?>
 
-<!DOCTYPE html>
 
 <html lang="es">
 
@@ -84,8 +81,12 @@ RequerirRol("Administrador");
             Gestionar roles
           </a>
 
-          <a class="btn btn-outline-dark" href="/AMBIENTE_ROPA/View/Administrador/AdminProductos.php">
+          <a class="btn btn-dark" href="/Ambiente_ropa/View/vGestion/GestionProductos.php">
             Gestionar productos
+          </a>
+
+          <a class="btn btn-dark" href="/Ambiente_ropa/View/vGestion/GestionCategoria.php">
+            Gestionar categorías
           </a>
 
         </div>

@@ -24,7 +24,7 @@ function ConsultarProductoModel($consecutivo)
     {
         $conn = OpenDB();
 
-        $sql = "CALL spConsultarProducto('$consecutivo')";
+        $sql = "CALL spConsultarProductoPorId('$consecutivo')";
         $response = $conn -> query($sql);
 
         return $response;
@@ -36,13 +36,13 @@ function ConsultarProductoModel($consecutivo)
     }
 }
 
-function RegistrarProductoModel($consecutivoCategoria, $nombre, $descripcion, $precio, $imagen, $stock)
+function RegistrarProductoModel($consecutivoCategoria, $nombre, $descripcion, $precio, $stock, $imagen)
 {
     try
     {
         $conn = OpenDB();
 
-        $sql = "CALL spRegistrarProducto($consecutivoCategoria,'$nombre', '$descripcion', $precio, '$imagen', $stock)";
+        $sql = "CALL spRegistrarProducto($consecutivoCategoria,'$nombre', '$descripcion', $precio, $stock, '$imagen')";
         $response = $conn -> query($sql);
 
         return $response;
@@ -124,6 +124,25 @@ function BuscarProductosModel($nombre, $consecutivoCategoria)
     catch(Exception $e)
     {
         AddError($e, 'BuscarProductosModel');
+        return false;
+    }
+}
+
+function BuscarProductosAdminModel($nombre, $consecutivoCategoria)
+{
+    try
+    {
+        $conn = OpenDB();
+
+        $sql = "CALL spBuscarProductosAdmin('$nombre', $consecutivoCategoria)";
+        $response = $conn -> query($sql);
+
+        return $response;       
+     
+    }
+    catch(Exception $e)
+    {
+        AddError($e, 'BuscarProductosAdminModel');
         return false;
     }
 }

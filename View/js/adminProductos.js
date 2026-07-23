@@ -1,170 +1,79 @@
-document.addEventListener(
-    "DOMContentLoaded",
-    function ()
-    {
-        const formularioEditar =
-            document.getElementById(
-                "formEditarProducto"
-            );
+document.addEventListener("DOMContentLoaded", function () {
+  const formularioEditar = document.getElementById("formEditarProducto");
 
-        if (formularioEditar)
-        {
-            formularioEditar.addEventListener(
-                "submit",
-                function (evento)
-                {
-                    const precio = parseFloat(
-                        document.getElementById(
-                            "editarPrecio"
-                        ).value
-                    );
+  if (formularioEditar) {
+    formularioEditar.addEventListener("submit", function (evento) {
+      const precio = parseFloat(document.getElementById("editarPrecio").value);
 
-                    const stock = parseInt(
-                        document.getElementById(
-                            "editarStock"
-                        ).value,
-                        10
-                    );
+      const stock = parseInt(document.getElementById("editarStock").value, 10);
 
-                    if (
-                        Number.isNaN(precio)
-                        || precio <= 0
-                    )
-                    {
-                        evento.preventDefault();
+      if (Number.isNaN(precio) || precio <= 0) {
+        evento.preventDefault();
 
-                        alert(
-                            "El precio debe ser mayor que cero."
-                        );
+        alert("El precio debe ser mayor que cero.");
 
-                        return;
-                    }
+        return;
+      }
 
-                    if (
-                        Number.isNaN(stock)
-                        || stock < 0
-                    )
-                    {
-                        evento.preventDefault();
+      if (Number.isNaN(stock) || stock < 0) {
+        evento.preventDefault();
 
-                        alert(
-                            "El stock no puede ser negativo."
-                        );
-                    }
-                }
-            );
-        }
+        alert("El stock no puede ser negativo.");
+      }
+    });
+  }
 
+  const campoImagen = document.getElementById("editarImagen");
 
-        const campoImagen =
-            document.getElementById(
-                "editarImagen"
-            );
+  const vistaImagen = document.getElementById("vistaImagenEditar");
 
-        const vistaImagen =
-            document.getElementById(
-                "vistaImagenEditar"
-            );
+  if (campoImagen && vistaImagen) {
+    campoImagen.addEventListener("change", function () {
+      const archivo = campoImagen.files[0];
 
-        if (
-            campoImagen
-            && vistaImagen
-        )
-        {
-            campoImagen.addEventListener(
-                "change",
-                function ()
-                {
-                    const archivo =
-                        campoImagen.files[0];
+      if (!archivo) {
+        return;
+      }
 
-                    if (!archivo)
-                    {
-                        return;
-                    }
+      const tiposPermitidos = ["image/jpeg", "image/png", "image/webp"];
 
-                    const tiposPermitidos = [
-                        "image/jpeg",
-                        "image/png",
-                        "image/webp"
-                    ];
+      if (!tiposPermitidos.includes(archivo.type)) {
+        alert("Seleccione una imagen JPG, PNG o WEBP.");
 
-                    if (
-                        !tiposPermitidos.includes(
-                            archivo.type
-                        )
-                    )
-                    {
-                        alert(
-                            "Seleccione una imagen JPG, PNG o WEBP."
-                        );
+        campoImagen.value = "";
 
-                        campoImagen.value = "";
+        return;
+      }
 
-                        return;
-                    }
+      if (archivo.size > 3 * 1024 * 1024) {
+        alert("La imagen no puede superar 3 MB.");
 
-                    if (
-                        archivo.size
-                        > 3 * 1024 * 1024
-                    )
-                    {
-                        alert(
-                            "La imagen no puede superar 3 MB."
-                        );
+        campoImagen.value = "";
 
-                        campoImagen.value = "";
+        return;
+      }
 
-                        return;
-                    }
+      vistaImagen.src = URL.createObjectURL(archivo);
+    });
+  }
 
-                    vistaImagen.src =
-                        URL.createObjectURL(
-                            archivo
-                        );
-                }
-            );
-        }
+  const formulariosEstado = document.querySelectorAll(".formulario-estado");
 
+  formulariosEstado.forEach(function (formulario) {
+    formulario.addEventListener("submit", function (evento) {
+      const boton = formulario.querySelector("button[type='submit']");
 
-        const formulariosEstado =
-            document.querySelectorAll(
-                ".formulario-estado"
-            );
+      const nombre = boton.dataset.nombre || "";
 
-        formulariosEstado.forEach(
-            function (formulario)
-            {
-                formulario.addEventListener(
-                    "submit",
-                    function (evento)
-                    {
-                        const boton =
-                            formulario.querySelector(
-                                "button[type='submit']"
-                            );
+      const accion = boton.dataset.accion || "";
 
-                        const nombre =
-                            boton.dataset.nombre || "";
+      const confirmado = confirm(
+        "¿Está seguro de " + accion + ' el producto "' + nombre + '"?',
+      );
 
-                        const accion =
-                            boton.dataset.accion || "";
-
-                        const confirmado = confirm(
-                            "¿Está seguro de "
-                            + accion
-                            + " el producto \""
-                            + nombre
-                            + "\"?"
-                        );
-
-                        if (!confirmado)
-                        {
-                            evento.preventDefault();
-                        }
-                    }
-                );
-            }
-        );
-    }
-);
+      if (!confirmado) {
+        evento.preventDefault();
+      }
+    });
+  });
+});
