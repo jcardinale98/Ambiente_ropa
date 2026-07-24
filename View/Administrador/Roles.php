@@ -35,217 +35,245 @@ unset(
 
 <head>
 
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-  <title>Gestión de roles</title>
+    <title>Gestión de roles</title>
 
-  <link rel="stylesheet" href="/Ambiente_ropa/css/vendor.css">
+    <link
+        rel="stylesheet"
+        href="/Ambiente_ropa/css/vendor.css"
+    >
 
-  <link rel="stylesheet" href="/Ambiente_ropa/css/style.css">
+    <link
+        rel="stylesheet"
+        href="/Ambiente_ropa/css/style.css"
+    >
 
-  <style>
-  .contenedor-roles {
-    width: 95%;
-    max-width: 1200px;
-    margin: 40px auto;
-  }
+    <style>
 
-  .encabezado-roles {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
-  }
+        .contenedor-roles
+        {
+            width: 95%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
 
-  .tabla-roles {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffffff;
-  }
+        .encabezado-roles
+        {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
 
-  .tabla-roles th,
-  .tabla-roles td {
-    padding: 12px;
-    border-bottom: 1px solid #dddddd;
-    text-align: left;
-  }
+        .tabla-roles
+        {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+        }
 
-  .tabla-roles th {
-    background-color: #191919;
-    color: #ffffff;
-  }
+        .tabla-roles th,
+        .tabla-roles td
+        {
+            padding: 12px;
+            border-bottom: 1px solid #dddddd;
+            text-align: left;
+        }
 
-  .formulario-rol {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-  }
+        .tabla-roles th
+        {
+            background-color: #191919;
+            color: #ffffff;
+        }
 
-  .formulario-rol select {
-    min-width: 160px;
-    margin: 0;
-  }
+        .formulario-rol
+        {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
 
-  .formulario-rol button {
-    margin: 0;
-  }
+        .formulario-rol select
+        {
+            min-width: 160px;
+            margin: 0;
+        }
 
-  .mensaje-correcto {
-    padding: 12px;
-    margin-bottom: 20px;
-    color: #155724;
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-  }
+        .formulario-rol button
+        {
+            margin: 0;
+        }
 
-  .mensaje-error {
-    padding: 12px;
-    margin-bottom: 20px;
-    color: #721c24;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-  }
+        .mensaje-correcto
+        {
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
 
-  .estado-activo {
-    font-weight: bold;
-    color: #198754;
-  }
+        .mensaje-error
+        {
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
 
-  .estado-inactivo {
-    font-weight: bold;
-    color: #dc3545;
-  }
-  </style>
+        .estado-activo
+        {
+            font-weight: bold;
+            color: #198754;
+        }
+
+        .estado-inactivo
+        {
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-  <main class="contenedor-roles">
+    <main class="contenedor-roles">
 
-    <div class="encabezado-roles">
+        <div class="encabezado-roles">
 
-      <div>
+            <div>
 
-        <h1>Gestión de roles</h1>
+                <h1>Gestión de roles</h1>
 
-        <p>
-          Usuario conectado:
-          <strong>
-            <?= htmlspecialchars(
+                <p>
+                    Usuario conectado:
+                    <strong>
+                        <?= htmlspecialchars(
                             $_SESSION["NombreUsuario"]
                         ) ?>
-          </strong>
+                    </strong>
 
-          — Rol:
+                    — Rol:
 
-          <strong>
-            <?= htmlspecialchars(
+                    <strong>
+                        <?= htmlspecialchars(
                             $_SESSION["RolUsuario"]
                         ) ?>
-          </strong>
-        </p>
+                    </strong>
+                </p>
 
-      </div>
+            </div>
 
-      <div>
+            <div>
 
-        <a class="btn btn-outline-dark" href="/Ambiente_ropa/View/Administrador/principal.php">
-          Volver
-        </a>
+                <a
+                    class="btn btn-outline-dark"
+                    href="/Ambiente_ropa/View/Administrador/principal.php"
+                >
+                    Volver
+                </a>
 
-      </div>
+            </div>
 
-    </div>
+        </div>
 
-    <?php if ($mensaje !== null): ?>
+        <?php if ($mensaje !== null): ?>
 
-    <div class="<?= $resultadoMensaje === 1
+            <div
+                class="<?= $resultadoMensaje === 1
                     ? 'mensaje-correcto'
-                    : 'mensaje-error' ?>">
-      <?= htmlspecialchars($mensaje) ?>
-    </div>
+                    : 'mensaje-error' ?>"
+            >
+                <?= htmlspecialchars($mensaje) ?>
+            </div>
 
-    <?php endif; ?>
+        <?php endif; ?>
 
-    <div style="overflow-x: auto;">
+        <div style="overflow-x: auto;">
 
-      <table class="tabla-roles">
+            <table class="tabla-roles">
 
-        <thead>
+                <thead>
 
-          <tr>
+                    <tr>
 
-            <th>Identificación</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Estado</th>
-            <th>Rol actual</th>
-            <th>Modificar rol</th>
+                        <th>Identificación</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Rol actual</th>
+                        <th>Modificar rol</th>
 
-          </tr>
+                    </tr>
 
-        </thead>
+                </thead>
 
-        <tbody>
+                <tbody>
 
-          <?php if (count($usuarios) > 0): ?>
+                    <?php if (count($usuarios) > 0): ?>
 
-          <?php foreach ($usuarios as $usuario): ?>
+                        <?php foreach ($usuarios as $usuario): ?>
 
-          <tr>
+                            <tr>
 
-            <td>
-              <?= htmlspecialchars(
+                                <td>
+                                    <?= htmlspecialchars(
                                         $usuario["Identificacion"]
                                     ) ?>
-            </td>
+                                </td>
 
-            <td>
-              <?= htmlspecialchars(
+                                <td>
+                                    <?= htmlspecialchars(
                                         $usuario["Nombre"]
                                     ) ?>
-            </td>
+                                </td>
 
-            <td>
-              <?= htmlspecialchars(
+                                <td>
+                                    <?= htmlspecialchars(
                                         $usuario["CorreoElectronico"]
                                     ) ?>
-            </td>
+                                </td>
 
-            <td>
+                                <td>
 
-              <?php if (
+                                    <?php if (
                                         intval($usuario["Estado"]) === 1
                                     ): ?>
 
-              <span class="estado-activo">
-                Activo
-              </span>
+                                        <span class="estado-activo">
+                                            Activo
+                                        </span>
 
-              <?php else: ?>
+                                    <?php else: ?>
 
-              <span class="estado-inactivo">
-                Inactivo
-              </span>
+                                        <span class="estado-inactivo">
+                                            Inactivo
+                                        </span>
 
-              <?php endif; ?>
+                                    <?php endif; ?>
 
-            </td>
+                                </td>
 
-            <td>
-              <?= htmlspecialchars(
+                                <td>
+                                    <?= htmlspecialchars(
                                         $usuario["Rol"]
                                     ) ?>
-            </td>
+                                </td>
 
-            <td>
+                                <td>
 
-              <?php if (
+                                    <?php if (
                                         intval(
                                             $usuario["Consecutivo"]
                                         )
@@ -256,77 +284,98 @@ unset(
                                         )
                                     ): ?>
 
-              <strong>
-                Sesión actual
-              </strong>
+                                        <strong>
+                                            Sesión actual
+                                        </strong>
 
-              <?php else: ?>
+                                    <?php else: ?>
 
-              <form class="formulario-rol" method="POST" action="/Ambiente_ropa/Controller/RolController.php">
+                                        <form
+                                            class="formulario-rol"
+                                            method="POST"
+                                            action="/Ambiente_ropa/Controller/RolController.php"
+                                        >
 
-                <input type="hidden" name="ConsecutivoUsuario" value="<?= intval(
+                                            <input
+                                                type="hidden"
+                                                name="ConsecutivoUsuario"
+                                                value="<?= intval(
                                                     $usuario[
                                                         "Consecutivo"
                                                     ]
-                                                ) ?>">
+                                                ) ?>"
+                                            >
 
-                <select name="ConsecutivoRol" required>
+                                            <select
+                                                name="ConsecutivoRol"
+                                                required
+                                            >
 
-                  <option value="1" <?= intval(
+                                                <option
+                                                    value="1"
+                                                    <?= intval(
                                                         $usuario[
                                                             "ConsecutivoRol"
                                                         ]
                                                     ) === 1
                                                         ? "selected"
-                                                        : "" ?>>
-                    Cliente
-                  </option>
+                                                        : "" ?>
+                                                >
+                                                    Cliente
+                                                </option>
 
-                  <option value="2" <?= intval(
+                                                <option
+                                                    value="2"
+                                                    <?= intval(
                                                         $usuario[
                                                             "ConsecutivoRol"
                                                         ]
                                                     ) === 2
                                                         ? "selected"
-                                                        : "" ?>>
-                    Administrador
-                  </option>
+                                                        : "" ?>
+                                                >
+                                                    Administrador
+                                                </option>
 
-                </select>
+                                            </select>
 
-                <button type="submit" name="btnActualizarRol" class="btn btn-dark">
-                  Guardar
-                </button>
+                                            <button
+                                                type="submit"
+                                                name="btnActualizarRol"
+                                                class="btn btn-dark"
+                                            >
+                                                Guardar
+                                            </button>
 
-              </form>
+                                        </form>
 
-              <?php endif; ?>
+                                    <?php endif; ?>
 
-            </td>
+                                </td>
 
-          </tr>
+                            </tr>
 
-          <?php endforeach; ?>
+                        <?php endforeach; ?>
 
-          <?php else: ?>
+                    <?php else: ?>
 
-          <tr>
+                        <tr>
 
-            <td colspan="6">
-              No se encontraron usuarios registrados.
-            </td>
+                            <td colspan="6">
+                                No se encontraron usuarios registrados.
+                            </td>
 
-          </tr>
+                        </tr>
 
-          <?php endif; ?>
+                    <?php endif; ?>
 
-        </tbody>
+                </tbody>
 
-      </table>
+            </table>
 
-    </div>
+        </div>
 
-  </main>
+    </main>
 
 </body>
 

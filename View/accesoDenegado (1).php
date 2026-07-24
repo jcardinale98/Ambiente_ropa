@@ -100,9 +100,9 @@ if (session_status() == PHP_SESSION_NONE)
 
                     <a
                         class="btn btn-dark"
-                        href="/Ambiente_ropa/View/vInicio/login.php"
+                        href="/Ambiente_ropa/Controller/CerrarSessionController.php"
                     >
-                        Iniciar sesión
+                        Cerrar sesión e iniciar nuevamente
                     </a>
 
                 <?php endif; ?>

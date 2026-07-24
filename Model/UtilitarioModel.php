@@ -14,14 +14,31 @@ if (session_status() == PHP_SESSION_NONE)
 
 function OpenDB()
 {
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    return new mysqli("127.0.0.1:3307", "root", "", "bdproyecto");
+    mysqli_report(
+        MYSQLI_REPORT_ERROR
+        | MYSQLI_REPORT_STRICT
+    );
+
+    $conn = new mysqli(
+        "127.0.0.1",
+        "root",
+        "",
+        "bdproyecto",
+        3307
+    );
+
+    $conn->set_charset("utf8mb4");
+
+    return $conn;
 }
 
 
 function CloseDB($conn)
 {
-    $conn->close();
+    if ($conn !== null)
+    {
+        $conn->close();
+    }
 }
 
 
@@ -56,18 +73,52 @@ function LimpiarResultados($conn)
 
 function AddError($error, $accion)
 {
-    $conn = OpenDB();
-    $mensaje = $error->getMessage();
-    $idUsuario = 0;
-    if(isset($_SESSION["ConsecutivoUsuario"]))
-    {
-        $idUsuario = $_SESSION["ConsecutivoUsuario"];
-    }
+    $conn = null;
 
-    $sql = "CALL spRegistrarError('$mensaje', '$accion', '$idUsuario')";
-    $conn->query($sql);
-    CloseDB($conn);
+    try
+    {
+        $conn = OpenDB();
+
+        $mensaje = $conn->real_escape_string(
+            $error->getMessage()
+        );
+
+        $accion = $conn->real_escape_string(
+            $accion
+        );
+
+        $consecutivoUsuario = isset(
+            $_SESSION["ConsecutivoUsuario"]
+        )
+            ? intval($_SESSION["ConsecutivoUsuario"])
+            : 0;
+
+        $sql = "CALL spRegistrarError(
+                    '$mensaje',
+                    '$accion',
+                    $consecutivoUsuario
+                )";
+
+        $conn->query($sql);
+
+        LimpiarResultados($conn);
+        CloseDB($conn);
+    }
+    catch (Exception $e)
+    {
+        if ($conn !== null)
+        {
+            try
+            {
+                CloseDB($conn);
+            }
+            catch (Exception $errorCierre)
+            {
+            }
+        }
+    }
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -85,14 +136,16 @@ function UsuarioAutenticado()
 function EsAdministrador()
 {
     return UsuarioAutenticado()
-        && $_SESSION["RolUsuario"] == "Administrador";
+        && $_SESSION["RolUsuario"]
+            === "Administrador";
 }
 
 
 function EsCliente()
 {
     return UsuarioAutenticado()
-        && $_SESSION["RolUsuario"] == "Cliente";
+        && $_SESSION["RolUsuario"]
+            === "Cliente";
 }
 
 
@@ -104,7 +157,7 @@ function EsCliente()
 
 function RequerirSesion()
 {
-    if(!UsuarioAutenticado())
+    if (!UsuarioAutenticado())
     {
         $_SESSION["MensajeLogin"] =
             "Debe iniciar sesión para continuar.";
@@ -128,7 +181,7 @@ function RequerirRol($rolPermitido)
 {
     RequerirSesion();
 
-    if($_SESSION["RolUsuario"] != $rolPermitido)
+    if ($_SESSION["RolUsuario"] !== $rolPermitido)
     {
         header(
             "Location: /Ambiente_ropa/View/accesoDenegado.php"
@@ -144,6 +197,7 @@ function RequerirRol($rolPermitido)
 | REDIRECCIÓN SEGÚN EL ROL
 |--------------------------------------------------------------------------
 */
+
 function RedirigirSegunRol()
 {
     if (!UsuarioAutenticado())

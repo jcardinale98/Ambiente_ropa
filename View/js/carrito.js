@@ -1,104 +1,156 @@
-$(document).ready(function () {
-  console.log("carrito.js cargado correctamente");
+$(document).ready(function ()
+{
+    console.log("carrito.js cargado correctamente");
 
-  $(document).on("click", ".btn-agregar", function () {
-    const boton = $(this);
+    $(document).on("click", ".btn-agregar", function ()
+    {
+        const boton = $(this);
 
-    const consecutivoProducto = parseInt(boton.attr("data-producto"));
+        const consecutivoProducto =
+            parseInt(boton.attr("data-producto"));
 
-    const campoCantidad = $("#cantidad_" + consecutivoProducto);
+        const campoCantidad =
+            $("#cantidad_" + consecutivoProducto);
 
-    const cantidad = parseInt(campoCantidad.val());
+        const cantidad =
+            parseInt(campoCantidad.val());
 
-    const cantidadMaxima = parseInt(campoCantidad.attr("max"));
+        const cantidadMaxima =
+            parseInt(campoCantidad.attr("max"));
 
-    if (isNaN(cantidad) || cantidad <= 0) {
-      MostrarMensaje("La cantidad debe ser mayor que cero.", false);
+        if (
+            isNaN(cantidad)
+            || cantidad <= 0
+        )
+        {
+            MostrarMensaje(
+                "La cantidad debe ser mayor que cero.",
+                false
+            );
 
-      return;
-    }
-
-    if (cantidad > cantidadMaxima) {
-      MostrarMensaje("La cantidad supera el inventario disponible.", false);
-
-      return;
-    }
-
-    boton.prop("disabled", true);
-
-    $.ajax({
-      url: "/Ambiente_ropa/Controller/CarritoController.php",
-      type: "POST",
-      dataType: "json",
-
-      data: {
-        Accion: "Agregar",
-        ConsecutivoProducto: consecutivoProducto,
-        Cantidad: cantidad,
-      },
-
-      success: function (respuesta) {
-        console.log(respuesta);
-
-        if (parseInt(respuesta.Resultado) === 1) {
-          MostrarMensaje(respuesta.Mensaje, true);
-
-          campoCantidad.val(1);
-
-          ActualizarCantidadCarrito();
-        } else {
-          MostrarMensaje(respuesta.Mensaje, false);
+            return;
         }
-      },
 
-      error: function (xhr) {
-        console.error(xhr.responseText);
+        if (cantidad > cantidadMaxima)
+        {
+            MostrarMensaje(
+                "La cantidad supera el inventario disponible.",
+                false
+            );
 
-        MostrarMensaje("No se pudo agregar el producto.", false);
-      },
+            return;
+        }
 
-      complete: function () {
-        boton.prop("disabled", false);
-      },
+        boton.prop("disabled", true);
+
+        $.ajax({
+            url: "/Ambiente_ropa/Controller/CarritoController.php",
+            type: "POST",
+            dataType: "json",
+
+            data: {
+                Accion: "Agregar",
+                ConsecutivoProducto: consecutivoProducto,
+                Cantidad: cantidad
+            },
+
+            success: function (respuesta)
+            {
+                console.log(respuesta);
+
+                if (
+                    parseInt(respuesta.Resultado) === 1
+                )
+                {
+                    MostrarMensaje(
+                        respuesta.Mensaje,
+                        true
+                    );
+
+                    campoCantidad.val(1);
+
+                    ActualizarCantidadCarrito();
+                }
+                else
+                {
+                    MostrarMensaje(
+                        respuesta.Mensaje,
+                        false
+                    );
+                }
+            },
+
+            error: function (xhr)
+            {
+                console.error(xhr.responseText);
+
+                MostrarMensaje(
+                    "No se pudo agregar el producto.",
+                    false
+                );
+            },
+
+            complete: function ()
+            {
+                boton.prop("disabled", false);
+            }
+        });
     });
-  });
 });
 
-function ActualizarCantidadCarrito() {
-  $.ajax({
-    url: "/Ambiente_ropa/Controller/CarritoController.php",
-    type: "POST",
-    dataType: "json",
 
-    data: {
-      Accion: "ConsultarCantidad",
-    },
+function ActualizarCantidadCarrito()
+{
+    $.ajax({
+        url: "/Ambiente_ropa/Controller/CarritoController.php",
+        type: "POST",
+        dataType: "json",
 
-    success: function (respuesta) {
-      if (parseInt(respuesta.Resultado) === 1) {
-        $("#contadorCarrito").text(respuesta.CantidadProductos);
-      }
-    },
+        data: {
+            Accion: "ConsultarCantidad"
+        },
 
-    error: function (xhr) {
-      console.error(xhr.responseText);
-    },
-  });
+        success: function (respuesta)
+        {
+            if (
+                parseInt(respuesta.Resultado) === 1
+            )
+            {
+                $("#contadorCarrito").text(
+                    respuesta.CantidadProductos
+                );
+            }
+        },
+
+        error: function (xhr)
+        {
+            console.error(xhr.responseText);
+        }
+    });
 }
 
-function MostrarMensaje(mensaje, exitoso) {
-  const alerta = $("#mensajeAlerta");
 
-  alerta.stop(true, true);
+function MostrarMensaje(mensaje, exitoso)
+{
+    const alerta = $("#mensajeAlerta");
 
-  alerta.removeClass("alert-success alert-danger");
+    alerta.stop(true, true);
 
-  alerta.addClass(exitoso ? "alert-success" : "alert-danger");
+    alerta.removeClass(
+        "alert-success alert-danger"
+    );
 
-  alerta.text(mensaje);
-  alerta.fadeIn(200);
+    alerta.addClass(
+        exitoso
+            ? "alert-success"
+            : "alert-danger"
+    );
 
-  setTimeout(function () {
-    alerta.fadeOut(300);
-  }, 3000);
+    alerta.text(mensaje);
+    alerta.fadeIn(200);
+
+    setTimeout(function ()
+    {
+        alerta.fadeOut(300);
+    }, 3000);
 }
