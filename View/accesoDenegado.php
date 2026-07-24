@@ -102,7 +102,7 @@ if (session_status() == PHP_SESSION_NONE)
                         class="btn btn-dark"
                         href="/Ambiente_ropa/Controller/CerrarSessionController.php"
                     >
-                        Cerrar sesión e iniciar nuevamente
+                        Iniciar nuevamente
                     </a>
 
                 <?php endif; ?>
