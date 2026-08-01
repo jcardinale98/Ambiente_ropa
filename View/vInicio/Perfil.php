@@ -50,88 +50,9 @@ if ($perfil === null)
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <style>
-
-        body
-        {
-            background-color: #f5f5f5;
-        }
-
-        .encabezado
-        {
-            background-color: #ffffff;
-            padding: 18px 30px;
-            border-bottom: 1px solid #dddddd;
-        }
-
-        .titulo-perfil
-        {
-            margin: 0;
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .contenedor-perfil
-        {
-            padding-top: 40px;
-            padding-bottom: 50px;
-        }
-
-        .tarjeta-perfil
-        {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.10);
-            height: 100%;
-        }
-
-        .titulo-seccion
-        {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 22px;
-        }
-
-        .icono-perfil
-        {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px auto;
-            border-radius: 50%;
-            background-color: #212529;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-        }
-
-        .campo-bloqueado
-        {
-            background-color: #e9ecef;
-            cursor: not-allowed;
-        }
-
-        .mensaje-alerta
-        {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            min-width: 340px;
-            max-width: 450px;
-            z-index: 9999;
-            display: none;
-        }
-
-        .texto-ayuda
-        {
-            color: #6c757d;
-            font-size: 14px;
-        }
-
-    </style>
-
+    <link
+        rel="stylesheet"
+        href="../css/perfil.css">
 </head>
 
 <body>

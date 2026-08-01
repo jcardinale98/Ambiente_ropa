@@ -226,9 +226,79 @@ function ConsultarCantidad($consecutivoUsuario)
 
 function ConfirmarCompra($consecutivoUsuario)
 {
+    /*
+        Se consulta la información antes de confirmar porque
+        el procedimiento de compra vacía el carrito al finalizar.
+    */
+    $productosCarrito = ConsultarCarritoModel(
+        $consecutivoUsuario
+    );
+
+    $totalCarrito = ConsultarTotalCarritoModel(
+        $consecutivoUsuario
+    );
+
+    if (count($productosCarrito) === 0)
+    {
+        echo json_encode(array(
+            "Resultado" => 0,
+            "Mensaje" => "No existen productos en el carrito."
+        ));
+
+        return;
+    }
+
     $resultado = ConfirmarCompraModel(
         $consecutivoUsuario
     );
+
+    if (
+        isset($resultado["Resultado"])
+        && intval($resultado["Resultado"]) === 1
+    )
+    {
+        $total = isset($totalCarrito["Total"])
+            ? floatval($totalCarrito["Total"])
+            : 0;
+
+        $numeroComprobante = "";
+
+        if (isset($resultado["ConsecutivoCompra"]))
+        {
+            $numeroComprobante =
+                strval($resultado["ConsecutivoCompra"]);
+        }
+        elseif (isset($resultado["CompraId"]))
+        {
+            $numeroComprobante =
+                strval($resultado["CompraId"]);
+        }
+        elseif (isset($resultado["Consecutivo"]))
+        {
+            $numeroComprobante =
+                strval($resultado["Consecutivo"]);
+        }
+        else
+        {
+            $numeroComprobante =
+                date("YmdHis")
+                . "-"
+                . $consecutivoUsuario;
+        }
+
+        $_SESSION["UltimoComprobante"] = array(
+            "Numero" => $numeroComprobante,
+            "Fecha" => date("Y-m-d H:i:s"),
+            "Cliente" => isset($_SESSION["NombreUsuario"])
+                ? $_SESSION["NombreUsuario"]
+                : "Cliente",
+            "Productos" => $productosCarrito,
+            "Total" => $total
+        );
+
+        $resultado["ComprobanteURL"] =
+            "/Ambiente_ropa/View/vInicio/Comprobante.php";
+    }
 
     echo json_encode($resultado);
 }

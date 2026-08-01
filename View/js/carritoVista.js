@@ -1,55 +1,73 @@
 $(document).ready(function ()
 {
     $("#btnConfirmarCompra").click(function ()
-{
-    const boton = $(this);
-
-    const confirmar = confirm(
-        "¿Está seguro de confirmar la compra? "
-        + "Esta acción descontará el inventario."
-    );
-
-    if (!confirmar)
     {
-        return;
-    }
+        const boton = $(this);
 
-    boton.prop("disabled", true);
-    boton.html(
-        '<i class="fa-solid fa-spinner fa-spin"></i> '
-        + 'Procesando...'
-    );
+        const confirmar = confirm(
+            "¿Está seguro de confirmar la compra? "
+            + "Esta acción descontará el inventario."
+        );
 
-    $.ajax({
-        url: "/Ambiente_ropa/Controller/CarritoController.php",
-        type: "POST",
-        dataType: "json",
-
-        data: {
-            Accion: "Confirmar"
-        },
-
-        success: function (respuesta)
+        if (!confirmar)
         {
-            if (
-                parseInt(respuesta.Resultado) === 1
-            )
-            {
-                MostrarMensaje(
-                    respuesta.Mensaje,
-                    true
-                );
+            return;
+        }
 
-                setTimeout(function ()
-                {
-                    window.location.href =
-                        "/Ambiente_ropa/View/vInicio/Productos.php";
-                }, 1500);
-            }
-            else
+        boton.prop("disabled", true);
+
+        boton.html(
+            '<i class="fa-solid fa-spinner fa-spin"></i> '
+            + 'Procesando...'
+        );
+
+        $.ajax({
+            url: "/Ambiente_ropa/Controller/CarritoController.php",
+            type: "POST",
+            dataType: "json",
+
+            data: {
+                Accion: "Confirmar"
+            },
+
+            success: function (respuesta)
             {
+                if (parseInt(respuesta.Resultado) === 1)
+                {
+                    MostrarMensaje(
+                        respuesta.Mensaje,
+                        true
+                    );
+
+                    setTimeout(function ()
+                    {
+                        window.location.href =
+                            respuesta.ComprobanteURL
+                            || "/Ambiente_ropa/View/vInicio/Comprobante.php";
+                    }, 1200);
+                }
+                else
+                {
+                    MostrarMensaje(
+                        respuesta.Mensaje,
+                        false
+                    );
+
+                    boton.prop("disabled", false);
+
+                    boton.html(
+                        '<i class="fa-solid fa-check"></i> '
+                        + 'Confirmar compra'
+                    );
+                }
+            },
+
+            error: function (xhr)
+            {
+                console.error(xhr.responseText);
+
                 MostrarMensaje(
-                    respuesta.Mensaje,
+                    "No se pudo confirmar la compra.",
                     false
                 );
 
@@ -60,27 +78,10 @@ $(document).ready(function ()
                     + 'Confirmar compra'
                 );
             }
-        },
-
-        error: function (xhr)
-        {
-            console.error(xhr.responseText);
-
-            MostrarMensaje(
-                "No se pudo confirmar la compra.",
-                false
-            );
-
-            boton.prop("disabled", false);
-
-            boton.html(
-                '<i class="fa-solid fa-check"></i> '
-                + 'Confirmar compra'
-            );
-        }
+        });
     });
-});
-    
+
+
     $(".btn-modificar").click(function ()
     {
         const producto = $(this).data("producto");
@@ -111,9 +112,7 @@ $(document).ready(function ()
 
             success: function (respuesta)
             {
-                if (
-                    parseInt(respuesta.Resultado) === 1
-                )
+                if (parseInt(respuesta.Resultado) === 1)
                 {
                     MostrarMensaje(
                         respuesta.Mensaje,
@@ -172,9 +171,7 @@ $(document).ready(function ()
 
             success: function (respuesta)
             {
-                if (
-                    parseInt(respuesta.Resultado) === 1
-                )
+                if (parseInt(respuesta.Resultado) === 1)
                 {
                     MostrarMensaje(
                         respuesta.Mensaje,
@@ -230,9 +227,7 @@ $(document).ready(function ()
 
             success: function (respuesta)
             {
-                if (
-                    parseInt(respuesta.Resultado) === 1
-                )
+                if (parseInt(respuesta.Resultado) === 1)
                 {
                     MostrarMensaje(
                         respuesta.Mensaje,

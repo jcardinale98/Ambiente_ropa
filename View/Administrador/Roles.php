@@ -46,104 +46,18 @@ unset(
 
     <link
         rel="stylesheet"
-        href="/Ambiente_ropa/css/vendor.css"
+        href="/Ambiente_ropa/View/css/vendor.css"
     >
 
     <link
         rel="stylesheet"
-        href="/Ambiente_ropa/css/style.css"
+        href="/Ambiente_ropa/View/css/style.css"
     >
 
-    <style>
-
-        .contenedor-roles
-        {
-            width: 95%;
-            max-width: 1200px;
-            margin: 40px auto;
-        }
-
-        .encabezado-roles
-        {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .tabla-roles
-        {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #ffffff;
-        }
-
-        .tabla-roles th,
-        .tabla-roles td
-        {
-            padding: 12px;
-            border-bottom: 1px solid #dddddd;
-            text-align: left;
-        }
-
-        .tabla-roles th
-        {
-            background-color: #191919;
-            color: #ffffff;
-        }
-
-        .formulario-rol
-        {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0;
-        }
-
-        .formulario-rol select
-        {
-            min-width: 160px;
-            margin: 0;
-        }
-
-        .formulario-rol button
-        {
-            margin: 0;
-        }
-
-        .mensaje-correcto
-        {
-            padding: 12px;
-            margin-bottom: 20px;
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-
-        .mensaje-error
-        {
-            padding: 12px;
-            margin-bottom: 20px;
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-
-        .estado-activo
-        {
-            font-weight: bold;
-            color: #198754;
-        }
-
-        .estado-inactivo
-        {
-            font-weight: bold;
-            color: #dc3545;
-        }
-
-    </style>
-
+    <link
+        rel="stylesheet"
+        href="/Ambiente_ropa/View/css/roles.css"
+    >
 </head>
 
 <body>
@@ -200,7 +114,7 @@ unset(
 
         <?php endif; ?>
 
-        <div style="overflow-x: auto;">
+        <div class="tabla-roles-responsive">
 
             <table class="tabla-roles">
 
