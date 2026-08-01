@@ -34,113 +34,36 @@ $totalActual = isset($totalCarrito["Total"])
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Carrito de compras</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+        rel="stylesheet"
+    >
 
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
-    <style>
-        body
-        {
-            background-color: #f5f5f5;
-        }
-
-        .encabezado
-        {
-            background-color: white;
-            border-bottom: 1px solid #dddddd;
-            padding: 18px 30px;
-        }
-
-        .titulo
-        {
-            margin: 0;
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .contenedor-carrito
-        {
-            padding-top: 35px;
-            padding-bottom: 45px;
-        }
-
-        .producto-carrito
-        {
-            background-color: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 18px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
-        }
-
-        .imagen-producto
-        {
-            width: 130px;
-            height: 130px;
-            object-fit: contain;
-            background-color: #eeeeee;
-            border-radius: 8px;
-        }
-
-        .producto-nombre
-        {
-            font-size: 21px;
-            font-weight: bold;
-        }
-
-        .producto-precio
-        {
-            color: #6f42c1;
-            font-size: 19px;
-            font-weight: bold;
-        }
-
-        .cantidad-carrito
-        {
-            width: 90px;
-        }
-
-        .resumen-carrito
-        {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
-        }
-
-        .total-carrito
-        {
-            font-size: 27px;
-            font-weight: bold;
-            color: #6f42c1;
-        }
-
-        .mensaje-alerta
-        {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            min-width: 320px;
-            z-index: 9999;
-            display: none;
-        }
-    </style>
+    <link
+        rel="stylesheet"
+        href="../css/carrito.css"
+    >
 </head>
 
 <body>
 
-    <div id="mensajeAlerta"
-         class="alert mensaje-alerta"
-         role="alert">
+    <div
+        id="mensajeAlerta"
+        class="alert mensaje-alerta"
+        role="alert"
+    >
     </div>
 
     <header class="encabezado">
@@ -151,8 +74,10 @@ $totalActual = isset($totalCarrito["Total"])
                 Mi carrito
             </h1>
 
-            <a href="Productos.php"
-               class="btn btn-outline-dark">
+            <a
+                href="Productos.php"
+                class="btn btn-outline-dark"
+            >
 
                 <i class="fa-solid fa-arrow-left"></i>
                 Seguir comprando
@@ -175,11 +100,11 @@ $totalActual = isset($totalCarrito["Total"])
                     Agrega productos para continuar con la compra.
                 </p>
 
-                <a href="Productos.php"
-                   class="btn btn-dark">
-
+                <a
+                    href="Productos.php"
+                    class="btn btn-dark"
+                >
                     Ver productos
-
                 </a>
 
             </div>
@@ -213,8 +138,10 @@ $totalActual = isset($totalCarrito["Total"])
                                 "../images/" . $nombreImagen;
                         ?>
 
-                        <div class="producto-carrito"
-                             id="producto_<?php echo $idProducto; ?>">
+                        <div
+                            class="producto-carrito"
+                            id="producto_<?php echo $idProducto; ?>"
+                        >
 
                             <div class="row align-items-center">
 
@@ -231,7 +158,8 @@ $totalActual = isset($totalCarrito["Total"])
                                             echo htmlspecialchars(
                                                 $producto["Nombre"]
                                             );
-                                        ?>">
+                                        ?>"
+                                    >
 
                                 </div>
 
@@ -279,17 +207,17 @@ $totalActual = isset($totalCarrito["Total"])
                                         id="cantidad_<?php echo $idProducto; ?>"
                                         value="<?php echo $cantidad; ?>"
                                         min="1"
-                                        max="<?php echo $stock; ?>">
+                                        max="<?php echo $stock; ?>"
+                                    >
 
                                     <button
                                         type="button"
                                         class="btn btn-primary mt-2 btn-modificar"
                                         data-producto="<?php
                                             echo $idProducto;
-                                        ?>">
-
+                                        ?>"
+                                    >
                                         Actualizar
-
                                     </button>
 
                                     <button
@@ -297,10 +225,9 @@ $totalActual = isset($totalCarrito["Total"])
                                         class="btn btn-danger mt-2 btn-eliminar"
                                         data-producto="<?php
                                             echo $idProducto;
-                                        ?>">
-
+                                        ?>"
+                                    >
                                         Eliminar
-
                                     </button>
 
                                     <p class="mt-3 mb-0">
@@ -362,22 +289,21 @@ $totalActual = isset($totalCarrito["Total"])
                         <button
                             type="button"
                             id="btnVaciarCarrito"
-                            class="btn btn-outline-danger w-100 mt-4">
-
+                            class="btn btn-outline-danger w-100 mt-4"
+                        >
                             Vaciar carrito
-
                         </button>
 
                         <button
-    type="button"
-    id="btnConfirmarCompra"
-    class="btn btn-dark w-100 mt-2">
+                            type="button"
+                            id="btnConfirmarCompra"
+                            class="btn btn-dark w-100 mt-2"
+                        >
 
-    <i class="fa-solid fa-check"></i>
+                            <i class="fa-solid fa-check"></i>
+                            Confirmar compra
 
-    Confirmar compra
-
-</button>
+                        </button>
 
                     </div>
 
@@ -390,7 +316,6 @@ $totalActual = isset($totalCarrito["Total"])
     </main>
 
     <script src="../js/jquery-1.11.0.min.js"></script>
-
     <script src="../js/carritoVista.js"></script>
 
 </body>
