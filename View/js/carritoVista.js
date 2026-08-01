@@ -42,8 +42,9 @@ $(document).ready(function ()
                     setTimeout(function ()
                     {
                         window.location.href =
-                            "/Ambiente_ropa/View/vInicio/Productos.php";
-                    }, 1500);
+                            respuesta.ComprobanteURL
+                            || "/Ambiente_ropa/View/vInicio/Comprobante.php";
+                    }, 1200);
                 }
                 else
                 {
