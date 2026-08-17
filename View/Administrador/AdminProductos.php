@@ -95,231 +95,189 @@ function ObtenerRutaImagenAdmin(
 
 <head>
 
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        Administración de productos
-    </title>
+  <title>
+    Administración de productos
+  </title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <style>
+  <style>
+  body {
+    background-color: #f5f5f5;
+  }
 
-        body
-        {
-            background-color: #f5f5f5;
-        }
+  .contenedor {
+    width: 95%;
+    max-width: 1350px;
+    margin: 35px auto;
+  }
 
-        .contenedor
-        {
-            width: 95%;
-            max-width: 1350px;
-            margin: 35px auto;
-        }
+  .encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 25px;
+  }
 
-        .encabezado
-        {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
+  .tarjeta {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow:
+      0 3px 14px rgba(0, 0, 0, 0.10);
+    margin-bottom: 30px;
+  }
 
-        .tarjeta
-        {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow:
-                0 3px 14px rgba(0, 0, 0, 0.10);
-            margin-bottom: 30px;
-        }
+  .tabla-productos {
+    vertical-align: middle;
+    margin: 0;
+  }
 
-        .tabla-productos
-        {
-            vertical-align: middle;
-            margin: 0;
-        }
+  .tabla-productos th {
+    background-color: #212529;
+    color: #ffffff;
+    white-space: nowrap;
+  }
 
-        .tabla-productos th
-        {
-            background-color: #212529;
-            color: #ffffff;
-            white-space: nowrap;
-        }
+  .imagen-producto {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+  }
 
-        .imagen-producto
-        {
-            width: 75px;
-            height: 75px;
-            object-fit: contain;
-            border: 1px solid #dddddd;
-            border-radius: 8px;
-        }
+  .imagen-edicion {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+  }
 
-        .imagen-edicion
-        {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            border: 1px solid #dddddd;
-            border-radius: 10px;
-        }
+  .mensaje {
+    padding: 14px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
 
-        .mensaje
-        {
-            padding: 14px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
+  .mensaje-correcto {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+  }
 
-        .mensaje-correcto
-        {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
+  .mensaje-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+  }
 
-        .mensaje-error
-        {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
+  .descripcion {
+    min-width: 210px;
+    max-width: 350px;
+    white-space: normal;
+  }
 
-        .descripcion
-        {
-            min-width: 210px;
-            max-width: 350px;
-            white-space: normal;
-        }
-
-        .acciones
-        {
-            min-width: 200px;
-        }
-
-    </style>
+  .acciones {
+    min-width: 200px;
+  }
+  </style>
 
 </head>
 
 <body>
 
-    <nav class="navbar navbar-dark bg-dark">
+  <nav class="navbar navbar-dark bg-dark">
 
-        <div class="container-fluid px-4">
+    <div class="container-fluid px-4">
 
-            <span class="navbar-brand">
+      <span class="navbar-brand">
 
-                Administración de productos
+        Administración de productos
 
-            </span>
+      </span>
 
-            <div class="d-flex gap-2">
+      <div class="d-flex gap-2">
 
-                <a
-                    class="btn btn-outline-light"
-                    href="/Ambiente_ropa/View/Administrador/principal.php"
-                >
+        <a class="btn btn-outline-light" href="/Ambiente_ropa/View/Administrador/principal.php">
 
-                    <i class="fa-solid fa-arrow-left"></i>
+          <i class="fa-solid fa-arrow-left"></i>
 
-                    Volver
+          Volver
 
-                </a>
+        </a>
 
-                <a
-                    class="btn btn-outline-light"
-                    href="/Ambiente_ropa/Controller/CerrarSessionController.php"
-                >
+        <a class="btn btn-outline-light" href="/Ambiente_ropa/Controller/CerrarSessionController.php">
 
-                    Cerrar sesión
+          Cerrar sesión
 
-                </a>
+        </a>
 
-            </div>
+      </div>
 
-        </div>
+    </div>
 
-    </nav>
+  </nav>
 
 
-    <main class="contenedor">
+  <main class="contenedor">
 
-        <div class="encabezado">
+    <div class="encabezado">
 
-            <div>
+      <div>
 
-                <h1 class="mb-1">
-                    Gestión de productos
-                </h1>
+        <h1 class="mb-1">
+          Gestión de productos
+        </h1>
 
-                <p class="text-muted mb-0">
+        <p class="text-muted mb-0">
 
-                    Usuario:
+          Usuario:
 
-                    <strong>
+          <strong>
 
-                        <?= htmlspecialchars(
+            <?= htmlspecialchars(
                             $_SESSION["NombreUsuario"]
                         ) ?>
 
-                    </strong>
+          </strong>
 
-                </p>
+        </p>
 
-            </div>
+      </div>
 
-            <button
-                type="button"
-                class="btn btn-dark"
-                data-bs-toggle="modal"
-                data-bs-target="#modalAgregarProducto"
-            >
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalAgregarProducto">
 
-                <i class="fa-solid fa-plus"></i>
+        <i class="fa-solid fa-plus"></i>
 
-                Agregar producto
+        Agregar producto
 
-            </button>
+      </button>
 
-        </div>
+    </div>
 
 
-        <?php if ($mensaje !== null): ?>
+    <?php if ($mensaje !== null): ?>
 
-            <div
-                class="mensaje <?= $resultadoMensaje === 1
+    <div class="mensaje <?= $resultadoMensaje === 1
                     ? 'mensaje-correcto'
-                    : 'mensaje-error' ?>"
-            >
+                    : 'mensaje-error' ?>">
 
-                <?= htmlspecialchars($mensaje) ?>
+      <?= htmlspecialchars($mensaje) ?>
+    </div>
+    <?php endif; ?>
 
-            </div>
-
-        <?php endif; ?>
-
-
-        <?php if ($productoEditar !== null): ?>
-
-            <?php
-
+    <?php if ($productoEditar !== null): ?>
+    <?php
                 $rutaImagenEditar =
                     ObtenerRutaImagenAdmin(
                         $productoEditar["RutaImagen"]
@@ -327,342 +285,213 @@ function ObtenerRutaImagenAdmin(
                     );
 
             ?>
+    <section class="tarjeta">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="mb-1">
 
-            <section class="tarjeta">
-
-                <div
-                    class="d-flex justify-content-between align-items-center mb-4"
-                >
-
-                    <div>
-
-                        <h2 class="mb-1">
-
-                            Editar producto
-                            #<?= intval(
+            Editar producto
+            #<?= intval(
                                 $productoEditar["Consecutivo"]
                             ) ?>
+          </h2>
 
-                        </h2>
+          <p class="text-muted mb-0">
+            Modifique los datos y presione
+            Guardar cambios.
+          </p>
+        </div>
+        <a href="AdminProductos.php" class="btn btn-outline-secondary">
+          Cancelar edición
+        </a>
+      </div>
 
-                        <p class="text-muted mb-0">
+      <form id="formEditarProducto" method="POST" action="/Ambiente_ropa/Controller/AdminProductoController.php"
+        enctype="multipart/form-data">
 
-                            Modifique los datos y presione
-                            Guardar cambios.
+        <input type="hidden" name="Accion" value="Actualizar">
 
-                        </p>
-
-                    </div>
-
-                    <a
-                        href="AdminProductos.php"
-                        class="btn btn-outline-secondary"
-                    >
-
-                        Cancelar edición
-
-                    </a>
-
-                </div>
-
-
-                <form
-                    id="formEditarProducto"
-                    method="POST"
-                    action="/Ambiente_ropa/Controller/AdminProductoController.php"
-                    enctype="multipart/form-data"
-                >
-
-                    <input
-                        type="hidden"
-                        name="Accion"
-                        value="Actualizar"
-                    >
-
-                    <input
-                        type="hidden"
-                        name="Consecutivo"
-                        value="<?= intval(
+        <input type="hidden" name="Consecutivo" value="<?= intval(
                             $productoEditar["Consecutivo"]
-                        ) ?>"
-                    >
+                        ) ?>">
 
 
-                    <div class="row g-3">
+        <div class="row g-3">
 
-                        <div class="col-md-8">
+          <div class="col-md-8">
 
-                            <label
-                                for="editarNombre"
-                                class="form-label"
-                            >
+            <label for="editarNombre" class="form-label">
 
-                                Nombre
+              Nombre
 
-                            </label>
+            </label>
 
-                            <input
-                                type="text"
-                                id="editarNombre"
-                                name="Nombre"
-                                class="form-control"
-                                maxlength="80"
-                                value="<?= htmlspecialchars(
+            <input type="text" id="editarNombre" name="Nombre" class="form-control" maxlength="80" value="<?= htmlspecialchars(
                                     $productoEditar["Nombre"]
-                                ) ?>"
-                                required
-                            >
+                                ) ?>" required>
 
-                        </div>
+          </div>
 
 
-                        <div class="col-md-4 text-center">
+          <div class="col-md-4 text-center">
 
-                            <img
-                                id="vistaImagenEditar"
-                                src="<?= htmlspecialchars(
+            <img id="vistaImagenEditar" src="<?= htmlspecialchars(
                                     $rutaImagenEditar
-                                ) ?>"
-                                class="imagen-edicion"
-                                alt="Imagen del producto"
-                            >
+                                ) ?>" class="imagen-edicion" alt="Imagen del producto">
 
-                        </div>
+          </div>
 
 
-                        <div class="col-md-4">
+          <div class="col-md-4">
 
-                            <label
-                                for="editarPrecio"
-                                class="form-label"
-                            >
+            <label for="editarPrecio" class="form-label">
 
-                                Precio
+              Precio
 
-                            </label>
+            </label>
 
-                            <input
-                                type="number"
-                                id="editarPrecio"
-                                name="Precio"
-                                class="form-control"
-                                min="0.01"
-                                step="0.01"
-                                value="<?= htmlspecialchars(
+            <input type="number" id="editarPrecio" name="Precio" class="form-control" min="0.01" step="0.01" value="<?= htmlspecialchars(
                                     $productoEditar["Precio"]
-                                ) ?>"
-                                required
-                            >
+                                ) ?>" required>
 
-                        </div>
+          </div>
 
 
-                        <div class="col-md-4">
+          <div class="col-md-4">
 
-                            <label
-                                for="editarStock"
-                                class="form-label"
-                            >
+            <label for="editarStock" class="form-label">
 
-                                Stock
+              Stock
 
-                            </label>
+            </label>
 
-                            <input
-                                type="number"
-                                id="editarStock"
-                                name="Stock"
-                                class="form-control"
-                                min="0"
-                                step="1"
-                                value="<?= intval(
+            <input type="number" id="editarStock" name="Stock" class="form-control" min="0" step="1" value="<?= intval(
                                     $productoEditar["Stock"]
-                                ) ?>"
-                                required
-                            >
+                                ) ?>" required>
 
-                        </div>
+          </div>
 
 
-                        <div class="col-md-4">
+          <div class="col-md-4">
 
-                            <label
-                                for="editarEstado"
-                                class="form-label"
-                            >
+            <label for="editarEstado" class="form-label">
 
-                                Estado
+              Estado
 
-                            </label>
+            </label>
 
-                            <select
-                                id="editarEstado"
-                                name="Estado"
-                                class="form-select"
-                                required
-                            >
+            <select id="editarEstado" name="Estado" class="form-select" required>
 
-                                <option
-                                    value="1"
-                                    <?= intval(
+              <option value="1" <?= intval(
                                         $productoEditar["Estado"]
                                     ) === 1
                                         ? "selected"
-                                        : "" ?>
-                                >
+                                        : "" ?>>
 
-                                    Activo
+                Activo
 
-                                </option>
+              </option>
 
-                                <option
-                                    value="0"
-                                    <?= intval(
+              <option value="0" <?= intval(
                                         $productoEditar["Estado"]
                                     ) === 0
                                         ? "selected"
-                                        : "" ?>
-                                >
+                                        : "" ?>>
 
-                                    Inactivo
+                Inactivo
 
-                                </option>
+              </option>
 
-                            </select>
+            </select>
 
-                        </div>
+          </div>
 
 
-                        <div class="col-12">
+          <div class="col-12">
 
-                            <label
-                                for="editarDescripcion"
-                                class="form-label"
-                            >
+            <label for="editarDescripcion" class="form-label">
 
-                                Descripción
+              Descripción
 
-                            </label>
+            </label>
 
-                            <textarea
-                                id="editarDescripcion"
-                                name="Descripcion"
-                                class="form-control"
-                                rows="4"
-                                maxlength="1000"
-                            ><?= htmlspecialchars(
+            <textarea id="editarDescripcion" name="Descripcion" class="form-control" rows="4" maxlength="1000"><?= htmlspecialchars(
                                 $productoEditar["Descripcion"]
                                 ?? ""
                             ) ?></textarea>
 
-                        </div>
+          </div>
 
 
-                        <div class="col-12">
+          <div class="col-12">
 
-                            <label
-                                for="editarImagen"
-                                class="form-label"
-                            >
+            <label for="editarImagen" class="form-label">
 
-                                Reemplazar imagen
+              Reemplazar imagen
 
-                            </label>
+            </label>
 
-                            <input
-                                type="file"
-                                id="editarImagen"
-                                name="Imagen"
-                                class="form-control"
-                                accept=".jpg,.jpeg,.png,.webp"
-                            >
+            <input type="file" id="editarImagen" name="Imagen" class="form-control" accept=".jpg,.jpeg,.png,.webp">
 
-                            <div class="form-text">
+            <div class="form-text">
 
-                                Déjelo vacío para conservar
-                                la imagen actual.
+              Déjelo vacío para conservar
+              la imagen actual.
 
-                            </div>
+            </div>
 
-                        </div>
+          </div>
 
 
-                        <div class="col-12">
+          <div class="col-12">
 
-                            <button
-                                type="submit"
-                                class="btn btn-primary"
-                            >
+            <button type="submit" class="btn btn-primary">
 
-                                <i class="fa-solid fa-floppy-disk"></i>
+              <i class="fa-solid fa-floppy-disk"></i>
 
-                                Guardar cambios
+              Guardar cambios
 
-                            </button>
+            </button>
 
-                        </div>
+          </div>
 
-                    </div>
+        </div>
 
-                </form>
+      </form>
 
-            </section>
+    </section>
 
-        <?php endif; ?>
+    <?php endif; ?>
 
 
-        <section class="tarjeta p-0">
-
-            <div class="table-responsive">
-
-                <table
-                    class="table table-hover tabla-productos"
-                >
-
-                    <thead>
-
-                        <tr>
-
-                            <th>ID</th>
-                            <th>Imagen</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <?php if (count($productos) === 0): ?>
-
-                            <tr>
-
-                                <td
-                                    colspan="8"
-                                    class="text-center py-4"
-                                >
-
-                                    No existen productos registrados.
-
-                                </td>
-
-                            </tr>
-
-                        <?php else: ?>
-
-                            <?php foreach ($productos as $producto): ?>
-
-                                <?php
-
+    <section class="tarjeta p-0">
+      <div class="table-responsive">
+        <table class="table table-hover tabla-productos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if (count($productos) === 0): ?>
+            <tr>
+              <td colspan="8" class="text-center py-4">
+                No existen productos registrados.
+              </td>
+            </tr>
+            <?php else: ?>
+            <?php foreach ($productos as $producto): ?>
+            <?php
                                     $consecutivo = intval(
                                         $producto["Consecutivo"]
                                     );
-
                                     $estado = intval(
                                         $producto["Estado"]
                                     );
@@ -675,50 +504,46 @@ function ObtenerRutaImagenAdmin(
 
                                 ?>
 
-                                <tr>
+            <tr>
 
-                                    <td>
-                                        <?= $consecutivo ?>
-                                    </td>
+              <td>
+                <?= $consecutivo ?>
+              </td>
 
-                                    <td>
+              <td>
 
-                                        <img
-                                            src="<?= htmlspecialchars(
+                <img src="<?= htmlspecialchars(
                                                 $rutaImagen
-                                            ) ?>"
-                                            class="imagen-producto"
-                                            alt="<?= htmlspecialchars(
+                                            ) ?>" class="imagen-producto" alt="<?= htmlspecialchars(
                                                 $producto["Nombre"]
-                                            ) ?>"
-                                        >
+                                            ) ?>">
 
-                                    </td>
+              </td>
 
-                                    <td>
+              <td>
 
-                                        <strong>
+                <strong>
 
-                                            <?= htmlspecialchars(
+                  <?= htmlspecialchars(
                                                 $producto["Nombre"]
                                             ) ?>
 
-                                        </strong>
+                </strong>
 
-                                    </td>
+              </td>
 
-                                    <td class="descripcion">
+              <td class="descripcion">
 
-                                        <?= htmlspecialchars(
+                <?= htmlspecialchars(
                                             $producto["Descripcion"]
                                             ?? ""
                                         ) ?>
 
-                                    </td>
+              </td>
 
-                                    <td>
+              <td>
 
-                                        ₡<?= number_format(
+                ₡<?= number_format(
                                             floatval(
                                                 $producto["Precio"]
                                             ),
@@ -727,319 +552,232 @@ function ObtenerRutaImagenAdmin(
                                             "."
                                         ) ?>
 
-                                    </td>
+              </td>
 
-                                    <td>
+              <td>
 
-                                        <?= intval(
+                <?= intval(
                                             $producto["Stock"]
                                         ) ?>
 
-                                    </td>
+              </td>
 
-                                    <td>
+              <td>
 
-                                        <?php if ($estado === 1): ?>
+                <?php if ($estado === 1): ?>
 
-                                            <span
-                                                class="badge text-bg-success"
-                                            >
+                <span class="badge text-bg-success">
 
-                                                Activo
+                  Activo
 
-                                            </span>
+                </span>
 
-                                        <?php else: ?>
+                <?php else: ?>
 
-                                            <span
-                                                class="badge text-bg-secondary"
-                                            >
+                <span class="badge text-bg-secondary">
 
-                                                Inactivo
+                  Inactivo
 
-                                            </span>
+                </span>
 
-                                        <?php endif; ?>
+                <?php endif; ?>
 
-                                    </td>
+              </td>
 
-                                    <td class="acciones">
+              <td class="acciones">
 
-                                        <a
-                                            href="AdminProductos.php?editar=<?= $consecutivo ?>"
-                                            class="btn btn-sm btn-primary"
-                                        >
+                <a href="AdminProductos.php?editar=<?= $consecutivo ?>" class="btn btn-sm btn-primary">
 
-                                            <i class="fa-solid fa-pen"></i>
+                  <i class="fa-solid fa-pen"></i>
 
-                                            Editar
+                  Editar
 
-                                        </a>
+                </a>
 
 
-                                        <form
-                                            method="POST"
-                                            action="/Ambiente_ropa/Controller/AdminProductoController.php"
-                                            class="d-inline formulario-estado"
-                                        >
+                <form method="POST" action="/Ambiente_ropa/Controller/AdminProductoController.php"
+                  class="d-inline formulario-estado">
 
-                                            <input
-                                                type="hidden"
-                                                name="Accion"
-                                                value="CambiarEstado"
-                                            >
+                  <input type="hidden" name="Accion" value="CambiarEstado">
 
-                                            <input
-                                                type="hidden"
-                                                name="Consecutivo"
-                                                value="<?= $consecutivo ?>"
-                                            >
+                  <input type="hidden" name="Consecutivo" value="<?= $consecutivo ?>">
 
-                                            <input
-                                                type="hidden"
-                                                name="Estado"
-                                                value="<?= $estado === 1
+                  <input type="hidden" name="Estado" value="<?= $estado === 1
                                                     ? 0
-                                                    : 1 ?>"
-                                            >
+                                                    : 1 ?>">
 
-                                            <button
-                                                type="submit"
-                                                class="btn btn-sm <?= $estado === 1
+                  <button type="submit" class="btn btn-sm <?= $estado === 1
                                                     ? 'btn-danger'
-                                                    : 'btn-success' ?>"
-                                                data-nombre="<?= htmlspecialchars(
+                                                    : 'btn-success' ?>" data-nombre="<?= htmlspecialchars(
                                                     $producto["Nombre"],
                                                     ENT_QUOTES
-                                                ) ?>"
-                                                data-accion="<?= $estado === 1
+                                                ) ?>" data-accion="<?= $estado === 1
                                                     ? 'desactivar'
-                                                    : 'activar' ?>"
-                                            >
+                                                    : 'activar' ?>">
 
-                                                <?= $estado === 1
+                    <?= $estado === 1
                                                     ? "Desactivar"
                                                     : "Activar" ?>
 
-                                            </button>
-
-                                        </form>
-
-                                    </td>
-
-                                </tr>
-
-                            <?php endforeach; ?>
-
-                        <?php endif; ?>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <div
-        class="modal fade"
-        id="modalAgregarProducto"
-        tabindex="-1"
-        aria-hidden="true"
-    >
-
-        <div class="modal-dialog modal-lg">
-
-            <div class="modal-content">
-
-                <form
-                    method="POST"
-                    action="/Ambiente_ropa/Controller/AdminProductoController.php"
-                    enctype="multipart/form-data"
-                >
-
-                    <input
-                        type="hidden"
-                        name="Accion"
-                        value="Agregar"
-                    >
-
-                    <div class="modal-header">
-
-                        <h2 class="modal-title fs-5">
-
-                            Agregar producto
-
-                        </h2>
-
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Cerrar"
-                        ></button>
-
-                    </div>
-
-
-                    <div class="modal-body">
-
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Nombre
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="Nombre"
-                                    class="form-control"
-                                    maxlength="80"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Precio
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="Precio"
-                                    class="form-control"
-                                    min="0.01"
-                                    step="0.01"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Stock
-                                </label>
-
-                                <input
-                                    type="number"
-                                    name="Stock"
-                                    class="form-control"
-                                    min="0"
-                                    step="1"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="col-12">
-
-                                <label class="form-label">
-                                    Descripción
-                                </label>
-
-                                <textarea
-                                    name="Descripcion"
-                                    class="form-control"
-                                    rows="3"
-                                    maxlength="1000"
-                                ></textarea>
-
-                            </div>
-
-
-                            <div class="col-md-8">
-
-                                <label class="form-label">
-                                    Imagen
-                                </label>
-
-                                <input
-                                    type="file"
-                                    name="Imagen"
-                                    class="form-control"
-                                    accept=".jpg,.jpeg,.png,.webp"
-                                >
-
-                            </div>
-
-
-                            <div class="col-md-4">
-
-                                <label class="form-label">
-                                    Estado
-                                </label>
-
-                                <select
-                                    name="Estado"
-                                    class="form-select"
-                                    required
-                                >
-
-                                    <option value="1" selected>
-                                        Activo
-                                    </option>
-
-                                    <option value="0">
-                                        Inactivo
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="modal-footer">
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal"
-                        >
-
-                            Cancelar
-
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn btn-dark"
-                        >
-
-                            Guardar producto
-
-                        </button>
-
-                    </div>
+                  </button>
 
                 </form>
 
+              </td>
+
+            </tr>
+
+            <?php endforeach; ?>
+
+            <?php endif; ?>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <div class="modal fade" id="modalAgregarProducto" tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+
+      <div class="modal-content">
+
+        <form method="POST" action="/Ambiente_ropa/Controller/AdminProductoController.php"
+          enctype="multipart/form-data">
+
+          <input type="hidden" name="Accion" value="Agregar">
+
+          <div class="modal-header">
+
+            <h2 class="modal-title fs-5">
+
+              Agregar producto
+
+            </h2>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+          </div>
+
+
+          <div class="modal-body">
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+
+                <label class="form-label">
+                  Nombre
+                </label>
+
+                <input type="text" name="Nombre" class="form-control" maxlength="80" required>
+
+              </div>
+
+
+              <div class="col-md-3">
+
+                <label class="form-label">
+                  Precio
+                </label>
+
+                <input type="number" name="Precio" class="form-control" min="0.01" step="0.01" required>
+
+              </div>
+
+
+              <div class="col-md-3">
+
+                <label class="form-label">
+                  Stock
+                </label>
+
+                <input type="number" name="Stock" class="form-control" min="0" step="1" required>
+
+              </div>
+
+
+              <div class="col-12">
+
+                <label class="form-label">
+                  Descripción
+                </label>
+
+                <textarea name="Descripcion" class="form-control" rows="3" maxlength="1000"></textarea>
+
+              </div>
+
+
+              <div class="col-md-8">
+
+                <label class="form-label">
+                  Imagen
+                </label>
+
+                <input type="file" name="Imagen" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+
+              </div>
+
+
+              <div class="col-md-4">
+
+                <label class="form-label">
+                  Estado
+                </label>
+
+                <select name="Estado" class="form-select" required>
+
+                  <option value="1" selected>
+                    Activo
+                  </option>
+
+                  <option value="0">
+                    Inactivo
+                  </option>
+
+                </select>
+
+              </div>
+
             </div>
 
-        </div>
+          </div>
+
+
+          <div class="modal-footer">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+
+              Cancelar
+
+            </button>
+
+            <button type="submit" class="btn btn-dark">
+
+              Guardar producto
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
 
     </div>
 
+  </div>
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    ></script>
 
-    <script src="../../js/adminProductos.js?v=100"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="../../js/adminProductos.js?v=100"></script>
 
 </body>
 
