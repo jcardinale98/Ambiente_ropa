@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE)
 }
 
 include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/CarritoModel.php';
+    . '/Ambiente_ropa/Controller/CarritoController.php';
 
 if (!isset($_SESSION["ConsecutivoUsuario"]))
 {
@@ -18,10 +18,10 @@ $consecutivoUsuario =
     intval($_SESSION["ConsecutivoUsuario"]);
 
 $productosCarrito =
-    ConsultarCarritoModel($consecutivoUsuario);
+    ConsultarCarritoController($consecutivoUsuario);
 
 $totalCarrito =
-    ConsultarTotalCarritoModel($consecutivoUsuario);
+    ConsultarTotalCarritoController($consecutivoUsuario);
 
 $totalActual = isset($totalCarrito["Total"])
     ? floatval($totalCarrito["Total"])

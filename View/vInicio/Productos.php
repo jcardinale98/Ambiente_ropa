@@ -6,10 +6,7 @@ if (session_status() == PHP_SESSION_NONE)
 }
 
 include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/UtilitarioModel.php';
-
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/CarritoModel.php';
+    . '/Ambiente_ropa/Controller/CarritoController.php';
 
 if (!isset($_SESSION["ConsecutivoUsuario"]))
 {
@@ -17,11 +14,11 @@ if (!isset($_SESSION["ConsecutivoUsuario"]))
     exit();
 }
 
-RequerirRol("Cliente");
+RequerirClienteController();
 
-$productos = ConsultarProductosDisponiblesModel();
+$productos = ConsultarProductosDisponiblesController();
 
-$cantidadCarrito = ConsultarCantidadCarritoModel(
+$cantidadCarrito = ConsultarCantidadCarritoController(
     $_SESSION["ConsecutivoUsuario"]
 );
 
