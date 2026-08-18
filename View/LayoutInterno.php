@@ -108,10 +108,14 @@ function HeaderInfo()
         exit();
     }
 
-    $nombreUsuario = htmlspecialchars(
-        $_SESSION["NombreUsuario"]
-    );
-
+    $nombreCompleto = trim($_SESSION["NombreUsuario"]);
+    $partesNombre = preg_split('/\s+/', $nombreCompleto);
+    $nombreCorto = $partesNombre[0];
+    if (count($partesNombre) > 1)
+    {
+        $nombreCorto .= ' ' . $partesNombre[count($partesNombre) - 1];
+    }
+    $nombreCorto = htmlspecialchars($nombreCorto);
     $nombreRol = htmlspecialchars(
         $_SESSION["RolUsuario"]
     );
@@ -143,11 +147,8 @@ function HeaderInfo()
 
                             <div class="col-lg-4 text-center">
 
-                                <span class="fw-semibold">
-
-                                    Envío gratis en compras mayores
-                                    a <strong>$200</strong>
-
+                                <span class="fw-semibold ultras-logo">
+                                    ULTRAS
                                 </span>
 
                             </div>
@@ -161,7 +162,7 @@ function HeaderInfo()
                                     <a
                                         href="Carrito.php"
                                         title="Carrito"
-                                        class="text-dark me-3"
+                                        class="text-dark me-3 d-flex align-items-center"
                                     >
 
                                         <i
@@ -190,16 +191,13 @@ function HeaderInfo()
 
                                             </div>
 
-                                            <div class="ms-2 text-start">
+                                            <div class="ms-2 text-start lh-1">
 
-                                                <div
-                                                    class="fw-bold"
-                                                    style="font-size:14px;"
-                                                >
-                                                    ' . $nombreUsuario . '
+                                                <div class="fw-bold mb-0 lh-1">
+                                                    ' . $nombreCorto . '
                                                 </div>
 
-                                                <small class="text-muted">
+                                                <small class="text-muted d-block mt-0 lh-1">
                                                     ' . $nombreRol . '
                                                 </small>
 
@@ -292,14 +290,12 @@ function HeaderInfo()
 
                                     <a
                                         href="/Ambiente_ropa/Controller/CerrarSessionController.php"
-                                        class="btn btn-outline-danger btn-sm ms-3"
+                                        class="d-flex align-items-center"
                                     >
 
                                         <i
-                                            class="fa fa-sign-out me-1"
+                                            class="fa fa-sign-out fa-lg me-1"
                                         ></i>
-
-                                        Cerrar sesión
 
                                     </a>
 
