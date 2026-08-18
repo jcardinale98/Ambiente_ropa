@@ -21,6 +21,7 @@ $categorias = ConsultarCategoriasController();
 <?php
     ImportCSS();
 ?>
+<link rel="stylesheet" href="../css/main.css?v=1">
 
 <body>
 
@@ -123,37 +124,37 @@ $categorias = ConsultarCategoriasController();
         </p>
       </div>
 
-      <form method="POST" action="" class="row justify-content-center mb-5">
-        <div class="col-lg-6 col-md-6 mb-3">
-          <div class="input-group">
-            <span class="input-group-text bg-white">
+      <form method="POST" action="" class="row justify-content-center align-items-center g-3 mb-5">
+        <div class="col-lg-6 col-md-6">
+          <div class="input-group filtro-buscador">
+            <span class="input-group-text">
               <i class="fa fa-search"></i>
             </span>
             <input type="search" class="form-control" name="nombreProducto" placeholder="Buscar producto...">
           </div>
         </div>
-        <div class="col-lg-3 col-md-4 mb-3">
-          <select class="form-select" name="consecutivoCategoria">
+        <div class="col-lg-3 col-md-4">
+          <select class="form-select filtro-select" name="consecutivoCategoria">
             <option value="0">
               Todas las categorías
             </option>
             <?php
-                        if($categorias)
-                        {
-                            while($categoria = $categorias->fetch_assoc())
-                            {
-                    ?>
+              if($categorias)
+              {
+                while($categoria = $categorias->fetch_assoc())
+              {
+            ?>
             <option value="<?= $categoria["Consecutivo"] ?>">
               <?= htmlspecialchars($categoria["Nombre"]) ?>
             </option>
             <?php
-                            }
-                        }
-                    ?>
+                }
+              }
+            ?>
           </select>
         </div>
-        <div class="col-lg-2 col-md-2 mb-3">
-          <button type="submit" name="btnBuscarProductos" class="btn btn-dark w-100">
+        <div class="col-lg-2 col-md-2">
+          <button type="submit" name="btnBuscarProductos" class="filtro-boton">
             <i class="fa fa-search me-1"></i>
             Buscar
           </button>

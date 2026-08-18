@@ -36,6 +36,10 @@
                 <i class="ti ti-plus me-2"></i>
                 Agregar Categoría
               </a>
+              <a href="../Administrador/principal.php" class="btn btn-secondary">
+                <i class="ti ti-arrow-left me-2"></i>
+                Volver
+              </a>
             </div>
           </div>
           <hr class="mt-3 mb-5">

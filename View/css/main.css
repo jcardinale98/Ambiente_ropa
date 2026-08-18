@@ -40399,3 +40399,74 @@ fieldset:disabled .btn {
 #catalogo .card h5 {
   font-weight: 600;
 }
+
+/* ==============================
+   Filtros del catálogo
+   ============================== */
+
+#catalogo .filtro-buscador {
+  height: 44px !important;
+  margin: 0 !important;
+}
+
+#catalogo .filtro-buscador .input-group-text {
+  height: 44px !important;
+  width: 44px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 1px solid #dee2e6 !important;
+  background: #fff !important;
+}
+
+#catalogo .filtro-buscador .form-control {
+  height: 44px !important;
+
+  padding: 0 12px !important;
+  margin: 0 !important;
+
+  line-height: 44px !important;
+
+  border: 1px solid #dee2e6 !important;
+}
+
+#catalogo .filtro-select {
+  height: 44px !important;
+
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+
+  line-height: 44px !important;
+}
+
+.filtro-boton {
+  width: 100%;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border: none;
+  border-radius: 6px;
+
+  background-color: #191919;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  cursor: pointer;
+}
+
+.filtro-boton:hover {
+  background-color: #333;
+}
