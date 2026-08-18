@@ -1,8 +1,9 @@
 <?php
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Controller/RolController.php';
 
-RequerirRol("Administrador");
+RequerirAdministradorController();
 ?>
 
 <!DOCTYPE html>

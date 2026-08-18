@@ -6,15 +6,12 @@ if (session_status() == PHP_SESSION_NONE)
 }
 
 include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/UtilitarioModel.php';
-
-include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/RolModel.php';
+    . '/Ambiente_ropa/Controller/RolController.php';
 
 
-RequerirRol("Administrador");
+RequerirAdministradorController();
 
-$usuarios = ConsultarUsuariosRolesModel();
+$usuarios = ConsultarUsuariosRolesController();
 
 $mensaje = $_SESSION["MensajeRol"]
     ?? null;

@@ -1,12 +1,17 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/ProductoController.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Controller/CategoriaController.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Ambiente_ropa/Model/UtilitarioModel.php';
-include_once $_SERVER['DOCUMENT_ROOT']  . '/Ambiente_ropa/View/LayoutInterno.php';
 
-RequerirRol("Cliente");
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Controller/ProductoController.php';
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Controller/CategoriaController.php';
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Controller/RolController.php';
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/View/LayoutInterno.php';
+RequerirClienteController();
 
 $categorias = ConsultarCategoriasController();
+
 ?>
 
 <!DOCTYPE html>

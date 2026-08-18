@@ -1,3 +1,10 @@
+-- =====================================================================
+-- BASE DE DATOS UNIFICADA
+-- Archivo base: BaseDatosProyecto(3).sql
+-- Cambios integrados: CambiosBD.sql (categorías + relación producto/categoría
+-- + procedimientos CRUD/búsqueda de categorías y productos).
+-- =====================================================================
+
 CREATE DATABASE IF NOT EXISTS `bdproyecto` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `bdproyecto`;
  
@@ -41,6 +48,17 @@ DROP PROCEDURE IF EXISTS spAdminConsultarProductos;
 DROP PROCEDURE IF EXISTS spAdminRegistrarProducto;
 DROP PROCEDURE IF EXISTS spAdminActualizarProducto;
 DROP PROCEDURE IF EXISTS spAdminCambiarEstadoProducto;
+DROP PROCEDURE IF EXISTS spConsultarCategorias;
+DROP PROCEDURE IF EXISTS spConsultarCategoria;
+DROP PROCEDURE IF EXISTS spRegistrarCategoria;
+DROP PROCEDURE IF EXISTS spActualizarCategoria;
+DROP PROCEDURE IF EXISTS spEliminarCategoria;
+DROP PROCEDURE IF EXISTS spConsultarProductos;
+DROP PROCEDURE IF EXISTS spRegistrarProducto;
+DROP PROCEDURE IF EXISTS spActualizarImagenProducto;
+DROP PROCEDURE IF EXISTS spActualizarProducto;
+DROP PROCEDURE IF EXISTS spEliminarProducto;
+DROP PROCEDURE IF EXISTS spBuscarProductos;
  
 -- Se eliminan primero las tablas "hijas" (con llaves foráneas)
 -- y al final las tablas "padre".
@@ -50,6 +68,7 @@ DROP TABLE IF EXISTS `tb_carrito`;
 DROP TABLE IF EXISTS `tb_usuario_rol`;
 DROP TABLE IF EXISTS `tb_error`;
 DROP TABLE IF EXISTS `tb_producto`;
+DROP TABLE IF EXISTS `tb_categoria`;
 DROP TABLE IF EXISTS `tb_usuario`;
 DROP TABLE IF EXISTS `tb_rol`;
 DROP TABLE IF EXISTS `tb_factura`;
@@ -102,17 +121,35 @@ CREATE TABLE `tb_usuario_rol` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
  
 --
--- Tabla `tb_producto` (sin dependencias)
+-- Tabla `tb_categoria` (sin dependencias)
+-- Integrada desde CambiosBD.sql
+--
+CREATE TABLE `tb_categoria` (
+  `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(80) NOT NULL,
+  `Descripcion` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`Consecutivo`),
+  UNIQUE KEY `Nombre` (`Nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Tabla `tb_producto` (depende de tb_categoria)
+-- La relación Producto-Categoría queda integrada directamente en la tabla.
 --
 CREATE TABLE `tb_producto` (
   `Consecutivo` int(11) NOT NULL AUTO_INCREMENT,
+  `ConsecutivoCategoria` int(11) DEFAULT NULL,
   `Nombre` varchar(80) NOT NULL,
   `Descripcion` text DEFAULT NULL,
   `Precio` decimal(10,2) NOT NULL,
   `Stock` int(11) NOT NULL,
   `RutaImagen` varchar(1024) DEFAULT NULL,
   `Estado` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`Consecutivo`)
+  PRIMARY KEY (`Consecutivo`),
+  KEY `FK_Producto_Categoria` (`ConsecutivoCategoria`),
+  CONSTRAINT `FK_Producto_Categoria`
+    FOREIGN KEY (`ConsecutivoCategoria`)
+    REFERENCES `tb_categoria` (`Consecutivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
  
 --
@@ -241,10 +278,22 @@ INSERT INTO `tb_usuario_rol` VALUES (12,1,'2026-07-16 05:06:34','2026-07-16 05:0
 UNLOCK TABLES;
  
 --
+-- Datos de `tb_categoria`
+-- Categorías iniciales para los productos de demostración existentes.
+--
+INSERT INTO tb_categoria (Consecutivo, Nombre, Descripcion)
+VALUES
+(1, 'Camisetas', 'Prendas superiores tipo camiseta.'),
+(2, 'Pantalones', 'Prendas inferiores tipo pantalón.'),
+(3, 'Sudaderas', 'Prendas tipo sudadera para clima fresco.'),
+(4, 'Gorras', 'Accesorios para la cabeza.');
+
+--
 -- Datos de `tb_producto`
 --
 INSERT INTO tb_producto
 (
+    ConsecutivoCategoria,
     Nombre,
     Descripcion,
     Precio,
@@ -254,6 +303,7 @@ INSERT INTO tb_producto
 )
 VALUES
 (
+    1,
     'Camiseta Negra',
     'Camiseta negra de algodón para uso casual.',
     12000.00,
@@ -262,6 +312,7 @@ VALUES
     1
 ),
 (
+    2,
     'Pantalón Azul',
     'Pantalón azul de corte moderno.',
     18500.00,
@@ -270,6 +321,7 @@ VALUES
     1
 ),
 (
+    3,
     'Sudadera Gris',
     'Sudadera gris cómoda para clima frío.',
     22000.00,
@@ -278,6 +330,7 @@ VALUES
     1
 ),
 (
+    4,
     'Gorra Negra',
     'Gorra negra ajustable.',
     7500.00,
@@ -742,9 +795,10 @@ CREATE PROCEDURE spConsultarProductoPorId
     IN pConsecutivoProducto INT
 )
 BEGIN
- 
+
     SELECT
         Consecutivo,
+        ConsecutivoCategoria,
         Nombre,
         Descripcion,
         Precio,
@@ -754,7 +808,7 @@ BEGIN
     FROM tb_producto
     WHERE Consecutivo = pConsecutivoProducto
       AND Estado = 1;
- 
+
 END $$
  
 --
@@ -1473,6 +1527,226 @@ END $$
 DELIMITER ;
 
 -- =====================================================================
+-- 5. PROCEDIMIENTOS DE CATEGORÍAS Y GESTIÓN DE PRODUCTOS
+-- Integrados desde CambiosBD.sql.
+-- =====================================================================
+
+DELIMITER $$
+
+-- PROCEDURE `spConsultarCategorias` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spConsultarCategorias()
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion
+    FROM tb_categoria
+    ORDER BY Nombre;
+
+END $$
+
+-- PROCEDURE `spConsultarCategoria` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spConsultarCategoria(
+    pConsecutivo INT
+)
+BEGIN
+
+    SELECT
+        Consecutivo,
+        Nombre,
+        Descripcion
+    FROM tb_categoria
+    WHERE Consecutivo = pConsecutivo;
+
+END $$
+
+-- PROCEDURE `spRegistrarCategoria` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spRegistrarCategoria(
+    pNombre VARCHAR(80),
+    pDescripcion VARCHAR(250)
+)
+BEGIN
+
+    INSERT INTO tb_categoria
+    (
+        Nombre,
+        Descripcion
+    )
+    VALUES
+    (
+        pNombre,
+        pDescripcion
+    );
+
+END $$
+
+-- PROCEDURE `spActualizarCategoria` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spActualizarCategoria(
+    pConsecutivo INT,
+    pNombre VARCHAR(80),
+    pDescripcion VARCHAR(250)
+)
+BEGIN
+
+    UPDATE tb_categoria
+    SET
+        Nombre = pNombre,
+        Descripcion = pDescripcion
+    WHERE Consecutivo = pConsecutivo;
+
+END $$
+
+-- PROCEDURE `spEliminarCategoria` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spEliminarCategoria(
+    pConsecutivo INT
+)
+BEGIN
+
+    DELETE
+    FROM tb_categoria
+    WHERE Consecutivo = pConsecutivo;
+
+END $$
+
+-- PROCEDURE `spConsultarProductos` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spConsultarProductos()
+BEGIN
+
+    SELECT
+        P.Consecutivo,
+        C.Nombre AS Categoria,
+        P.Nombre,
+        P.Descripcion,
+        P.Precio,
+        P.Stock,
+        P.RutaImagen,
+        P.Estado
+    FROM tb_producto P
+    INNER JOIN tb_categoria C
+        ON P.ConsecutivoCategoria = C.Consecutivo
+    WHERE P.Estado = 1
+    ORDER BY P.Consecutivo DESC;
+
+END $$
+
+-- PROCEDURE `spRegistrarProducto` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spRegistrarProducto(
+    pConsecutivoCategoria INT,
+    pNombre VARCHAR(80),
+    pDescripcion TEXT,
+    pPrecio DECIMAL(10,2),
+    pStock INT
+)
+BEGIN
+
+    INSERT INTO tb_producto
+    (
+        ConsecutivoCategoria,
+        Nombre,
+        Descripcion,
+        Precio,
+        Stock,
+        Estado
+    )
+    VALUES
+    (
+        pConsecutivoCategoria,
+        pNombre,
+        pDescripcion,
+        pPrecio,
+        pStock,
+        1
+    );
+
+    SELECT LAST_INSERT_ID() AS ID;
+
+END $$
+
+-- PROCEDURE `spActualizarImagenProducto` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spActualizarImagenProducto(
+    pConsecutivo INT,
+    pRutaImagen VARCHAR(1024)
+)
+BEGIN
+
+    UPDATE tb_producto
+    SET RutaImagen = pRutaImagen
+    WHERE Consecutivo = pConsecutivo;
+
+END $$
+
+-- PROCEDURE `spActualizarProducto` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spActualizarProducto(
+    pConsecutivo INT,
+    pConsecutivoCategoria INT,
+    pNombre VARCHAR(80),
+    pDescripcion TEXT,
+    pPrecio DECIMAL(10,2),
+    pStock INT
+)
+BEGIN
+
+    UPDATE tb_producto
+    SET
+        ConsecutivoCategoria = pConsecutivoCategoria,
+        Nombre = pNombre,
+        Descripcion = pDescripcion,
+        Precio = pPrecio,
+        Stock = pStock
+    WHERE Consecutivo = pConsecutivo;
+
+END $$
+
+-- PROCEDURE `spEliminarProducto` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spEliminarProducto(
+    pConsecutivo INT
+)
+BEGIN
+
+    UPDATE tb_producto
+    SET Estado = 0
+    WHERE Consecutivo = pConsecutivo;
+
+END $$
+
+-- PROCEDURE `spBuscarProductos` (integrado desde CambiosBD.sql)
+CREATE PROCEDURE spBuscarProductos(
+    pNombre VARCHAR(80),
+    pConsecutivoCategoria INT
+)
+BEGIN
+
+    SELECT
+        P.Consecutivo,
+        C.Nombre AS Categoria,
+        P.Nombre,
+        P.Descripcion,
+        P.Precio,
+        P.Stock,
+        P.RutaImagen
+    FROM tb_producto P
+    INNER JOIN tb_categoria C
+        ON P.ConsecutivoCategoria = C.Consecutivo
+    WHERE P.Estado = 1
+      AND
+      (
+          pNombre = ''
+          OR P.Nombre LIKE CONCAT('%', pNombre, '%')
+      )
+      AND
+      (
+          pConsecutivoCategoria = 0
+          OR P.ConsecutivoCategoria = pConsecutivoCategoria
+      )
+    ORDER BY P.Nombre;
+
+END $$
+
+DELIMITER ;
+
+
+-- =====================================================================
 -- Inserts
 -- =====================================================================
 
@@ -1517,7 +1791,7 @@ CALL spIniciarSesionUsuario(
 
  
 -- =====================================================================
--- 5. AJUSTES DE ROLES (idempotentes)
+-- 6. AJUSTES DE ROLES (idempotentes)
 -- =====================================================================
  
 -- Se agrega el rol 'Cliente' (no existía previamente).
@@ -1569,7 +1843,7 @@ ORDER BY U.Nombre;
  
  
 -- =====================================================================
--- 6. PRUEBAS / DEMOSTRACIÓN (opcional)
+-- 7. PRUEBAS / DEMOSTRACIÓN (opcional)
 -- Las mismas llamadas y consultas de prueba del script original,
 -- agrupadas por funcionalidad y en un orden que respeta las
 -- dependencias entre ellas (por ejemplo: agregar al carrito antes
