@@ -11,7 +11,7 @@ USE `bdproyecto`;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -39,6 +39,7 @@ DROP PROCEDURE IF EXISTS spConsultarPerfilUsuario;
 DROP PROCEDURE IF EXISTS spActualizarPerfilUsuario;
 DROP PROCEDURE IF EXISTS spActualizarContrasenna;
 DROP PROCEDURE IF EXISTS spIniciarSesionUsuario;
+DROP PROCEDURE IF EXISTS spRecuperarContrasenna;
 DROP PROCEDURE IF EXISTS spRegistrarError;
 DROP PROCEDURE IF EXISTS spRegistrarUsuario;
 DROP PROCEDURE IF EXISTS spValidarCorreo;
@@ -1144,6 +1145,46 @@ BEGIN
     AND U.Estado = 1
 
     LIMIT 1;
+
+END; $$
+
+--
+-- PROCEDURE `spRecuperarContrasenna`
+--
+-- Los mensajes se mantienen en ASCII para evitar errores de codificacion
+-- cuando este bloque se ejecuta desde phpMyAdmin.
+CREATE PROCEDURE spRecuperarContrasenna
+(
+    IN pCorreoElectronico VARCHAR(100),
+    IN pNuevaContrasenna VARCHAR(100)
+)
+BEGIN
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM tb_usuario
+        WHERE CorreoElectronico = TRIM(pCorreoElectronico)
+          AND Estado = 1
+    )
+    THEN
+
+        SELECT
+            0 AS Resultado,
+            'El correo no esta registrado.' AS Mensaje;
+
+    ELSE
+
+        UPDATE tb_usuario
+        SET Contrasenna = pNuevaContrasenna
+        WHERE CorreoElectronico = TRIM(pCorreoElectronico)
+          AND Estado = 1;
+
+        SELECT
+            1 AS Resultado,
+            'La contrasena fue actualizada correctamente.' AS Mensaje;
+
+    END IF;
 
 END; $$
  
