@@ -108,10 +108,14 @@ function HeaderInfo()
         exit();
     }
 
-    $nombreUsuario = htmlspecialchars(
-        $_SESSION["NombreUsuario"]
-    );
-
+    $nombreCompleto = trim($_SESSION["NombreUsuario"]);
+    $partesNombre = preg_split('/\s+/', $nombreCompleto);
+    $nombreCorto = $partesNombre[0];
+    if (count($partesNombre) > 1)
+    {
+        $nombreCorto .= ' ' . $partesNombre[count($partesNombre) - 1];
+    }
+    $nombreCorto = htmlspecialchars($nombreCorto);
     $nombreRol = htmlspecialchars(
         $_SESSION["RolUsuario"]
     );
@@ -135,7 +139,7 @@ function HeaderInfo()
 
                                     <i class="fa fa-phone me-2"></i>
 
-                                    +506 8888-7777
+                                    +506 2026 1182
 
                                 </span>
 
@@ -143,11 +147,8 @@ function HeaderInfo()
 
                             <div class="col-lg-4 text-center">
 
-                                <span class="fw-semibold">
-
-                                    Envío gratis en compras mayores
-                                    a <strong>$200</strong>
-
+                                <span class="fw-semibold ultras-logo">
+                                    ULTRAS
                                 </span>
 
                             </div>
@@ -161,7 +162,7 @@ function HeaderInfo()
                                     <a
                                         href="Carrito.php"
                                         title="Carrito"
-                                        class="text-dark me-3"
+                                        class="text-dark me-3 d-flex align-items-center"
                                     >
 
                                         <i
@@ -190,16 +191,13 @@ function HeaderInfo()
 
                                             </div>
 
-                                            <div class="ms-2 text-start">
+                                            <div class="ms-2 text-start lh-1">
 
-                                                <div
-                                                    class="fw-bold"
-                                                    style="font-size:14px;"
-                                                >
-                                                    ' . $nombreUsuario . '
+                                                <div class="fw-bold mb-0 lh-1">
+                                                    ' . $nombreCorto . '
                                                 </div>
 
-                                                <small class="text-muted">
+                                                <small class="text-muted d-block mt-0 lh-1">
                                                     ' . $nombreRol . '
                                                 </small>
 
@@ -292,14 +290,12 @@ function HeaderInfo()
 
                                     <a
                                         href="/Ambiente_ropa/Controller/CerrarSessionController.php"
-                                        class="btn btn-outline-danger btn-sm ms-3"
+                                        class="d-flex align-items-center"
                                     >
 
                                         <i
-                                            class="fa fa-sign-out me-1"
+                                            class="fa fa-sign-out fa-lg me-1"
                                         ></i>
-
-                                        Cerrar sesión
 
                                     </a>
 
@@ -322,93 +318,103 @@ function HeaderInfo()
 
 function FooterInfo()
 {
-    echo '
-        <footer id="footer">
+echo '
+<footer id="footer">
+  <div class="container">
+    <div class="footer-menu-list">
+      <div class="row d-flex flex-wrap justify-content-between">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="footer-menu">
+            <h1 class="widget-title">Ultras</h1>
+            <ul class="menu-list list-unstyled">
 
-            <div class="container">
-
-                <div class="footer-menu-list">
-
-                    <div
-                        class="row d-flex flex-wrap justify-content-between"
-                    >
-
-                        <div
-                            class="col-lg-4 col-md-6 col-sm-12"
-                        >
-
-                            <div class="footer-menu">
-
-                                <h1 class="widget-title">
-                                    Tienda de Ropa
-                                </h1>
-
-                                <p>
-                                    Ropa moderna, cómoda y de calidad.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div
-                            class="col-lg-4 col-md-6 col-sm-12"
-                        >
-
-                            <div class="footer-menu">
-
-                                <h5 class="widget-title">
-                                    Servicio al cliente
-                                </h5>
-
-                                <p>
-                                    Para consultas puede escribirnos a
-                                    contacto@tiendaropa.com
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div
-                            class="col-lg-4 col-md-6 col-sm-12"
-                        >
-
-                            <div class="footer-menu">
-
-                                <h5 class="widget-title">
-                                    Contáctanos
-                                </h5>
-
-                                <p>
-                                    Teléfono: +506 2026-1182
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <hr>
-
-        </footer>
-
-        <div id="footer-bottom">
-
-            <div class="container">
-
-                <p>
-                    Tienda de Ropa &copy; 2026.
-                    Todos los derechos reservados.
-                </p>
-
-            </div>
-
+            </ul>
+          </div>
         </div>
-    ';
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="footer-menu">
+            <h5 class="widget-title">Servicio al Cliente</h5>
+            <p>
+              Somos una marca de ropa comprometida con el estilo y la calidad.
+              Para consultas o pedidos, puede escribirnos al correo: contacto@ultras.com
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="footer-menu">
+            <h5 class="widget-title">Contáctanos</h5>
+            <p>
+              ¿Tienes alguna pregunta o sugerencia?
+              <a href="#" class="email">nuestrosservicios@ultras.com</a>
+            </p>
+            <p>
+              ¿Necesitas ayuda? Llámanos. <br />
+              <strong>+506 2026 1182</strong>
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="footer-menu">
+            <h5 class="widget-title">Desde 2026</h5>
+            <p>
+              Somos una marca de ropa que combina estilo moderno con comodidad.
+              Diseñamos prendas únicas para quienes buscan expresar su personalidad
+              a través de la moda, cuidando cada detalle y ofreciendo calidad en cada colección.
+            </p>
+            <div class="social-links">
+              <ul class="d-flex list-unstyled">
+                <li>
+                  <a href="#">
+                    <i class="icon icon-facebook"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="icon icon-twitter"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="icon icon-youtube-play"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="icon icon-behance-square"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+</footer>
+
+
+<div id="footer-bottom">
+  <div class="container">
+    <div class="d-flex align-items-center flex-wrap justify-content-between">
+      <div class="copyright">
+        <p>
+          ULTRAS &copy; 2026. Todos los derechos reservados.
+        <p>Desarrollado por el equipo 3</p>
+        <p></p>
+        </p>
+      </div>
+      <div class="payment-method">
+        <p>Opciones de Pago :</p>
+        <div class="card-wrap">
+          <img src="../images/visa-icon.jpg" alt="visa" />
+          <img src="../images/mastercard.png" alt="mastercard" />
+          <img src="../images/american-express.jpg" alt="american-express" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+';
 }

@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE)
 }
 
 include_once $_SERVER['DOCUMENT_ROOT']
-    . '/Ambiente_ropa/Model/PerfilModel.php';
+    . '/Ambiente_ropa/Controller/PerfilController.php';
 
 if (!isset($_SESSION["ConsecutivoUsuario"]))
 {
@@ -18,7 +18,7 @@ $consecutivoUsuario = intval(
     $_SESSION["ConsecutivoUsuario"]
 );
 
-$perfil = ConsultarPerfilUsuarioModel(
+$perfil = ConsultarPerfilUsuarioController(
     $consecutivoUsuario
 );
 

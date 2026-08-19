@@ -8,85 +8,47 @@ if (session_status() == PHP_SESSION_NONE)
 include_once $_SERVER['DOCUMENT_ROOT']
     . '/Ambiente_ropa/Model/PerfilModel.php';
 
-header('Content-Type: application/json; charset=utf-8');
 
-if (!isset($_SESSION["ConsecutivoUsuario"]))
+/*
+|--------------------------------------------------------------------------
+| RF #13 - GESTIÓN DE PERFIL DE USUARIO
+|--------------------------------------------------------------------------
+| La vista se comunica con este controlador y el controlador
+| se comunica con PerfilModel.php.
+*/
+
+function ConsultarPerfilUsuarioController($consecutivoUsuario)
 {
-    echo json_encode(array(
-        "Resultado" => 0,
-        "Mensaje" => "Debe iniciar sesión para administrar su perfil."
-    ));
-
-    exit();
-}
-
-$consecutivoUsuario = intval(
-    $_SESSION["ConsecutivoUsuario"]
-);
-
-$accion = isset($_POST["Accion"])
-    ? trim($_POST["Accion"])
-    : "";
-
-switch ($accion)
-{
-    case "ActualizarPerfil":
-
-        ActualizarPerfil(
-            $consecutivoUsuario
-        );
-
-        break;
-
-    case "ActualizarContrasenna":
-
-        ActualizarContrasenna(
-            $consecutivoUsuario
-        );
-
-        break;
-
-    default:
-
-        echo json_encode(array(
-            "Resultado" => 0,
-            "Mensaje" => "La acción solicitada no es válida."
-        ));
-
-        break;
+    return ConsultarPerfilUsuarioModel(
+        intval($consecutivoUsuario)
+    );
 }
 
 
-function ActualizarPerfil($consecutivoUsuario)
+function ActualizarPerfilController(
+    $consecutivoUsuario,
+    $nombre,
+    $correoElectronico
+)
 {
-    $nombre = isset($_POST["Nombre"])
-        ? trim($_POST["Nombre"])
-        : "";
-
-    $correoElectronico = isset(
-        $_POST["CorreoElectronico"]
-    )
-        ? trim($_POST["CorreoElectronico"])
-        : "";
+    $consecutivoUsuario = intval($consecutivoUsuario);
+    $nombre = trim($nombre);
+    $correoElectronico = trim($correoElectronico);
 
     if ($nombre === "")
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "Debe ingresar el nombre."
-        ));
-
-        return;
+        );
     }
 
     if ($correoElectronico === "")
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "Debe ingresar el correo electrónico."
-        ));
-
-        return;
+        );
     }
 
     if (
@@ -96,32 +58,26 @@ function ActualizarPerfil($consecutivoUsuario)
         )
     )
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "El formato del correo electrónico no es válido."
-        ));
-
-        return;
+        );
     }
 
     if (strlen($nombre) > 250)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "El nombre supera la longitud permitida."
-        ));
-
-        return;
+        );
     }
 
     if (strlen($correoElectronico) > 100)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "El correo electrónico supera la longitud permitida."
-        ));
-
-        return;
+        );
     }
 
     $resultado = ActualizarPerfilUsuarioModel(
@@ -141,95 +97,139 @@ function ActualizarPerfil($consecutivoUsuario)
             $correoElectronico;
     }
 
-    echo json_encode($resultado);
+    return $resultado;
 }
 
 
-function ActualizarContrasenna($consecutivoUsuario)
+function ActualizarContrasennaController(
+    $consecutivoUsuario,
+    $contrasennaActual,
+    $nuevaContrasenna,
+    $confirmarContrasenna
+)
 {
-    $contrasennaActual = isset(
-        $_POST["ContrasennaActual"]
-    )
-        ? $_POST["ContrasennaActual"]
-        : "";
-
-    $nuevaContrasenna = isset(
-        $_POST["NuevaContrasenna"]
-    )
-        ? $_POST["NuevaContrasenna"]
-        : "";
-
-    $confirmarContrasenna = isset(
-        $_POST["ConfirmarContrasenna"]
-    )
-        ? $_POST["ConfirmarContrasenna"]
-        : "";
+    $consecutivoUsuario = intval($consecutivoUsuario);
 
     if ($contrasennaActual === "")
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "Debe ingresar la contraseña actual."
-        ));
-
-        return;
+        );
     }
 
     if ($nuevaContrasenna === "")
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "Debe ingresar la nueva contraseña."
-        ));
-
-        return;
+        );
     }
 
     if ($confirmarContrasenna === "")
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "Debe confirmar la nueva contraseña."
-        ));
-
-        return;
+        );
     }
 
     if (strlen($nuevaContrasenna) < 5)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "La nueva contraseña debe tener al menos 5 caracteres."
-        ));
-
-        return;
+        );
     }
 
     if ($nuevaContrasenna !== $confirmarContrasenna)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "La confirmación de la contraseña no coincide."
-        ));
-
-        return;
+        );
     }
 
     if ($contrasennaActual === $nuevaContrasenna)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "La nueva contraseña debe ser diferente a la actual."
+        );
+    }
+
+    return ActualizarContrasennaModel(
+        $consecutivoUsuario,
+        $contrasennaActual,
+        $nuevaContrasenna
+    );
+}
+
+
+function ProcesarSolicitudPerfilController()
+{
+    header('Content-Type: application/json; charset=utf-8');
+
+    if (!isset($_SESSION["ConsecutivoUsuario"]))
+    {
+        echo json_encode(array(
+            "Resultado" => 0,
+            "Mensaje" => "Debe iniciar sesión para administrar su perfil."
         ));
 
         return;
     }
 
-    $resultado = ActualizarContrasennaModel(
-        $consecutivoUsuario,
-        $contrasennaActual,
-        $nuevaContrasenna
+    $consecutivoUsuario = intval(
+        $_SESSION["ConsecutivoUsuario"]
     );
 
+    $accion = isset($_POST["Accion"])
+        ? trim($_POST["Accion"])
+        : "";
+
+    switch ($accion)
+    {
+        case "ActualizarPerfil":
+
+            $resultado = ActualizarPerfilController(
+                $consecutivoUsuario,
+                $_POST["Nombre"] ?? "",
+                $_POST["CorreoElectronico"] ?? ""
+            );
+
+            break;
+
+        case "ActualizarContrasenna":
+
+            $resultado = ActualizarContrasennaController(
+                $consecutivoUsuario,
+                $_POST["ContrasennaActual"] ?? "",
+                $_POST["NuevaContrasenna"] ?? "",
+                $_POST["ConfirmarContrasenna"] ?? ""
+            );
+
+            break;
+
+        default:
+
+            $resultado = array(
+                "Resultado" => 0,
+                "Mensaje" => "La acción solicitada no es válida."
+            );
+
+            break;
+    }
+
     echo json_encode($resultado);
+}
+
+
+if (
+    isset($_SERVER["SCRIPT_FILENAME"])
+    && realpath($_SERVER["SCRIPT_FILENAME"])
+        === realpath(__FILE__)
+)
+{
+    ProcesarSolicitudPerfilController();
 }

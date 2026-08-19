@@ -45,7 +45,6 @@ if (ini_get("session.use_cookies"))
 
 session_destroy();
 
-
 /*
 |--------------------------------------------------------------------------
 | Regresar a la pantalla de inicio de sesión

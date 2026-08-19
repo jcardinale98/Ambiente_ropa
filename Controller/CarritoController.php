@@ -6,230 +6,159 @@ if (session_status() == PHP_SESSION_NONE)
 }
 
 include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Model/UtilitarioModel.php';
+
+include_once $_SERVER['DOCUMENT_ROOT']
     . '/Ambiente_ropa/Model/CarritoModel.php';
 
-header('Content-Type: application/json; charset=utf-8');
 
-if (!isset($_SESSION["ConsecutivoUsuario"]))
+/*
+|--------------------------------------------------------------------------
+| RF #11 - GESTIÓN DE CARRITO DE COMPRAS
+|--------------------------------------------------------------------------
+| Las vistas consumen únicamente funciones del controlador.
+| El controlador se comunica con los modelos.
+*/
+
+function RequerirClienteController()
 {
-    echo json_encode(array(
-        "Resultado" => 0,
-        "Mensaje" => "Debe iniciar sesión para utilizar el carrito."
-    ));
-
-    exit();
+    RequerirRol("Cliente");
 }
 
-$consecutivoUsuario = intval(
-    $_SESSION["ConsecutivoUsuario"]
-);
 
-$accion = isset($_POST["Accion"])
-    ? $_POST["Accion"]
-    : "";
-
-switch ($accion)
+function ConsultarProductosDisponiblesController()
 {
-    case "Agregar":
+    return ConsultarProductosDisponiblesModel();
+}
 
-        AgregarProducto(
-            $consecutivoUsuario
-        );
 
-        break;
-
-    case "Modificar":
-
-        ModificarCantidad(
-            $consecutivoUsuario
-        );
-
-        break;
-
-    case "Eliminar":
-
-        EliminarProducto(
-            $consecutivoUsuario
-        );
-
-        break;
-
-    case "Vaciar":
-
-        VaciarCarrito(
-            $consecutivoUsuario
-        );
-
-        break;
-
-    case "Confirmar":
-
-    ConfirmarCompra(
-        $consecutivoUsuario
+function ConsultarCarritoController($consecutivoUsuario)
+{
+    return ConsultarCarritoModel(
+        intval($consecutivoUsuario)
     );
-
-    break;    
-
-    case "ConsultarCantidad":
-
-        ConsultarCantidad(
-            $consecutivoUsuario
-        );
-
-        break;
-
-    default:
-
-        echo json_encode(array(
-            "Resultado" => 0,
-            "Mensaje" => "La acción solicitada no es válida."
-        ));
-
-        break;
 }
 
 
-function AgregarProducto($consecutivoUsuario)
+function ConsultarTotalCarritoController($consecutivoUsuario)
 {
-    $consecutivoProducto = isset(
-        $_POST["ConsecutivoProducto"]
-    )
-        ? intval($_POST["ConsecutivoProducto"])
-        : 0;
+    return ConsultarTotalCarritoModel(
+        intval($consecutivoUsuario)
+    );
+}
 
-    $cantidad = isset($_POST["Cantidad"])
-        ? intval($_POST["Cantidad"])
-        : 0;
+
+function ConsultarCantidadCarritoController($consecutivoUsuario)
+{
+    return ConsultarCantidadCarritoModel(
+        intval($consecutivoUsuario)
+    );
+}
+
+
+function AgregarProductoController(
+    $consecutivoUsuario,
+    $consecutivoProducto,
+    $cantidad
+)
+{
+    $consecutivoUsuario = intval($consecutivoUsuario);
+    $consecutivoProducto = intval($consecutivoProducto);
+    $cantidad = intval($cantidad);
 
     if ($consecutivoProducto <= 0)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "Debe seleccionar un producto válido."
-        ));
-
-        return;
+        );
     }
 
     if ($cantidad <= 0)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "La cantidad debe ser mayor que cero."
-        ));
-
-        return;
+        );
     }
 
-    $resultado = AgregarProductoCarritoModel(
+    return AgregarProductoCarritoModel(
         $consecutivoUsuario,
         $consecutivoProducto,
         $cantidad
     );
-
-    echo json_encode($resultado);
 }
 
 
-function ModificarCantidad($consecutivoUsuario)
+function ModificarCantidadController(
+    $consecutivoUsuario,
+    $consecutivoProducto,
+    $nuevaCantidad
+)
 {
-    $consecutivoProducto = isset(
-        $_POST["ConsecutivoProducto"]
-    )
-        ? intval($_POST["ConsecutivoProducto"])
-        : 0;
-
-    $nuevaCantidad = isset($_POST["Cantidad"])
-        ? intval($_POST["Cantidad"])
-        : 0;
+    $consecutivoUsuario = intval($consecutivoUsuario);
+    $consecutivoProducto = intval($consecutivoProducto);
+    $nuevaCantidad = intval($nuevaCantidad);
 
     if ($consecutivoProducto <= 0)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "El producto seleccionado no es válido."
-        ));
-
-        return;
+        );
     }
 
     if ($nuevaCantidad <= 0)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "La cantidad debe ser mayor que cero."
-        ));
-
-        return;
+        );
     }
 
-    $resultado = ModificarCantidadCarritoModel(
+    return ModificarCantidadCarritoModel(
         $consecutivoUsuario,
         $consecutivoProducto,
         $nuevaCantidad
     );
-
-    echo json_encode($resultado);
 }
 
 
-function EliminarProducto($consecutivoUsuario)
+function EliminarProductoController(
+    $consecutivoUsuario,
+    $consecutivoProducto
+)
 {
-    $consecutivoProducto = isset(
-        $_POST["ConsecutivoProducto"]
-    )
-        ? intval($_POST["ConsecutivoProducto"])
-        : 0;
+    $consecutivoUsuario = intval($consecutivoUsuario);
+    $consecutivoProducto = intval($consecutivoProducto);
 
     if ($consecutivoProducto <= 0)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "El producto seleccionado no es válido."
-        ));
-
-        return;
+        );
     }
 
-    $resultado = EliminarProductoCarritoModel(
+    return EliminarProductoCarritoModel(
         $consecutivoUsuario,
         $consecutivoProducto
     );
-
-    echo json_encode($resultado);
 }
 
 
-function VaciarCarrito($consecutivoUsuario)
+function VaciarCarritoController($consecutivoUsuario)
 {
-    $resultado = VaciarCarritoModel(
-        $consecutivoUsuario
+    return VaciarCarritoModel(
+        intval($consecutivoUsuario)
     );
-
-    echo json_encode($resultado);
 }
 
 
-function ConsultarCantidad($consecutivoUsuario)
+function ConfirmarCompraController($consecutivoUsuario)
 {
-    $resultado = ConsultarCantidadCarritoModel(
-        $consecutivoUsuario
-    );
+    $consecutivoUsuario = intval($consecutivoUsuario);
 
-    echo json_encode(array(
-        "Resultado" => 1,
-        "CantidadProductos" => intval(
-            $resultado["CantidadProductos"]
-        )
-    ));
-}
-
-function ConfirmarCompra($consecutivoUsuario)
-{
-    /*
-        Se consulta la información antes de confirmar porque
-        el procedimiento de compra vacía el carrito al finalizar.
-    */
     $productosCarrito = ConsultarCarritoModel(
         $consecutivoUsuario
     );
@@ -240,12 +169,10 @@ function ConfirmarCompra($consecutivoUsuario)
 
     if (count($productosCarrito) === 0)
     {
-        echo json_encode(array(
+        return array(
             "Resultado" => 0,
             "Mensaje" => "No existen productos en el carrito."
-        ));
-
-        return;
+        );
     }
 
     $resultado = ConfirmarCompraModel(
@@ -300,5 +227,123 @@ function ConfirmarCompra($consecutivoUsuario)
             "/Ambiente_ropa/View/vInicio/Comprobante.php";
     }
 
+    return $resultado;
+}
+
+
+function ProcesarSolicitudCarritoController()
+{
+    header('Content-Type: application/json; charset=utf-8');
+
+    if (!isset($_SESSION["ConsecutivoUsuario"]))
+    {
+        echo json_encode(array(
+            "Resultado" => 0,
+            "Mensaje" => "Debe iniciar sesión para utilizar el carrito."
+        ));
+
+        return;
+    }
+
+    $consecutivoUsuario = intval(
+        $_SESSION["ConsecutivoUsuario"]
+    );
+
+    $accion = isset($_POST["Accion"])
+        ? trim($_POST["Accion"])
+        : "";
+
+    switch ($accion)
+    {
+        case "Agregar":
+
+            $resultado = AgregarProductoController(
+                $consecutivoUsuario,
+                $_POST["ConsecutivoProducto"] ?? 0,
+                $_POST["Cantidad"] ?? 0
+            );
+
+            break;
+
+        case "Modificar":
+
+            $resultado = ModificarCantidadController(
+                $consecutivoUsuario,
+                $_POST["ConsecutivoProducto"] ?? 0,
+                $_POST["Cantidad"] ?? 0
+            );
+
+            break;
+
+        case "Eliminar":
+
+            $resultado = EliminarProductoController(
+                $consecutivoUsuario,
+                $_POST["ConsecutivoProducto"] ?? 0
+            );
+
+            break;
+
+        case "Vaciar":
+
+            $resultado = VaciarCarritoController(
+                $consecutivoUsuario
+            );
+
+            break;
+
+        case "Confirmar":
+
+            $resultado = ConfirmarCompraController(
+                $consecutivoUsuario
+            );
+
+            break;
+
+        case "ConsultarCantidad":
+
+            $cantidadCarrito =
+                ConsultarCantidadCarritoController(
+                    $consecutivoUsuario
+                );
+
+            $resultado = array(
+                "Resultado" => 1,
+                "CantidadProductos" => intval(
+                    $cantidadCarrito["CantidadProductos"] ?? 0
+                )
+            );
+
+            break;
+
+        default:
+
+            $resultado = array(
+                "Resultado" => 0,
+                "Mensaje" => "La acción solicitada no es válida."
+            );
+
+            break;
+    }
+
     echo json_encode($resultado);
+}
+
+
+/*
+    Esto es importante:
+
+    Si CarritoController.php es llamado directamente por AJAX,
+    procesa la solicitud.
+
+    Si Productos.php o Carrito.php incluyen este controlador,
+    solamente carga sus funciones y NO imprime JSON.
+*/
+if (
+    isset($_SERVER["SCRIPT_FILENAME"])
+    && realpath($_SERVER["SCRIPT_FILENAME"])
+        === realpath(__FILE__)
+)
+{
+    ProcesarSolicitudCarritoController();
 }

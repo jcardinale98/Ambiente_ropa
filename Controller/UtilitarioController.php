@@ -18,8 +18,8 @@
     {
         try
         {
-            require 'PHPMailer/src/PHPMailer.php';
-            require 'PHPMailer/src/SMTP.php';
+            require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
+            require_once __DIR__ . '/PHPMailer/src/SMTP.php';
 
             $correoSalida = "felipemoralestorelli@gmail.com";
             $contrasennaSalida = "nyng lxxa kcpj taau";
@@ -50,7 +50,7 @@
         }
         catch (Exception $e)
         {
-            AddError($e, 'EnviarCorreo', 0);
+            AddError($e, 'EnviarCorreo');
             return false;
         }
     }
