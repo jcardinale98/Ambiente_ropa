@@ -46,7 +46,7 @@ $categorias = ConsultarCategoriasController();
     <div class="swiper main-swiper">
       <div class="swiper-wrapper">
         <div class="swiper-slide" style="
-                        background-image: url('../images/banner1.jpg');
+                        background-image: url('../images/banner1.png');
                         background-repeat: no-repeat;
                         background-size: cover;
                         background-position: center;
@@ -73,26 +73,12 @@ $categorias = ConsultarCategoriasController();
           </div>
         </div>
         <div class="swiper-slide" style="
-                        background-image: url('../images/banner2.jpg');
+                        background-image: url('../images/banner3.jpg');
                         background-repeat: no-repeat;
                         background-size: cover;
                         background-position: center;
                     ">
-          <div class="banner-content">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-6">
-                  <h2 class="banner-title">
-                    Colección casual
-                  </h2>
-                  <p>
-                    Explora el catálogo de ropa casual para
-                    hombres y mujeres.
-                  </p>
-                  <div class="btn-wrap">
-                    <a href="Productos.php" class="btn btn-light btn-medium">
-                      Comprar ahora
-                    </a>
+
                   </div>
                 </div>
               </div>
@@ -103,17 +89,6 @@ $categorias = ConsultarCategoriasController();
     </div>
   </section>
 
-  <section id="brand-collection" class="padding-medium bg-light-grey">
-    <div class="container">
-      <div class="d-flex flex-wrap justify-content-between">
-        <img src="../images/brand1.png" alt="Marca 1" class="brand-image">
-        <img src="../images/brand2.png" alt="Marca 2" class="brand-image">
-        <img src="../images/brand3.png" alt="Marca 3" class="brand-image">
-        <img src="../images/brand4.png" alt="Marca 4" class="brand-image">
-        <img src="../images/brand5.png" alt="Marca 5" class="brand-image">
-      </div>
-    </div>
-  </section>
 
   <section id="catalogo" class="padding-medium">
     <div class="container">
@@ -160,6 +135,8 @@ $categorias = ConsultarCategoriasController();
           </button>
         </div>
       </form>
+
+      
 
       <div class="row">
         <?php if($productos && $productos->num_rows > 0) { ?>
@@ -220,6 +197,18 @@ $categorias = ConsultarCategoriasController();
           <i class="fa-solid fa-user-gear"></i>
           Mi perfil
         </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="brand-collection" class="padding-medium bg-light-grey">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between">
+        <img src="../images/brand1.png" alt="Marca 1" class="brand-image">
+        <img src="../images/brand2.png" alt="Marca 2" class="brand-image">
+        <img src="../images/brand3.png" alt="Marca 3" class="brand-image">
+        <img src="../images/brand4.png" alt="Marca 4" class="brand-image">
+        <img src="../images/brand5.png" alt="Marca 5" class="brand-image">
       </div>
     </div>
   </section>

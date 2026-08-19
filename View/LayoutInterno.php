@@ -139,7 +139,7 @@ function HeaderInfo()
 
                                     <i class="fa fa-phone me-2"></i>
 
-                                    +506 8888-7777
+                                    +506 2026 1182
 
                                 </span>
 
