@@ -1,0 +1,163 @@
+body
+{
+    background-color: #f5f5f5;
+    color: #212529;
+}
+
+.contenedor-comprobante
+{
+    width: 94%;
+    max-width: 950px;
+    margin: 45px auto;
+}
+
+.comprobante
+{
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 35px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.10);
+}
+
+.comprobante-encabezado
+{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.comprobante-encabezado h1
+{
+    margin-bottom: 8px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.comprobante-encabezado p
+{
+    margin: 0;
+    color: #6c757d;
+}
+
+.icono-exito
+{
+    width: 78px;
+    height: 78px;
+    margin: 0 auto 18px auto;
+    border-radius: 50%;
+    background-color: #198754;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+}
+
+.datos-compra
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 20px;
+    margin-bottom: 28px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+.datos-compra div
+{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.etiqueta
+{
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.tabla-comprobante
+{
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.tabla-comprobante th
+{
+    background-color: #212529;
+    color: #ffffff;
+}
+
+.total-compra
+{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 25px;
+    padding-top: 24px;
+    font-size: 22px;
+}
+
+.total-compra strong
+{
+    color: #6f42c1;
+    font-size: 28px;
+}
+
+.acciones-comprobante
+{
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+@media screen and (max-width: 768px)
+{
+    .comprobante
+    {
+        padding: 22px;
+    }
+
+    .datos-compra
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .acciones-comprobante
+    {
+        flex-direction: column;
+    }
+
+    .acciones-comprobante .btn
+    {
+        width: 100%;
+    }
+}
+
+@media print
+{
+    body
+    {
+        background-color: #ffffff;
+    }
+
+    .contenedor-comprobante
+    {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    .comprobante
+    {
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .acciones-comprobante
+    {
+        display: none;
+    }
+}
