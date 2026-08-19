@@ -11,6 +11,9 @@ include_once $_SERVER['DOCUMENT_ROOT']
 include_once $_SERVER['DOCUMENT_ROOT']
     . '/Ambiente_ropa/Model/UtilitarioModel.php';
 
+include_once $_SERVER['DOCUMENT_ROOT']
+    . '/Ambiente_ropa/Controller/UtilitarioController.php';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,3 +87,92 @@ if (isset($_POST["btnlogin"]))
 
     RedirigirSegunRol();
 }
+
+if(isset($_POST["btnRegistrar"]))
+    {
+        $identificacion = $_POST["identificacion"];
+        $nombre = $_POST["nombre"];
+        $correoElectronico = $_POST["correoElectronico"];
+        $contrasenna = $_POST["contrasenna"];
+       
+
+        $datos = RegistrarUsuarioModel($identificacion,$nombre,$correoElectronico,$contrasenna);
+
+        if($datos)
+        {
+            header("Location: ../../View/vInicio/login.php");
+            exit();
+        }
+
+        $_POST["Mensaje"] = "No se ha podido registrar su información correctamente";
+    }
+
+if (isset($_POST["btnRecuperarAcceso"]))
+{
+    $correoElectronico = trim(
+        $_POST["correoElectronico"] ?? ""
+    );
+
+    if (
+        $correoElectronico === ""
+        || !filter_var(
+            $correoElectronico,
+            FILTER_VALIDATE_EMAIL
+        )
+    )
+    {
+        $_POST["Mensaje"] =
+            "Debe ingresar un correo electrónico válido.";
+    }
+    else
+    {
+        $nuevaContrasenna = generarContrasena();
+
+        $resultado = RecuperarContrasennaModel(
+            $correoElectronico,
+            $nuevaContrasenna
+        );
+
+        if (
+            isset($resultado["Resultado"])
+            && intval($resultado["Resultado"]) === 1
+        )
+        {
+            $contenido =
+                "Su nueva contraseña temporal es: <strong>"
+                . htmlspecialchars(
+                    $nuevaContrasenna,
+                    ENT_QUOTES,
+                    "UTF-8"
+                )
+                . "</strong>";
+
+            if (EnviarCorreo(
+                "Recuperación de contraseña",
+                $contenido,
+                $correoElectronico
+            ))
+            {
+                header(
+                    "Location: /Ambiente_ropa/View/vInicio/login.php"
+                );
+
+                exit();
+            }
+
+            $_POST["Mensaje"] =
+                "La contraseña fue actualizada, pero no se pudo enviar el correo.";
+        }
+        else
+        {
+            $_POST["Mensaje"] = $resultado["Mensaje"];
+        }
+    }
+}
+
+    if(isset($_POST["btnSalir"]))        
+    {
+        CerrarSesion();
+    }
+
+
